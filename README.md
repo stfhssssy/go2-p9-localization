@@ -16,19 +16,28 @@ Go2 /utlidar/cloud + D435i gyro/acceleration
 下载发行镜像后 `docker load -i go2-p9-arm64.tar`（若下载的是 `.tar.zst`，先 `zstd -d`），镜像名与 SHA256 以同版本 `release.json` / `SHA256SUMS` 为准。
 
 ```bash
-# 已有主机相机驱动，且 unite_imu_method=2。需要相同 ROS_DOMAIN_ID / DDS 接口。
+# 实机：已有主机相机驱动，且 unite_imu_method=2；domain 0，绑定 SAR_ROBOT_IFACE。
 # SAR_ROBOT_IFACE 由比赛环境提供，勿自行猜测网络接口。
 sar-run go2-p9:arm64 p9 diagnose
 sar-run --gui go2-p9:arm64 p9 live --config "$HOME/p9/robot.yaml" \
   --output "$HOME/p9/runs/live-001" --rviz
+# 另一终端保存实机运行，保持同一 domain 0 / 机器人接口：
+sar-run go2-p9:arm64 p9 save
 
-# 历史 localization 已线性插值的派生包：使用该包专用配置。
-sar-run --gui go2-p9:arm64 p9 replay --bag "$HOME/bags/localization-linear" \
+# 回放：隔离到 domain 42 + loopback，避免与真机同名话题混流。
+# 历史 localization 已线性插值的派生包，使用该包专用配置。
+sar-run --gui go2-p9:arm64 env ROS_DOMAIN_ID=42 \
+  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
+  p9 replay --bag "$HOME/bags/localization-linear" \
   --config /opt/p9/config/replay.example.yaml --rate 0.5 \
   --output "$HOME/p9/runs/replay-001" --rviz
-# 另一终端、相同 domain/interface：
-sar-run go2-p9:arm64 p9 save
+# 另一终端保存该回放，必须使用同一 domain 42 / loopback：
+sar-run go2-p9:arm64 env ROS_DOMAIN_ID=42 \
+  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
+  p9 save
 ```
+
+回放命令中的 `env` 只覆盖该容器进程的 DDS 设置，不改变实机相机驱动的 domain 0。不要在机器人 domain 0 上播放历史 bag；同一回放 domain 内只运行一个 P9 实例。
 
 `config/live.example.yaml` 需要填写本机测量的 LiDAR→相机 IMU 旋转和平移。`config/live-p9-experimental.yaml` 提供旧 P9 的实验旋转和假设零平移，时间偏移为零；它**不是比赛真机完成标定的证明**。`replay.example.yaml` 中约 2167 秒偏移只属于那份公开 localization 派生包，不用于其他 bag 或实时数据。所有启动必须明确选择配置，默认入口仅做 10 秒只读诊断。
 

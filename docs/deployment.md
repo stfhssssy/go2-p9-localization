@@ -66,11 +66,22 @@ sar-run go2-p9:arm64 p9 live --config /path/robot.yaml --output /path/new-run
 
 历史 P9 输入是已经把相机加速度线性插值到 merged IMU 时间戳的**派生 bag**；在线版本新增的等待双侧加速度样本逻辑不能对该数据重复应用。复制 `config/replay.example.yaml`，明确是原始数据还是派生数据，并与其 conversion manifest 匹配。
 
+回放与实机使用不同 DDS 上下文：实机保持 domain 0、绑定 `SAR_ROBOT_IFACE`；下面将回放显式隔离为 domain 42、仅绑定 loopback `lo`。否则机器人实时发布的同名 `/utlidar/cloud` 可能混入 bag 回放。`env` 在容器入口之后设置变量，不依赖父终端的 DDS 配置，也不修改相机驱动的环境。bag、配置和输出仍放在 `sar-run` 已挂载的主机目录中。
+
 ```bash
-sar-run go2-p9:arm64 p9 replay \
+sar-run go2-p9:arm64 env ROS_DOMAIN_ID=42 \
+  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
+  p9 replay \
   --bag /path/bag --config /path/replay.yaml --rate 0.5 \
   --output /path/new-replay
+
+# 另一终端保存该回放，使用完全相同的 domain/interface：
+sar-run go2-p9:arm64 env ROS_DOMAIN_ID=42 \
+  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
+  p9 save
 ```
+
+回放 RViz 使用 `sar-run --gui` 并添加 `--rviz`，继承同一隔离配置。不要同时在 domain 42 启动其他同名 P9 实例；保存实机运行时仍使用 domain 0 与实机接口，不能套用上述回放保存命令。
 
 回放使用 `use_sim_time=true` 和播放器 `/clock`。它们不修正两个传感器消息头的设备时钟差。原始点云 header 若尚未修正，应按该 bag 的 manifest 加一次偏移；已修正的 bag 不得再加。相机 IMU 与点云逐点相对时间保持其声明的约定。
 
