@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Native checkout launcher; the Docker image has its own p9 entrypoint.
+set -eo pipefail
+
+p9_repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+if [[ ! -r /opt/ros/jazzy/setup.bash ]]; then
+  echo 'ROS 2 Jazzy is required at /opt/ros/jazzy; see docs/native.md.' >&2
+  exit 2
+fi
+if [[ ! -r "$p9_repo_root/install/setup.bash" ]]; then
+  echo 'Build this checkout first with scripts/build-native.sh.' >&2
+  exit 2
+fi
+export P9_SOURCE_REVISION="$(git -C "$p9_repo_root" rev-parse HEAD 2>/dev/null || printf unknown)"
+source /opt/ros/jazzy/setup.bash
+source "$p9_repo_root/install/setup.bash"
+export P9_HOME="$p9_repo_root"
+export RMW_IMPLEMENTATION="${RMW_IMPLEMENTATION:-rmw_cyclonedds_cpp}"
+export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
+if [[ -z "${CYCLONEDDS_URI:-}" ]]; then
+  p9_iface="${SAR_ROBOT_IFACE:-lo}"
+  if [[ ! "$p9_iface" =~ ^[a-zA-Z0-9_.:-]+$ ]]; then
+    echo 'Invalid SAR_ROBOT_IFACE' >&2
+    exit 2
+  fi
+  export CYCLONEDDS_URI="<CycloneDDS><Domain><General><Interfaces><NetworkInterface name=\"${p9_iface}\"/></Interfaces></General></Domain></CycloneDDS>"
+fi
+exec ros2 run go2_p9 p9 "$@"

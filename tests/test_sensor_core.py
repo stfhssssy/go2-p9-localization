@@ -1,8 +1,10 @@
 """Sensor contracts without ROS, a network, or access to recorded data."""
 import copy
+import json
 from pathlib import Path
 import struct
 import sys
+import tempfile
 from types import SimpleNamespace as NS
 import unittest
 
@@ -11,6 +13,7 @@ from go2_p9.sensor_core import (  # noqa: E402
     AccelSample, AdapterOptions, FIELD_SPECS, IdentityFrameGraph, InvalidSensorData,
     NS_PER_SEC, POINT, POINT_STEP, RawImuInterpolator, check_live_age,
     clock_relation, interpolate_acceleration, prepare_cloud, validate_merged_imu)
+from go2_p9.adapter_node import write_diagnostic_report  # noqa: E402
 
 
 EPOCH = 1_793_245_181_931_124_536
@@ -259,6 +262,24 @@ class SensorCoreTests(unittest.TestCase):
         self.assertFalse(clock_relation(None, EPOCH, .5)['available'])
         self.assertFalse(clock_relation(EPOCH+100_000_000, EPOCH, .5)['mismatch'])
         self.assertTrue(clock_relation(EPOCH+2*NS_PER_SEC, EPOCH, .5)['mismatch'])
+
+    def test_diagnostic_json_atomic_counts_and_byte_level(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'input_status.json'
+            details = dict(counts={'cloud_received': 3, 'cloud_published': 2,
+                                   'cloud_rejected': 1}, raw_counts={'gyro_dropped_stale': 1})
+            write_diagnostic_report(path, details, b'\x02', 'clock mismatch', EPOCH)
+            value = json.loads(path.read_text())
+            self.assertEqual(value['counts'], details['counts'])
+            self.assertEqual(value['diagnostic_stamp_ns'], EPOCH)
+            self.assertEqual(value['status_level'], 2)
+            self.assertFalse(path.with_name('input_status.json.tmp').exists())
+            write_diagnostic_report(path, details, 0, 'valid', EPOCH+1)
+            self.assertEqual(json.loads(path.read_text())['status_level'], 0)
+            # A serialization failure cannot corrupt the preceding complete file.
+            with self.assertRaises(ValueError):
+                write_diagnostic_report(path, {'bad': float('nan')}, 0, 'bad', EPOCH+2)
+            self.assertEqual(json.loads(path.read_text())['diagnostic_stamp_ns'], EPOCH+1)
 
 
 if __name__ == '__main__':

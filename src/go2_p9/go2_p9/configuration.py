@@ -16,7 +16,7 @@ SENSOR_NODE_PARAMETERS = frozenset({
     'max_scan_duration_sec', 'raw_gyro_frame', 'raw_accel_frame', 'max_accel_gap_sec',
     'raw_queue_size', 'raw_buffer_sec', 'raw_pending_timeout_sec', 'cloud_queue_size',
     'imu_queue_size', 'max_message_age_sec', 'future_tolerance_sec',
-    'clock_tolerance_sec', 'input_timeout_sec',
+    'clock_tolerance_sec', 'input_timeout_sec', 'diagnostic_output_path',
 })
 MAPPING_NODE_PARAMETERS = frozenset({
     'input_cloud_topic', 'input_odom_topic', 'world_frame', 'native_frame', 'output_dir',
@@ -26,7 +26,7 @@ MAPPING_NODE_PARAMETERS = frozenset({
     'base_frame', 'T_imu_base_rotation', 'T_imu_base_translation', 'map_publish_period_sec',
     'path_publish_period_sec', 'stale_timeout_sec', 'tracking_timeout_sec',
 })
-SENSOR_ENTRYPOINT_PARAMETERS = frozenset({'mode', 'use_sim_time', 'output_cloud_topic', 'output_imu_topic'})
+SENSOR_ENTRYPOINT_PARAMETERS = frozenset({'mode', 'use_sim_time', 'output_cloud_topic', 'output_imu_topic', 'diagnostic_output_path'})
 MAPPING_ENTRYPOINT_PARAMETERS = frozenset({'input_cloud_topic', 'input_odom_topic', 'world_frame',
                                          'native_frame', 'output_dir', 'use_sim_time'})
 

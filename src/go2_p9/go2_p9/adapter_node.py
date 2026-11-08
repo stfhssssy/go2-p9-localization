@@ -2,6 +2,7 @@
 from collections import Counter
 import json
 import math
+from pathlib import Path
 import struct
 import time
 
@@ -9,6 +10,18 @@ from .sensor_core import (AdapterOptions, FIELD_SPECS, POINT_STEP, NS_PER_SEC,
                           IdentityFrameGraph, InvalidSensorData, RawImuInterpolator,
                           check_live_age, clock_relation, prepare_cloud,
                           stamp_nanoseconds, validate_merged_imu)
+
+
+def write_diagnostic_report(path, details, level, message, stamp_ns):
+    """Persist the same status/values as DiagnosticArray without partial JSON."""
+    if path is None:
+        return
+    numeric_level = level[0] if isinstance(level, (bytes, bytearray)) else int(level)
+    document = dict(details, status_level=numeric_level, status_message=message,
+                    diagnostic_stamp_ns=int(stamp_ns))
+    temporary = path.with_name(path.name + '.tmp')
+    temporary.write_text(json.dumps(document, indent=2, allow_nan=False, ensure_ascii=False) + '\n')
+    temporary.replace(path)
 
 
 def main(args=None):
@@ -37,7 +50,7 @@ def main(args=None):
                 raw_queue_size=4000, raw_buffer_sec=2.0, raw_pending_timeout_sec=2.0,
                 cloud_queue_size=100, imu_queue_size=4000, max_message_age_sec=1.0,
                 future_tolerance_sec=0.1, clock_tolerance_sec=0.5,
-                input_timeout_sec=2.0)
+                input_timeout_sec=2.0, diagnostic_output_path='')
             for name, value in defaults.items():
                 self.declare_parameter(name, value)
             self.cfg = {key: self.get_parameter(key).value for key in defaults}
@@ -60,6 +73,14 @@ def main(args=None):
             if any(not topic for topic in topics+outputs) or len(set(topics+outputs)) != len(topics+outputs):
                 raise ValueError('active sensor input and output topics must be nonempty and distinct')
             self.options = AdapterOptions(**{key: c[key] for key in AdapterOptions.__dataclass_fields__})
+            self.diagnostic_output = None
+            if not isinstance(c['diagnostic_output_path'], str):
+                raise ValueError('diagnostic_output_path must be a path string or empty')
+            if c['diagnostic_output_path']:
+                self.diagnostic_output = Path(c['diagnostic_output_path']).expanduser().resolve()
+                if self.diagnostic_output.exists():
+                    raise FileExistsError('Refusing to overwrite earlier input diagnostics: ' + str(self.diagnostic_output))
+                self.diagnostic_output.parent.mkdir(parents=True, exist_ok=True)
             self.counts = Counter()
             self.first_stamp, self.last_stamp, self.received_steady = {}, {}, {}
             self.last_cloud_raw = self.last_imu = self.cloud_end_ns = None
@@ -246,9 +267,13 @@ def main(args=None):
                 message='; '.join(reasons) if reasons else 'valid sensor input contracts; not a localization accuracy verdict',
                 values=[KeyValue(key=k, value=json.dumps(v, allow_nan=False, ensure_ascii=False)) for k, v in details.items()])
             diagnostic = DiagnosticArray()
-            diagnostic.header.stamp = self.get_clock().now().to_msg()
+            report_time = self.get_clock().now()
+            diagnostic.header.stamp = report_time.to_msg()
             diagnostic.status = [status]
-            self.diag_pub.publish(diagnostic)
+            write_diagnostic_report(self.diagnostic_output, details, level, status.message,
+                                    report_time.nanoseconds)
+            if rclpy.ok():
+                self.diag_pub.publish(diagnostic)
 
     rclpy.init(args=args)
     node = None
@@ -259,9 +284,10 @@ def main(args=None):
         pass
     finally:
         if node is not None:
-            if rclpy.ok():
+            try:
                 node.report()
-            node.destroy_node()
+            finally:
+                node.destroy_node()
         rclpy.try_shutdown()
 
 

@@ -51,7 +51,9 @@ def main():
         parser.error('Output directory is not empty; choose a new --output')
     output.mkdir(parents=True, exist_ok=True)
     record = dict(config=config, mode=a.command, bag=str(Path(a.bag).resolve()) if a.command == 'replay' else None,
-                  rate=getattr(a, 'rate', None), ros_domain_id=os.environ.get('ROS_DOMAIN_ID'),
+                  rate=getattr(a, 'rate', None), source_revision=os.environ.get('P9_SOURCE_REVISION', 'native-unrecorded'),
+                  binary_sha256=(home()/'provenance/binary.sha256').read_text().strip() if (home()/'provenance/binary.sha256').exists() else None,
+                  ros_domain_id=os.environ.get('ROS_DOMAIN_ID'),
                   rmw=os.environ.get('RMW_IMPLEMENTATION'), source_manifest=json.loads((home()/'provenance/source-manifest.json').read_text()))
     (output/'effective-config.json').write_text(json.dumps(record, indent=2)+'\n')
     os.environ['ROS_LOG_DIR'] = str(output/'ros-logs')

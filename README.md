@@ -54,4 +54,6 @@ PYTHONPATH=src/go2_p9 python3 -m unittest discover -s tests -p 'test_*.py' -v
 
 x86 主机需 ARM64 QEMU/binfmt 或 ARM64 远端构建器；不得复用 x86 编译的历史二进制。运行入口不联网安装依赖。源码、配置和构建依赖均随镜像部署，不依赖作者或本地实验目录挂载。
 
+原生 GitHub 路线使用 `scripts/build-native.sh` 构建、`scripts/p9` 启动；见 [原生安装](docs/native.md)。
+
 完整说明：[部署](docs/deployment.md) · [标定](docs/calibration.md) · [来源](docs/provenance.md) · [第三方许可](THIRD_PARTY_NOTICES.md)。保留上游完整源文件和许可证；本项目新代码 GPL-2.0-only。实际 Point-LIO 源码哈希见 `provenance/source-manifest.json`，镜像内编译产物哈希见 `/opt/p9/provenance/binary.sha256`。

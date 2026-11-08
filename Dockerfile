@@ -39,6 +39,7 @@ RUN chmod 755 /usr/local/bin/p9-entrypoint && \
     python3 -c 'import rclpy, go2_p9.adapter_node, go2_p9.mapping_node; from ament_index_python.packages import get_package_prefix; print(get_package_prefix("point_lio_unilidar"))' && \
     dpkg-query -W > /opt/p9/provenance/packages.txt
 ARG SOURCE_REVISION=unreleased
+ENV P9_SOURCE_REVISION=${SOURCE_REVISION}
 LABEL org.opencontainers.image.title="Go2 P9 Point-LIO localization" \
       org.opencontainers.image.source="https://github.com/stfhssssy/go2-p9-localization" \
       org.opencontainers.image.revision="${SOURCE_REVISION}"

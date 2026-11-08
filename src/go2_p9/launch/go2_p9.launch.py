@@ -15,6 +15,7 @@ def setup(context):
         raise ValueError('mode must be live or replay')
     _, sensor, mapping, pointlio = load(args['config'], args['mode'])
     mapping['output_dir'] = str(Path(args['output']).resolve())
+    sensor['diagnostic_output_path'] = str(Path(args['output']).resolve()/'input_status.json')
     adapter = Node(package='go2_p9', executable='p9_adapter', parameters=[sensor], output='screen')
     engine = Node(package='point_lio_unilidar', executable='pointlio_mapping', name='pointlio_mapping',
                   parameters=[pointlio], output='screen', remappings=[

@@ -19,3 +19,5 @@ src/point_lio_unilidar/PCD/
 
 **/._*
 .DS_Store
+
+provenance/binary.sha256
