@@ -23,9 +23,18 @@ def main():
     parser.add_argument('--seconds', type=float, default=12.)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--raw', action='store_true')
+    parser.add_argument('--cloud-hz', type=float, default=10.)
+    parser.add_argument('--imu-hz', type=float, default=200.)
+    parser.add_argument('--point-stride', type=int, default=1)
     args = parser.parse_args()
     if not math.isfinite(args.seconds) or args.seconds < 5:
         parser.error('--seconds must be at least five wall seconds')
+    if any(not math.isfinite(v) or v <= 0 for v in (args.cloud_hz, args.imu_hz)):
+        parser.error('sensor rates must be finite and positive')
+    if args.point_stride < 1 or args.point_stride > 16:
+        parser.error('--point-stride must be between 1 and 16')
+    if args.raw and args.imu_hz < 100:
+        parser.error('raw mode needs --imu-hz >= 100 for <= 20 ms acceleration brackets')
     if args.output.exists():
         parser.error('output exists; refusing overwrite')
     try:
@@ -64,6 +73,7 @@ def main():
     for side in (-3., 3.):
         points.extend((x, side, z) for x in np.linspace(-4, 4, 65) for z in np.linspace(-1, 2.5, 29))
     points.extend((x, y, -1.) for x in np.linspace(-4, 4, 65) for y in np.linspace(-3, 3, 49))
+    points = points[::args.point_stride]
     encoded = bytearray(len(points)*POINT_STEP)
     for index, (x, y, z) in enumerate(points):
         POINT.pack_into(encoded, index*POINT_STEP, x, y, z, 50., index % 16,
@@ -246,7 +256,7 @@ def main():
                     imu_pub.publish(message(ns, 'camera_imu_optical_frame'))
                 counts['input_gyro_or_merged'] += 1
                 tick += 1
-                next_imu = now + .005  # no wall-stall catchup bursts or invented times
+                next_imu = now + 1. / args.imu_hz  # no catchup bursts or invented times
             if now >= next_cloud and now < deadline:
                 # Scan acquisition started 100 ms ago and ended 5 ms ago.
                 # IMU samples already cover it; no future stamped scan is needed.
@@ -257,7 +267,7 @@ def main():
                     height=1, width=len(points), fields=fields, is_bigendian=False,
                     point_step=POINT_STEP, row_step=len(points)*POINT_STEP, data=encoded, is_dense=True))
                 counts['input_cloud'] += 1
-                next_cloud = now + .1
+                next_cloud = now + 1. / args.cloud_hz
             rclpy.spin_once(node, timeout_sec=.001)
     except (KeyboardInterrupt, Exception) as exc:
         fail(type(exc).__name__ + ': ' + str(exc))
@@ -289,6 +299,8 @@ def main():
     report = dict(passed=not failures, failures=failures, kind='synthetic_stationary_pipeline_smoke',
                   absolute_accuracy_test=False, no_real_robot_motion=True, raw=args.raw,
                   domain=domain, requested_input_seconds=args.seconds, counts=dict(counts),
+                  requested_cloud_hz=args.cloud_hz, requested_imu_hz=args.imu_hz,
+                  point_stride=args.point_stride,
                   exact_pairs=len(stamps['odom'] & stamps['registered']),
                   unmatched_odom_ns=sorted(only_odom), unmatched_registered_ns=sorted(only_scan),
                   latest_map=latest_map, latest_path=latest_path,

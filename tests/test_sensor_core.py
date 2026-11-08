@@ -1,6 +1,7 @@
 """Sensor contracts without ROS, a network, or access to recorded data."""
 import copy
 import json
+import math
 from pathlib import Path
 import struct
 import sys
@@ -8,12 +9,15 @@ import tempfile
 from types import SimpleNamespace as NS
 import unittest
 
+import numpy as np
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src/go2_p9'))
 from go2_p9.sensor_core import (  # noqa: E402
     AccelSample, AdapterOptions, FIELD_SPECS, IdentityFrameGraph, InvalidSensorData,
     NS_PER_SEC, POINT, POINT_STEP, RawImuInterpolator, check_live_age,
     clock_relation, interpolate_acceleration, prepare_cloud, validate_merged_imu)
 from go2_p9.adapter_node import write_diagnostic_report  # noqa: E402
+from go2_p9.cloud_codec import CloudOptions, normalize_cloud, normalize_cloud_numpy  # noqa: E402
 
 
 EPOCH = 1_793_245_181_931_124_536
@@ -73,6 +77,97 @@ def accel(ns, values=(0., 0., 9.81)):
 
 
 class SensorCoreTests(unittest.TestCase):
+    def assert_codec_matches_oracle(self, msg, options=None):
+        options = options or CloudOptions()
+        scalar = normalize_cloud(msg, options)
+        vector = normalize_cloud_numpy(msg, options)
+        self.assertEqual(vector.dropped_coordinates, scalar.dropped_coordinates)
+        self.assertEqual(vector.sorted_by_time, scalar.sorted_by_time)
+        self.assertEqual(vector.points.tolist(), [list(p) for p in scalar.points])
+        scalar_bytes = b''.join(POINT.pack(*p) for p in scalar.points)
+        vector_bytes = b''.join(POINT.pack(*p[:4], int(p[4]), p[5]) for p in vector.points)
+        self.assertEqual(vector_bytes, scalar_bytes)
+
+    def test_numpy_oracle_multicolumn_padded_endian_stable_optional(self):
+        rows = [(2., -0., 3., 100., 2, .03), (1., 1., 1., 50., 1, .01),
+                (4., 4., 4., 80., 3, .01), (float('nan'), 2., 3., float('nan'), 5, .02),
+                (5., 5., 5., 20., 7, .04), (6., 6., 6., 30., 8, 0.)]
+        for endian in ('<', '>'):
+            msg = cloud(rows, endian=endian, padding=0)
+            packed = msg.data
+            msg.width, msg.height, msg.row_step = 3, 2, 3*48+17
+            msg.data = packed[:3*48] + b'\xff'*17 + packed[3*48:]
+            self.assert_codec_matches_oracle(msg)
+            actual = prepare_cloud(msg)
+            oracle = normalize_cloud(msg)
+            self.assertEqual(actual.data, b''.join(POINT.pack(*p) for p in oracle.points))
+            for remove in [('ring',), ('intensity',), ('ring', 'intensity')]:
+                subset = copy.deepcopy(msg)
+                subset.fields = [f for f in subset.fields if f.name not in remove]
+                self.assert_codec_matches_oracle(subset)
+
+    def test_numpy_oracle_all_scalar_datatypes_and_time_scaling(self):
+        formats = {1: 'b', 2: 'B', 3: 'h', 4: 'H', 5: 'i', 6: 'I', 7: 'f', 8: 'd'}
+        for datatype, fmt in formats.items():
+            for endian in ('<', '>'):
+                fields = [NS(name=n, offset=i*8, datatype=datatype, count=1)
+                          for i, n in enumerate(('x', 'y', 'z', 'intensity', 'ring', 'ticks'))]
+                values = [(2, 3, 4, 5, 6, 20), (7, 8, 9, 10, 11, 10)]
+                data = bytearray(96)
+                for i, row in enumerate(values):
+                    for j, value in enumerate(row):
+                        struct.pack_into(endian+fmt, data, i*48+j*8, value)
+                msg = NS(header=cloud().header, width=2, height=1, point_step=48,
+                         row_step=96, fields=fields, data=data, is_bigendian=endian == '>')
+                self.assert_codec_matches_oracle(msg, CloudOptions(time_field='ticks', point_time_scale=.001))
+        absolute = cloud([(1., 2., 3., 5., 1, 1.+.01), (2., 3., 4., 6., 2, 1.+.02)], ns=NS_PER_SEC)
+        self.assert_codec_matches_oracle(absolute, CloudOptions(point_time_is_absolute=True))
+
+    def test_numpy_oracle_rejection_on_invalid_coordinates_times_and_metadata(self):
+        invalid = []
+        for t in (-.01, .21, float('nan'), float('inf')):
+            invalid.append(cloud([(1., 2., 3., 4., 1, .01), (float('nan'), 2., 3., float('nan'), 2, t)]))
+        for intensity in (float('nan'), float('inf')):
+            invalid.append(cloud([(1., 2., 3., intensity, 1, .01), (2., 3., 4., 5., 2, .02)]))
+        # Noninteger or out-of-range ring in a floating-point field.
+        for ring in (.5, -1., 65536., float('inf')):
+            msg = cloud()
+            next(f for f in msg.fields if f.name == 'ring').datatype = 8
+            msg.data = bytearray(msg.data)
+            struct.pack_into('<d', msg.data, 8, ring)
+            invalid.append(msg)
+        for mutation in ('duplicate', 'missing', 'count', 'offset', 'short', 'stride'):
+            msg = cloud()
+            if mutation == 'duplicate': msg.fields.append(copy.deepcopy(msg.fields[0]))
+            if mutation == 'missing': msg.fields = [f for f in msg.fields if f.name != 'time']
+            if mutation == 'count': msg.fields[0].count = 2
+            if mutation == 'offset': msg.fields[0].offset = 47
+            if mutation == 'short': msg.data = msg.data[:10]
+            if mutation == 'stride': msg.row_step = 1
+            invalid.append(msg)
+        for msg in invalid:
+            for implementation in (normalize_cloud, normalize_cloud_numpy):
+                with self.assertRaises(InvalidSensorData):
+                    implementation(msg)
+
+    def test_numpy_prepare_matches_scalar_bytes_range_boundaries(self):
+        rng = np.random.default_rng(11)
+        points = []
+        for limit in (.2, 30.):
+            for _ in range(100):
+                xyz = rng.normal(size=3)
+                xyz *= limit / math.hypot(*xyz)
+                for scale in (np.nextafter(1., 0.), 1., np.nextafter(1., 2.)):
+                    points.append((*tuple(xyz * scale), 50., 3, .1 * len(points) / 1000))
+        points += [(float('nan'), 1., 2., float('nan'), 0, .15)]
+        msg = cloud(points)
+        scalar = normalize_cloud(msg)
+        keep = [p for p in scalar.points if .2 <= math.hypot(*p[:3]) <= 30.]
+        result = prepare_cloud(msg)
+        self.assertEqual(result.data, b''.join(POINT.pack(*p) for p in keep))
+        self.assertEqual(result.dropped_range, len(scalar.points)-len(keep))
+        self.assertEqual(result.dropped_coordinates, 1)
+
     def test_cloud_padding_endian_named_fields_and_canonical_layout(self):
         for endian in ('<', '>'):
             msg = cloud(endian=endian)

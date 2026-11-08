@@ -9,6 +9,8 @@ from dataclasses import dataclass
 import math
 import struct
 
+import numpy as np
+
 
 # sensor_msgs/msg/PointField datatype values.
 FIELD_FORMATS = {
@@ -152,6 +154,88 @@ def normalize_cloud(msg, options=CloudOptions()):
             'all point timestamps are identical; a scan needs actual acquisition times')
     if not ordered:
         points.sort(key=lambda point: point[-1])
+    return NormalizedCloud(points, dropped_coordinates, not ordered)
+
+
+def normalize_cloud_numpy(msg, options=CloudOptions()):
+    """Vectorized equivalent of :func:`normalize_cloud`, retained as its oracle.
+
+    ``points`` is an N-by-6 float64 array in the same canonical column order.
+    Float64 intermediate calculations match the scalar decoder's Python floats;
+    only the downstream canonical serialization rounds to float32. All timing
+    is checked before removing invalid coordinates. Padding is never a point.
+    """
+    width, height = int(msg.width), int(msg.height)
+    point_step, row_step = int(msg.point_step), int(msg.row_step)
+    if width <= 0 or height <= 0:
+        raise InvalidSensorData('empty point cloud')
+    if point_step <= 0 or row_step < width * point_step:
+        raise InvalidSensorData('invalid PointCloud2 point_step/row_step')
+    data = memoryview(msg.data)
+    required_size = (height - 1) * row_step + width * point_step
+    if len(data) < required_size:
+        raise InvalidSensorData('PointCloud2 data is shorter than declared dimensions')
+    fields = {}
+    for field in msg.fields:
+        if field.name in fields:
+            raise InvalidSensorData(f'duplicate field {field.name!r}')
+        fields[field.name] = field
+    for name in ('x', 'y', 'z', options.time_field):
+        if name not in fields:
+            raise InvalidSensorData(
+                f'missing required field {name!r}; genuine per-point timing is required')
+    numpy_formats = {1: 'i1', 2: 'u1', 3: 'i2', 4: 'u2',
+                     5: 'i4', 6: 'u4', 7: 'f4', 8: 'f8'}
+    endian = '>' if msg.is_bigendian else '<'
+    names, formats, offsets = [], [], []
+    for name in ('x', 'y', 'z', 'intensity', 'ring', options.time_field):
+        field = fields.get(name)
+        if field is None:
+            continue
+        if field.datatype not in FIELD_FORMATS or field.count != 1:
+            raise InvalidSensorData(f'field {name!r} must have a supported scalar datatype')
+        dtype = np.dtype(endian + numpy_formats[field.datatype])
+        if field.offset < 0 or field.offset + dtype.itemsize > point_step:
+            raise InvalidSensorData(f'field {name!r} lies outside point_step')
+        names.append(name)
+        formats.append(dtype)
+        offsets.append(field.offset)
+    dtype = np.dtype(dict(names=names, formats=formats, offsets=offsets, itemsize=point_step))
+    records = np.ndarray((height, width), dtype=dtype, buffer=data,
+                         strides=(row_step, point_step))
+    # C-order flattening preserves row/column order even for padded rows.
+    values = {name: records[name].astype(np.float64).reshape(-1) for name in names}
+    header_sec = stamp_nanoseconds(msg.header.stamp) / NANOSECONDS_PER_SECOND
+    with np.errstate(over='ignore', invalid='ignore'):
+        times = values[options.time_field] * options.point_time_scale
+        if options.point_time_is_absolute:
+            times -= header_sec
+    if np.any(~np.isfinite(times) | (times < 0.0)):
+        raise InvalidSensorData('per-point time must be finite and nonnegative')
+    if np.any(times > options.max_scan_duration_sec):
+        invalid_time = times[times > options.max_scan_duration_sec][0]
+        raise InvalidSensorData(
+            f'point offset {invalid_time:.6g}s exceeds max_scan_duration_sec; '
+            'check time field, units and header reference')
+    xyz = np.column_stack([values[name] for name in ('x', 'y', 'z')])
+    valid = np.all(np.isfinite(xyz) & (np.abs(xyz) <= FLOAT32_MAX), axis=1)
+    dropped_coordinates = int(np.count_nonzero(~valid))
+    if not np.any(valid):
+        raise InvalidSensorData('point cloud has no finite coordinates')
+    # Match the oracle: intensity/ring on a discarded coordinate are ignored.
+    intensity = values.get('intensity', np.zeros(len(times)))[valid]
+    ring = values.get('ring', np.zeros(len(times)))[valid]
+    if np.any(~np.isfinite(intensity) | (np.abs(intensity) > FLOAT32_MAX)):
+        raise InvalidSensorData('intensity cannot be represented as finite float32')
+    if np.any(~np.isfinite(ring) | (ring != np.trunc(ring)) | (ring < 0) | (ring > 65535)):
+        raise InvalidSensorData('ring must be an integer in [0, 65535]')
+    if width * height > 1 and np.max(times) <= np.min(times):
+        raise InvalidSensorData(
+            'all point timestamps are identical; a scan needs actual acquisition times')
+    points = np.column_stack((xyz[valid], intensity, ring, times[valid]))
+    ordered = bool(np.all(points[1:, 5] >= points[:-1, 5]))
+    if not ordered:
+        points = points[np.argsort(points[:, 5], kind='stable')]
     return NormalizedCloud(points, dropped_coordinates, not ordered)
 
 

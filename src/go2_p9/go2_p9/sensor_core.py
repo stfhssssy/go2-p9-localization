@@ -6,7 +6,9 @@ from dataclasses import dataclass
 import math
 import struct
 
-from .cloud_codec import (CloudOptions, InvalidSensorData, normalize_cloud,
+import numpy as np
+
+from .cloud_codec import (CloudOptions, InvalidSensorData, normalize_cloud_numpy,
                           stamp_nanoseconds, validate_imu)
 
 NS_PER_SEC = 1_000_000_000
@@ -14,6 +16,9 @@ POINT_STEP = 32
 POINT = struct.Struct('<fff4xfH2xf4x')
 FIELD_SPECS = (('x', 0, 7), ('y', 4, 7), ('z', 8, 7),
                ('intensity', 16, 7), ('ring', 20, 4), ('time', 24, 7))
+POINT_DTYPE = np.dtype(dict(names=['x', 'y', 'z', 'intensity', 'ring', 'time'],
+    formats=['<f4', '<f4', '<f4', '<f4', '<u2', '<f4'],
+    offsets=[0, 4, 8, 16, 20, 24], itemsize=POINT_STEP))
 
 
 @dataclass(frozen=True)
@@ -76,22 +81,30 @@ def prepare_cloud(msg, previous_stamp_ns=None, options=None):
     shifted = stamp + options.cloud_offset_ns
     if not 0 <= shifted < 2_147_483_648 * NS_PER_SEC:
         raise InvalidSensorData('shifted cloud header is outside ROS Time range')
-    normalized = normalize_cloud(msg, CloudOptions(
+    normalized = normalize_cloud_numpy(msg, CloudOptions(
         time_field=options.point_time_field, point_time_scale=options.point_time_scale,
         max_scan_duration_sec=options.max_scan_duration_sec))
-    points = [p for p in normalized.points
-              if options.min_range <= math.hypot(p[0], p[1], p[2]) <= options.max_range]
-    if not points:
+    points = normalized.points
+    ranges = np.hypot.reduce(points[:, :3], axis=1)
+    # NumPy's reduction can differ by a few ulps from math.hypot. Preserve the
+    # original inclusive range decisions at either configured boundary.
+    edge = ((np.abs(ranges - options.min_range) <= 8 * np.spacing(options.min_range))
+            | (np.abs(ranges - options.max_range) <= 8 * np.spacing(options.max_range)))
+    for index in np.flatnonzero(edge):
+        ranges[index] = math.hypot(*points[index, :3])
+    points = points[(ranges >= options.min_range) & (ranges <= options.max_range)]
+    if len(points) == 0:
         raise InvalidSensorData('no points remain in the configured range')
-    data = bytearray(len(points) * POINT_STEP)
-    for index, point in enumerate(points):
-        POINT.pack_into(data, index * POINT_STEP, *point)
+    # Zero-initialization also preserves all canonical PCL alignment padding.
+    data = np.zeros(len(points), dtype=POINT_DTYPE)
+    for column, name in enumerate(POINT_DTYPE.names):
+        data[name] = points[:, column]
     header = copy.deepcopy(msg.header)
     header.stamp.sec, header.stamp.nanosec = divmod(shifted, NS_PER_SEC)
-    return PreparedCloud(header, bytes(data), len(points), stamp, shifted,
+    return PreparedCloud(header, data.tobytes(), len(points), stamp, shifted,
                          int(msg.width) * int(msg.height), normalized.dropped_coordinates,
                          len(normalized.points) - len(points), normalized.sorted_by_time,
-                         points[0][-1], points[-1][-1])
+                         float(points[0][-1]), float(points[-1][-1]))
 
 
 def validate_merged_imu(msg, previous_stamp_ns=None, frame='camera_imu_optical_frame'):
