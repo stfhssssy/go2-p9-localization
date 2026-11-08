@@ -1,0 +1,265 @@
+"""Sensor contracts without ROS, a network, or access to recorded data."""
+import copy
+from pathlib import Path
+import struct
+import sys
+from types import SimpleNamespace as NS
+import unittest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src/go2_p9'))
+from go2_p9.sensor_core import (  # noqa: E402
+    AccelSample, AdapterOptions, FIELD_SPECS, IdentityFrameGraph, InvalidSensorData,
+    NS_PER_SEC, POINT, POINT_STEP, RawImuInterpolator, check_live_age,
+    clock_relation, interpolate_acceleration, prepare_cloud, validate_merged_imu)
+
+
+EPOCH = 1_793_245_181_931_124_536
+
+
+def stamp(ns):
+    sec, nanosec = divmod(ns, NS_PER_SEC)
+    return NS(sec=sec, nanosec=nanosec)
+
+
+def imu(ns=EPOCH, frame='camera_imu_optical_frame', acceleration=(.3, -9.65, .7)):
+    return NS(header=NS(frame_id=frame, stamp=stamp(ns)),
+              angular_velocity=NS(x=.11, y=-.22, z=.33),
+              linear_acceleration=NS(**dict(zip('xyz', acceleration))),
+              orientation=NS(x=0., y=0., z=0., w=0.),
+              orientation_covariance=[-1.] + [0.]*8,
+              angular_velocity_covariance=[.02, 0., 0., 0., .02, 0., 0., 0., .02],
+              linear_acceleration_covariance=[.01, 0., 0., 0., .01, 0., 0., 0., .01])
+
+
+def cloud(points=None, endian='<', padding=11, ns=EPOCH, time_field='time'):
+    points = points or [(1., 2., -3., 42., 7, .02), (2., 0., 0., 43., 8, .01)]
+    fields = [(time_field, 0, 8, 'd'), ('ring', 8, 2, 'B'), ('x', 16, 8, 'd'),
+              ('z', 24, 8, 'd'), ('intensity', 32, 7, 'f'), ('y', 40, 8, 'd')]
+    stride = 48 + padding
+    data = bytearray(stride*len(points))
+    for index, point in enumerate(points):
+        values = dict(zip(('x', 'y', 'z', 'intensity', 'ring', time_field), point))
+        for name, offset, _, fmt in fields:
+            struct.pack_into(endian+fmt, data, index*stride+offset, values[name])
+    return NS(header=NS(frame_id='utlidar_lidar', stamp=stamp(ns)), width=1,
+              height=len(points), fields=[NS(name=n, offset=o, datatype=d, count=1)
+                  for n, o, d, _ in fields], point_step=48, row_step=stride,
+              is_bigendian=endian == '>', data=bytes(data))
+
+
+def graph():
+    result = IdentityFrameGraph()
+    # Common optical transform may be nonidentity in the body, but relative
+    # accel/gyro/merged transformations must all be identity.
+    result.add('camera_link', 'optical', (.1, .2, .3), (-.5, .5, -.5, .5))
+    for frame in ('camera_accel_optical_frame', 'camera_gyro_optical_frame', 'camera_imu_optical_frame'):
+        result.add('optical', frame, (0., 0., 0.), (0., 0., 0., 1.))
+    return result
+
+
+def gyro(ns, **kwargs):
+    result = imu(ns, 'camera_gyro_optical_frame', **kwargs)
+    result.linear_acceleration_covariance[0] = -1.
+    return result
+
+
+def accel(ns, values=(0., 0., 9.81)):
+    result = imu(ns, 'camera_accel_optical_frame', acceleration=values)
+    result.angular_velocity_covariance[0] = -1.
+    return result
+
+
+class SensorCoreTests(unittest.TestCase):
+    def test_cloud_padding_endian_named_fields_and_canonical_layout(self):
+        for endian in ('<', '>'):
+            msg = cloud(endian=endian)
+            before = copy.deepcopy(msg)
+            out = prepare_cloud(msg)
+            a, b = [POINT.unpack_from(out.data, i*POINT_STEP) for i in range(2)]
+            self.assertEqual(a[:5], (2., 0., 0., 43., 8))
+            self.assertEqual(b[:5], (1., 2., -3., 42., 7))
+            self.assertAlmostEqual(a[5], .01)
+            self.assertTrue(out.sorted_by_time)
+            self.assertEqual(msg, before)
+            self.assertEqual(out.output_stamp_ns, EPOCH)
+            self.assertEqual(out.header.frame_id, msg.header.frame_id)
+        self.assertEqual(POINT_STEP, 32)
+        self.assertEqual(POINT.size, 32)
+        self.assertIn(('time', 24, 7), FIELD_SPECS)
+
+    def test_only_explicit_cloud_offset_and_time_unit_conversion(self):
+        msg = cloud([(1., 0., 0., 1., 2, 20.), (2., 0., 0., 3., 4, 10.)], time_field='t_ms')
+        options = AdapterOptions(clock_offset_sec=-1.123456789,
+                                 point_time_field='t_ms', point_time_scale=.001)
+        out = prepare_cloud(msg, options=options)
+        self.assertEqual(out.output_stamp_ns, EPOCH-1_123_456_789)
+        self.assertAlmostEqual(POINT.unpack_from(out.data)[5], .01)
+        self.assertEqual(msg.header.stamp, stamp(EPOCH))
+        for offset in (-3., 3.):
+            edge = cloud(ns=0 if offset < 0 else 2_147_483_647*NS_PER_SEC)
+            with self.assertRaises(InvalidSensorData):
+                prepare_cloud(edge, options=AdapterOptions(clock_offset_sec=offset))
+        with self.assertRaises(ValueError):
+            AdapterOptions(clock_offset_sec=1e308)
+
+    def test_cloud_timing_and_monotonicity_fail_closed(self):
+        msg = cloud()
+        msg.fields = [f for f in msg.fields if f.name != 'time']
+        with self.assertRaisesRegex(InvalidSensorData, 'missing required'):
+            prepare_cloud(msg)
+        for pair in [(0., 0.), (-.01, .02), (.01, float('nan')), (.01, .3)]:
+            with self.assertRaises(InvalidSensorData):
+                prepare_cloud(cloud([(1., 0., 0., 1., 0, pair[0]), (1., 0., 0., 1., 0, pair[1])]))
+        for previous in (EPOCH, EPOCH+1):
+            with self.assertRaisesRegex(InvalidSensorData, 'duplicate or backward'):
+                prepare_cloud(cloud(), previous)
+        self.assertEqual(prepare_cloud(cloud(), EPOCH-1).input_stamp_ns, EPOCH)
+
+    def test_range_counts_and_bad_coordinates(self):
+        points = [(0., 0., 0., 1., 0, 0.), (.2, 0., 0., 1., 0, .01),
+                  (30., 0., 0., 1., 0, .02), (31., 0., 0., 1., 0, .03),
+                  (float('nan'), 0., 0., 1., 0, .04)]
+        out = prepare_cloud(cloud(points))
+        self.assertEqual((out.input_points, out.width, out.dropped_range, out.dropped_coordinates), (5, 2, 2, 1))
+        # A no-return point still cannot hide invalid timing.
+        points[-1] = (float('nan'), 0., 0., 1., 0, -.01)
+        with self.assertRaises(InvalidSensorData):
+            prepare_cloud(cloud(points))
+
+    def test_merged_payload_stays_exact_and_frames_cannot_be_relabelled(self):
+        msg, original = imu(), imu()
+        self.assertEqual(validate_merged_imu(msg), EPOCH)
+        self.assertEqual(msg, original)
+        for previous in (EPOCH, EPOCH+1):
+            with self.assertRaises(InvalidSensorData):
+                validate_merged_imu(msg, previous)
+        msg.header.frame_id = 'camera_imu_frame'
+        with self.assertRaises(InvalidSensorData):
+            validate_merged_imu(msg)
+        msg = cloud()
+        msg.header.frame_id = 'odom'
+        with self.assertRaises(InvalidSensorData):
+            prepare_cloud(msg)
+        for attribute in ('angular_velocity', 'linear_acceleration', 'orientation'):
+            msg = imu()
+            getattr(msg, attribute).x = float('nan')
+            with self.assertRaises(InvalidSensorData):
+                validate_merged_imu(msg)
+
+    def test_ns_interpolation_exact_hits_long_gap_and_no_extrapolation(self):
+        cov = (.01, 0., 0., 0., .01, 0., 0., 0., .01)
+        samples = [AccelSample(EPOCH, (0., 2., 9.), cov),
+                   AccelSample(EPOCH+7, (7., 9., 16.), cov)]
+        value, returned_cov, gap = interpolate_acceleration(samples, EPOCH+3, 10)
+        self.assertEqual(value, (3., 5., 12.))
+        self.assertEqual(returned_cov, cov)
+        self.assertEqual(gap, 7)
+        # A measured exact endpoint does not need an adjacent short bracket.
+        self.assertEqual(interpolate_acceleration(samples, EPOCH+7, 1)[0], (7., 9., 16.))
+        for target, limit in [(EPOCH-1, 10), (EPOCH+8, 10), (EPOCH+3, 6)]:
+            with self.assertRaises(InvalidSensorData):
+                interpolate_acceleration(samples, target, limit)
+        with self.assertRaises(InvalidSensorData):
+            interpolate_acceleration(samples[::-1], EPOCH+3, 10)
+        with self.assertRaises(InvalidSensorData):
+            AccelSample(EPOCH, (0., float('nan'), 9.), cov)
+        with self.assertRaises(InvalidSensorData):
+            AccelSample(EPOCH, (0., 0., 9.), (-1.,) + cov[1:])
+
+    def test_raw_merger_waits_for_right_sample_and_preserves_gyro(self):
+        merger = RawImuInterpolator(frame_graph=graph())
+        start = EPOCH
+        self.assertEqual(merger.push_accel(accel(start, (0., 1., 2.)), 0.), [])
+        original = gyro(start+5_000_000)
+        before = copy.deepcopy(original)
+        self.assertEqual(merger.push_gyro(original, .001), [])
+        result = merger.push_accel(accel(start+10_000_000, (10., 11., 12.)), .002)
+        self.assertEqual(len(result), 1)
+        out = result[0]
+        self.assertEqual((out.linear_acceleration.x, out.linear_acceleration.y, out.linear_acceleration.z), (5., 6., 7.))
+        self.assertEqual(out.angular_velocity, before.angular_velocity)
+        self.assertEqual(out.angular_velocity_covariance, before.angular_velocity_covariance)
+        self.assertEqual(out.orientation, before.orientation)
+        self.assertEqual(out.orientation_covariance, before.orientation_covariance)
+        self.assertEqual(out.header.stamp, before.header.stamp)
+        self.assertEqual(out.header.frame_id, 'camera_imu_optical_frame')
+        self.assertEqual(original, before)
+        self.assertEqual(merger.max_used_bracket_ns, 10_000_000)
+
+    def test_raw_boundaries_drop_gap_and_precoverage_without_extrapolation(self):
+        merger = RawImuInterpolator(frame_graph=graph())
+        merger.push_gyro(gyro(EPOCH-1), 0.)
+        self.assertEqual(merger.push_accel(accel(EPOCH), .001), [])
+        self.assertEqual(merger.counts['gyro_dropped_no_left_sample'], 1)
+        exact = merger.push_gyro(gyro(EPOCH), .002)
+        self.assertEqual(len(exact), 1)
+        merger.push_gyro(gyro(EPOCH+20_000_000), .003)
+        self.assertEqual(merger.push_accel(accel(EPOCH+40_000_000), .004), [])
+        self.assertEqual(merger.counts['gyro_dropped_accel_gap'], 1)
+        # Still accept the measured right endpoint after a too-long gap.
+        self.assertEqual(len(merger.push_gyro(gyro(EPOCH+40_000_000), .005)), 1)
+        for msg in (gyro(EPOCH+40_000_000), gyro(EPOCH+30_000_000)):
+            with self.assertRaises(InvalidSensorData):
+                merger.push_gyro(msg, .006)
+        with self.assertRaises(InvalidSensorData):
+            merger.push_accel(accel(EPOCH), .007)
+
+    def test_raw_queues_bounded_and_pending_gyro_expires(self):
+        merger = RawImuInterpolator(frame_graph=graph(), queue_size=2, pending_timeout_sec=.1)
+        for i in range(5):
+            merger.push_gyro(gyro(EPOCH+i), .001*i)
+        self.assertEqual(len(merger.gyros), 2)
+        self.assertEqual(merger.counts['gyro_dropped_queue'], 3)
+        merger.expire(.2)
+        self.assertEqual(len(merger.gyros), 0)
+        self.assertEqual(merger.counts['gyro_dropped_stale'], 2)
+        for i in range(5):
+            merger.push_accel(accel(EPOCH+i), .21+i*.001)
+        self.assertEqual(len(merger.accels), 2)
+        self.assertEqual(merger.counts['accel_evicted_queue'], 3)
+
+    def test_raw_component_validation_does_not_require_unmeasured_component(self):
+        merger = RawImuInterpolator(frame_graph=graph())
+        message = accel(EPOCH)
+        message.angular_velocity.x = float('nan')
+        merger.push_accel(message, 0.)
+        message = gyro(EPOCH)
+        message.linear_acceleration.x = float('nan')
+        output = merger.push_gyro(message, .001)[0]
+        self.assertEqual(output.linear_acceleration.z, 9.81)
+        self.assertEqual(validate_merged_imu(output), EPOCH)
+        message = accel(EPOCH+1)
+        message.linear_acceleration_covariance[0] = -1.
+        with self.assertRaises(InvalidSensorData):
+            merger.push_accel(message, .002)
+
+    def test_static_frame_identity_required_nonidentity_conflicts_fail_closed(self):
+        with self.assertRaisesRegex(InvalidSensorData, 'unavailable'):
+            RawImuInterpolator().push_gyro(gyro(EPOCH), 0.)
+        g = graph()
+        g.require_identity('camera_gyro_optical_frame', 'camera_imu_optical_frame')
+        # Quaternion signs are equivalent; duplicate static replay is harmless.
+        g.add('optical', 'camera_imu_optical_frame', (0., 0., 0.), (0., 0., 0., -1.))
+        for translation, rotation in [((.01, 0., 0.), (0., 0., 0., 1.)), ((0., 0., 0.), (1., 0., 0., 0.))]:
+            other = IdentityFrameGraph()
+            other.add('root', 'a', translation, rotation)
+            other.add('root', 'b', (0., 0., 0.), (0., 0., 0., 1.))
+            with self.assertRaisesRegex(InvalidSensorData, 'not co-located'):
+                other.require_identity('a', 'b')
+        with self.assertRaisesRegex(InvalidSensorData, 'conflicting'):
+            g.add('optical', 'camera_imu_optical_frame', (.01, 0., 0.), (0., 0., 0., 1.))
+        with self.assertRaises(InvalidSensorData):
+            g.require_identity('camera_gyro_optical_frame', 'camera_imu_optical_frame')
+
+    def test_live_age_guard_and_cross_sensor_clock_diagnostics(self):
+        check_live_age(EPOCH, EPOCH+100_000_000, 1., .1)
+        for now in (0, EPOCH+2*NS_PER_SEC, EPOCH-NS_PER_SEC):
+            with self.assertRaises(InvalidSensorData):
+                check_live_age(EPOCH, now, 1., .1)
+        self.assertFalse(clock_relation(None, EPOCH, .5)['available'])
+        self.assertFalse(clock_relation(EPOCH+100_000_000, EPOCH, .5)['mismatch'])
+        self.assertTrue(clock_relation(EPOCH+2*NS_PER_SEC, EPOCH, .5)['mismatch'])
+
+
+if __name__ == '__main__':
+    unittest.main()

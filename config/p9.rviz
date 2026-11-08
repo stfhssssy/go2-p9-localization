@@ -1,0 +1,100 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Background Color: 28; 31; 36
+    Fixed Frame: camera_init
+    Frame Rate: 10
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid (1 m)
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 30
+      Reference Frame: <Fixed Frame>
+    - Class: rviz_default_plugins/PointCloud2
+      Name: P9 registered geometry (5 cm voxels)
+      Enabled: true
+      Topic:
+        Value: /p9/map
+        Reliability Policy: Reliable
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Depth: 1
+      Position Transformer: XYZ
+      Color Transformer: AxisColor
+      Axis: Z
+      Autocompute Value Bounds: false
+      Min Value: -0.1
+      Max Value: 1.5
+      Use rainbow: true
+      Decay Time: 0
+      Size (Pixels): 2
+      Size (m): 0.05
+      Style: Points
+      Alpha: 1
+      Use Fixed Frame: true
+    - Class: rviz_default_plugins/Path
+      Name: Point-LIO native IMU trajectory (not base_link)
+      Enabled: true
+      Topic:
+        Value: /p9/path
+        Reliability Policy: Reliable
+        Durability Policy: Transient Local
+        History Policy: Keep Last
+        Depth: 1
+      Buffer Length: 1
+      Color: 255; 190; 30
+      Line Style: Billboards
+      Line Width: 0.025
+      Alpha: 1
+    - Class: rviz_default_plugins/Axes
+      Name: Native estimated IMU origin
+      Enabled: true
+      Reference Frame: aft_mapped
+      Length: 0.3
+      Radius: 0.02
+    - Class: rviz_default_plugins/PointCloud2
+      Name: Zhang terrain (optional, relative elevation)
+      Enabled: false
+      Topic:
+        Value: /terrain_map
+        Reliability Policy: Reliable
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Depth: 1
+      Position Transformer: XYZ
+      Color Transformer: Intensity
+      Channel Name: intensity
+      Autocompute Intensity Bounds: false
+      Min Intensity: 0
+      Max Intensity: 1.5
+      Use rainbow: true
+      Decay Time: 0
+      Size (Pixels): 2
+      Style: Points
+      Alpha: 1
+      Use Fixed Frame: true
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Target Frame: camera_init
+      Distance: 12
+      Pitch: 1.05
+      Yaw: 0.7
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+Window Geometry:
+  Width: 1400
+  Height: 900

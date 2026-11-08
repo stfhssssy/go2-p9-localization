@@ -1,0 +1,13 @@
+.git
+**/__pycache__
+.pytest_cache
+build
+install
+log
+dist
+run-output
+*.tar*
+*.db3
+*.mcap
+.env
+robot.yaml

@@ -1,0 +1,13 @@
+# Synthetic test only, not physical robot calibration.
+version: 1
+calibration:
+  status: synthetic
+  rotation: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
+  translation: [0.0, 0.0, 0.0]
+sensor:
+  input_cloud_topic: /utlidar/cloud
+  input_imu_topic: /camera/camera/imu
+  imu_mode: merged_linear
+  clock_offset_sec: 0.0
+mapping:
+  publish_terrain_inputs: false

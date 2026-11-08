@@ -1,0 +1,21 @@
+# Frozen localization prepared bag profile. NOT a generic live or other-bag time offset.
+version: 1
+calibration:
+  status: experimental
+  note: Rotation fitted on another public bag; translation remains unknown and assumed zero.
+  rotation: [0.8355866054446094, 0.5483605551895937, -0.03310175695815267, -0.11474335096813629, 0.23313628860067767, 0.9656507828123501, 0.5372420201456313, -0.8030866531387898, 0.25772628763899647]
+  translation: [0.0, 0.0, 0.0]
+sensor:
+  input_cloud_topic: /utlidar/cloud
+  input_imu_topic: /camera/camera/imu
+  imu_mode: merged_linear  # already linearly interpolated derived bag
+  cloud_frame: utlidar_lidar
+  imu_frame: camera_imu_optical_frame
+  clock_offset_sec: 2167.645092767
+  point_time_field: time
+  point_time_scale: 1.0
+mapping:
+  voxel_size: 0.05
+  publish_terrain_inputs: false
+  publish_base_frame: false
+  publish_map_alias: false

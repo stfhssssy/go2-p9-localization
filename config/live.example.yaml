@@ -1,0 +1,23 @@
+# Copy this file and enter this robot's LiDAR -> camera IMU transform.
+# This template deliberately does not assert that the historical bag rotation is calibrated.
+version: 1
+calibration:
+  status: uncalibrated
+  rotation: null
+  translation: null
+sensor:
+  input_cloud_topic: /utlidar/cloud
+  input_imu_topic: /camera/camera/imu
+  imu_mode: merged_linear  # host RealSense unite_imu_method=2
+  cloud_frame: utlidar_lidar
+  imu_frame: camera_imu_optical_frame
+  clock_offset_sec: 0.0  # added to cloud headers only; verify physical clock agreement
+  point_time_field: time
+  point_time_scale: 1.0
+  min_range: 0.2
+  max_range: 30.0
+mapping:
+  voxel_size: 0.05
+  publish_terrain_inputs: false
+  publish_base_frame: false
+  publish_map_alias: false

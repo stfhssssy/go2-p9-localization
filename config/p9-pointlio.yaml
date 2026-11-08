@@ -1,0 +1,78 @@
+# Camera-linear diagnostic profile; fitted R, unknown T=0.
+# Target Point-LIO uses gravity alignment and fixed initial gravity magnitude 9.81.
+/**:
+  ros__parameters:
+    use_imu_as_input: false
+    prop_at_freq_of_imu: true
+    check_satu: true
+    init_map_size: 10
+    point_filter_num: 1
+    space_down_sample: true
+    filter_size_surf: 0.1
+    filter_size_map: 0.1
+    cube_side_length: 200.0
+    common:
+      lid_topic: /p9/points
+      imu_topic: /p9/imu
+      con_frame: false
+      cut_frame: false
+      time_lag_imu_to_lidar: 0.0
+    preprocess:
+      lidar_type: 5
+      timestamp_unit: 0
+      scan_line: 18
+      blind: 0.2
+    mapping:
+      imu_en: true
+      start_in_aggressive_motion: false
+      extrinsic_est_en: false
+      imu_time_inte: 0.005
+      acc_cov_output: 500.0
+      gyr_cov_output: 1000.0
+      imu_meas_omg_cov: 0.01
+      acc_norm: 9.81
+      satu_acc: 30.0
+      satu_gyro: 35.0
+      lidar_meas_cov: 0.01
+      acc_cov_input: 0.01
+      gyr_cov_input: 0.001
+      b_acc_cov: 0.0001
+      b_gyr_cov: 0.0001
+      plane_thr: 0.1
+      match_s: 81.0
+      fov_degree: 180.0
+      det_range: 30.0
+      gravity_align: true
+      gravity:
+      - 0.0
+      - 0.0
+      - -9.81
+      gravity_init:
+      - 0.0
+      - 0.0
+      - -9.81
+      extrinsic_T:
+      - 0.0
+      - 0.0
+      - 0.0
+      extrinsic_R:
+      - 0.8355866054446094
+      - 0.5483605551895937
+      - -0.03310175695815267
+      - -0.11474335096813629
+      - 0.23313628860067767
+      - 0.9656507828123501
+      - 0.5372420201456313
+      - -0.8030866531387898
+      - 0.25772628763899647
+    odometry:
+      publish_odometry_without_downsample: false
+    publish:
+      path_en: false
+      scan_publish_en: true
+      scan_bodyframe_pub_en: false
+    runtime_pos_log_enable: false
+    pcd_save:
+      pcd_save_en: false
+      interval: -1
+    use_sim_time: false # overridden by replay/live entrypoint

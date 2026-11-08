@@ -1,0 +1,25 @@
+/utlidar/cloud:
+  history: keep_last
+  depth: 200
+  reliability: reliable
+  durability: volatile
+/camera/camera/imu:
+  history: keep_last
+  depth: 4000
+  reliability: reliable
+  durability: volatile
+/camera/camera/gyro/sample:
+  history: keep_last
+  depth: 4000
+  reliability: reliable
+  durability: volatile
+/camera/camera/accel/sample:
+  history: keep_last
+  depth: 2000
+  reliability: reliable
+  durability: volatile
+/tf_static:
+  history: keep_last
+  depth: 100
+  reliability: reliable
+  durability: transient_local
