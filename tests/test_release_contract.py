@@ -86,6 +86,30 @@ class ReleaseContract(unittest.TestCase):
         self.assertEqual(replay["sensor"]["clock_offset_sec"], 2167.645092767)
         self.assertEqual(replay["sensor"]["imu_mode"], "merged_linear")
 
+    def test_image_contract_and_runtime_entrypoint_keep_offline_arm64_scope(self):
+        dockerfile = (ROOT / "Dockerfile").read_text()
+        entrypoint = (ROOT / "docker/entrypoint.sh").read_text()
+        self.assertRegex(dockerfile, r"(?m)^ARG BASE_IMAGE=go2-control:arm64-v4$")
+        self.assertIn("dpkg --print-architecture", dockerfile)
+        self.assertIn("= arm64", dockerfile)
+        self.assertIn("ros-jazzy-rosbag2-storage-mcap", dockerfile)
+        self.assertIn("ros-jazzy-rosbag2-storage-default-plugins", dockerfile)
+        self.assertIn("python3-yaml", dockerfile)
+        self.assertIn("python3-numpy", dockerfile)
+        self.assertIn("SAR_ROBOT_IFACE", entrypoint)
+        self.assertIn("ROS_DOMAIN_ID", entrypoint)
+        # Installation is allowed at build time, not during offline startup.
+        self.assertNotRegex(entrypoint, r"\b(?:apt(?:-get)?\s+install|pip\s+install|git\s+clone|curl\s|wget\s)")
+        self.assertNotIn("-march=native", (POINTLIO / "CMakeLists.txt").read_text())
+
+    def test_replay_static_tf_is_durable_for_raw_imu_frame_validation(self):
+        qos = yaml.safe_load((ROOT / "config/replay-qos.yaml").read_text())
+        self.assertEqual(qos['/tf_static']['durability'], 'transient_local')
+        self.assertEqual(qos['/tf_static']['reliability'], 'reliable')
+        for topic in ('/utlidar/cloud', '/camera/camera/imu',
+                      '/camera/camera/gyro/sample', '/camera/camera/accel/sample'):
+            self.assertEqual(qos[topic]['reliability'], 'reliable')
+
     def test_upstream_license_texts_and_embedded_notices_are_preserved(self):
         for relative in ("LICENSE", "include/IKFoM/LICENSE"):
             with self.subTest(file=relative):

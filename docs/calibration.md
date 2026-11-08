@@ -61,6 +61,6 @@ T_I_L = inverse(T_C_I) * inverse(T_G_C) * T_G_L
 
 `clock_offset_sec` 仅应用于 cloud header；`point_time_field` 和 `point_time_scale` 声明逐点时间。`mode=live` 检查消息年龄与未来时间（默认上限分别为 1 s 和 0.1 s）；`mode=replay` 不使用该 epoch 年龄检查。最新 cloud/IMU stamp 差超过 `clock_tolerance_sec=0.5` 会报告时钟诊断错误，这只是运行守卫，不是精密同步标定。完整参数和失败处理以发行代码为准。
 
-在线 raw 插值会增加等待，merged 模式也可能包含驱动内部等待；两者均不增加实测加速度采样数量。当前在线接口与历史离线 converter 是不同实现，需要单独测试；没有依据历史派生 bag 的成功宣称在线真机已通过。
+在线 raw 插值会增加等待，merged 模式也可能包含驱动内部等待；两者均不增加实测加速度采样数量。raw 模式保留 preceding/exact raw accel 的协方差，不据插值公式自行缩小协方差，不能据此宣称重采样噪声已标定。当前在线接口与历史离线 converter 是不同实现，需要单独测试；没有依据历史派生 bag 的成功宣称在线真机已通过。
 
 接受一组标定前，分别检查静止不同姿态下的比力、动态 gyro/acc 一致性、时间 holdout 残差、外参与杆臂效应。一次静止姿态接近 9.81 m/s² 不足以证明所有轴、符号和动态语义正确。

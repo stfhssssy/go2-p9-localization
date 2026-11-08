@@ -1,5 +1,8 @@
 """Configuration rejection/clock contracts, runnable without ROS."""
 import copy
+import ast
+import contextlib
+import io
 import os
 from pathlib import Path
 import sys
@@ -12,7 +15,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src/go2_p9"))
-from go2_p9.configuration import load
+from go2_p9.configuration import load, SENSOR_NODE_PARAMETERS, MAPPING_NODE_PARAMETERS
 
 
 class ConfigurationContract(unittest.TestCase):
@@ -101,6 +104,84 @@ class ConfigurationContract(unittest.TestCase):
         config["sensors"] = {}
         with self.assertRaisesRegex(ValueError, "Unknown config sections"):
             self.read_config(config)
+
+    def test_unknown_mode_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "mode must be"):
+            self.read_config(self.example, "Replay")
+
+    def test_unknown_node_parameters_are_rejected_before_ros_can_ignore_them(self):
+        for section, key, value in (("sensor", "clock_ofset_sec", 2167.),
+                                    ("mapping", "voxel_szie", .1),
+                                    ("calibration", "staus", "measured")):
+            with self.subTest(section=section, key=key):
+                config = copy.deepcopy(self.example)
+                config[section][key] = value
+                with self.assertRaisesRegex(ValueError, "Unknown " + section + " parameters"):
+                    self.read_config(config)
+
+    def test_sections_require_mappings(self):
+        for section in ("sensor", "mapping", "calibration"):
+            for value in (None, [], "not a mapping"):
+                with self.subTest(section=section, value=value):
+                    config = copy.deepcopy(self.example)
+                    config[section] = value
+                    with self.assertRaisesRegex(ValueError, "must be a mapping"):
+                        self.read_config(config)
+
+    def test_mode_qos_and_boolean_values_are_not_silently_coerced(self):
+        variants = [("sensor", "imu_mode", "linear"),
+                    ("sensor", "clock_offset_sec", True),
+                    ("sensor", "clock_offset_sec", "0.0"),
+                    ("mapping", "input_reliability", "best-effort"),
+                    ("mapping", "publish_base_frame", "false")]
+        for section, key, value in variants:
+            with self.subTest(section=section, key=key, value=value):
+                config = copy.deepcopy(self.example)
+                config[section][key] = value
+                with self.assertRaises(ValueError):
+                    self.read_config(config)
+
+    def test_raw_mode_and_its_options_are_accepted(self):
+        config = copy.deepcopy(self.example)
+        config['sensor'].update(imu_mode='raw_linear', gyro_topic='/raw/gyro', accel_topic='/raw/accel',
+                                raw_gyro_frame='gyro', raw_accel_frame='accel', max_accel_gap_sec=.03,
+                                raw_queue_size=4000, raw_buffer_sec=2., raw_pending_timeout_sec=2.)
+        _, sensor, _, _ = self.read_config(config, 'replay')
+        self.assertEqual(sensor['imu_mode'], 'raw_linear')
+        self.assertEqual(sensor['gyro_topic'], '/raw/gyro')
+        self.assertTrue(sensor['use_sim_time'])
+
+    def test_allowed_parameter_names_match_node_declarations_without_importing_ros(self):
+        for filename, expected in (('adapter_node.py', SENSOR_NODE_PARAMETERS),
+                                   ('mapping_node.py', MAPPING_NODE_PARAMETERS)):
+            with self.subTest(file=filename):
+                tree = ast.parse((ROOT/'src/go2_p9/go2_p9'/filename).read_text())
+                declarations = [node.value for node in ast.walk(tree)
+                                if isinstance(node, ast.Assign)
+                                and any(isinstance(t, ast.Name) and t.id == 'defaults' for t in node.targets)]
+                self.assertEqual(len(declarations), 1)
+                call = declarations[0]
+                self.assertIsInstance(call, ast.Call)
+                self.assertIsInstance(call.func, ast.Name)
+                self.assertEqual(call.func.id, 'dict')
+                self.assertEqual({keyword.arg for keyword in call.keywords}, expected)
+
+    def test_cli_refuses_any_nonempty_output_before_recording_or_launching(self):
+        from go2_p9 import cli
+        output = Path(self.temp.name) / "prior-output"
+        output.mkdir()
+        prior = output / "trajectory.csv"
+        prior.write_text("previous run\n")
+        argv = ["p9", "live", "--config", str(ROOT / "config/live-p9-experimental.yaml"),
+                "--output", str(output)]
+        with patch.object(sys, "argv", argv), patch.object(cli.os, "execvp") as execute, \
+                contextlib.redirect_stderr(io.StringIO()), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(SystemExit) as raised:
+                cli.main()
+        self.assertEqual(raised.exception.code, 2)
+        execute.assert_not_called()
+        self.assertEqual(prior.read_text(), "previous run\n")
+        self.assertFalse((output / "effective-config.json").exists())
 
 
 if __name__ == "__main__":

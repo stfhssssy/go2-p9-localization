@@ -16,3 +16,6 @@ run-output/
 robot.yaml
 src/point_lio_unilidar/Log/
 src/point_lio_unilidar/PCD/
+
+**/._*
+.DS_Store

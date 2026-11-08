@@ -47,12 +47,16 @@ ros2 launch realsense2_camera rs_launch.py \
 
 ## 实机定位
 
-先复制并审阅 `config/live.example.yaml`，填入本机话题、frame、外参、时间约定及独立输出目录。不要把录包专用的约 2167 秒偏移用于实时数据。`config/p9-pointlio.yaml` 保留历史算法参数，其存在不意味着示例外参已适用于当前机器人。参见 [标定约定](calibration.md)。
+先复制并审阅 `config/live.example.yaml`，填入本机话题、frame、外参、时间约定及独立输出目录。这个模板的旋转和平移是 `null`，未填写会拒绝启动；填写后也要如实设置 `calibration.status`。不要把录包专用的约 2167 秒偏移用于实时数据。`config/p9-pointlio.yaml` 保留历史算法参数，其存在不意味着示例外参已适用于当前机器人。参见 [标定约定](calibration.md)。
+
+另有 `config/live-p9-experimental.yaml`，显式携带历史拟合旋转、未知的 `T=[0,0,0]` 与 `clock_offset_sec=0`。选择它可启动实验，入口会提示 `experimental`；零时差同样需要当前数据验证。这是对未标定假设的显式选择，不能当作比赛机器人的已测标定。
 
 ```bash
 sar-run go2-p9:arm64 p9 diagnose
-sar-run go2-p9:arm64 p9 live --config /path/robot.yaml
+sar-run go2-p9:arm64 p9 live --config /path/robot.yaml --output /path/new-run
 ```
+
+需要交互查看时，在具有桌面的会话使用 `sar-run --gui`，给 `p9 live` 或 `p9 replay` 增加 `--rviz`。`--output` 应位于 host 已挂载目录；非空目录会拒绝使用，避免覆盖历史运行。
 
 `p9 diagnose` 默认只读，不启动估计器。`live` 的配置必须与当前传感器匹配，使用墙钟而非录包 `/clock`。启动后先静止检查输入频率、连续时间、加速度模长、Point-LIO 初始化和位姿/扫描同时间戳配对，再进行受控移动。保存本次生效参数、拒绝计数、源与输出计数、二进制哈希和地图。
 
@@ -64,12 +68,13 @@ sar-run go2-p9:arm64 p9 live --config /path/robot.yaml
 
 ```bash
 sar-run go2-p9:arm64 p9 replay \
-  --bag /path/bag --config /path/replay.yaml --rate 0.5
+  --bag /path/bag --config /path/replay.yaml --rate 0.5 \
+  --output /path/new-replay
 ```
 
 回放使用 `use_sim_time=true` 和播放器 `/clock`。它们不修正两个传感器消息头的设备时钟差。原始点云 header 若尚未修正，应按该 bag 的 manifest 加一次偏移；已修正的 bag 不得再加。相机 IMU 与点云逐点相对时间保持其声明的约定。
 
-等待播放器正常结束和队列处理完成后，在相同的运行上下文调用 `p9 save`，保留地图、轨迹与报告。输入原始计数不等于估计输出计数：初始化、输入覆盖不足、适配器拒绝和算法缺帧必须分开记录，不能把所有缺失统称初始化。新一次运行使用新输出目录。
+等待播放器正常结束和队列处理完成后，在相同的运行上下文调用 `p9 save`，保留地图、轨迹与报告。默认 EOF 后节点继续运行，便于 RViz 查看。可加 `--exit-on-finish`，在 EOF 后等待 5 秒再关闭节点并触发保存；该固定等待不是队列已经清空的证明，尤其 ARM64 上仍需检查尾部时间和计数。输入原始计数不等于估计输出计数：初始化、输入覆盖不足、适配器拒绝和算法缺帧必须分开记录，不能把所有缺失统称初始化。新一次运行使用新输出目录。
 
 ## 验收边界
 

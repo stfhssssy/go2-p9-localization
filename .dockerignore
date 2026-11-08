@@ -11,3 +11,6 @@ run-output
 *.mcap
 .env
 robot.yaml
+
+**/._*
+.DS_Store
