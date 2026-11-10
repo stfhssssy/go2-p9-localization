@@ -58,7 +58,7 @@
     "scripts/p9nav": "e79865b56957b1e9a5877fe117bbb7b1ab6d04ec5b1c5b90a07ba914e224c910",
     "scripts/smoke-live.sh": "d605a7fda2a5dcc929a74a9be750b8984731ba2a697753bc079692b08dd55c77",
     "simulation/README.txt": "c4009656fcf3d3c1d45fb8299c6b944d122df1e7b376fe5f6d2d52c9f47aed60",
-    "simulation/inside.sh": "b7da383247ea923e2057726e84105fc0ff5f327781b6f42829598359a6c84e98",
+    "simulation/inside.sh": "62753801894db6c451059b3b90059f2c11404eff530cccff6af769412c51dd62",
     "simulation/p9_sensor_adapter.py": "78f819c0cc616c370a4b3cc0862cf9448136c9d2e0e49d588a45c7276b5cc5e2",
     "simulation/prepare_runtime.py": "0993a88bfec0bec900804df63710e80a6c89ea059e1a7bfd5edd2e5da8b686b6",
     "simulation/run_simulation.py": "b7c7a32fabc46b1685c1d6835d88c52c0e191f562c6f73f19578ebe45b703658",
@@ -71,6 +71,7 @@
     "simulation/simulator.launch.py": "ba147e087a2ce8c942214b21ec7fbd0020816be87320a968c5b17cd51a465661",
     "simulation/source-provenance.json": "aa6d07051dcbd4a27244fba6d042f04f35898c73d281fe19d27c3e680e6af765",
     "simulation/test_contracts.py": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+    "simulation/test_overlay_environment.py": "516075621742fcd73e9c46bdba0c287be7a5003c0ee42de76a7b2ac28f33245a",
     "simulation/validate_navigation.py": "1b40cb65e59069daf7057a43327319cdf71c4b84e7c4fac3397194d00c92459b",
     "simulation/xwd_to_png.py": "f1efde03a8a4338132e3a1c6a7cba5a1c9d0221cc552f583628f2954d9e12636",
     "src/far_planner/CMakeLists.txt": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6",
@@ -319,7 +320,7 @@
     },
     "simulation/inside.sh": {
       "common_fix_sha256": null,
-      "release_sha256": "b7da383247ea923e2057726e84105fc0ff5f327781b6f42829598359a6c84e98",
+      "release_sha256": "62753801894db6c451059b3b90059f2c11404eff530cccff6af769412c51dd62",
       "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
     },
     "simulation/p9_sensor_adapter.py": {
@@ -380,6 +381,11 @@
     "simulation/test_contracts.py": {
       "common_fix_sha256": null,
       "release_sha256": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/test_overlay_environment.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "516075621742fcd73e9c46bdba0c287be7a5003c0ee42de76a7b2ac28f33245a",
       "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
     },
     "simulation/validate_navigation.py": {
