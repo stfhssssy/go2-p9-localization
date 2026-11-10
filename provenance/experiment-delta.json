@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "experiment": "go2-native-imu-repair-20261109",
+  "status": "experimental; not validated for deployment",
+  "base_release_revision": "42364157dd5ca0350bbbf4a749a852ad3e8ebc25",
+  "original_source_manifest_sha256": "5d3345a330e94542a0399b9e8d3311d24438d763bcee575058c2b12c44838b8d",
+  "scope": {
+    "directories": [
+      "src",
+      "config",
+      "scripts",
+      "docker"
+    ],
+    "files": [
+      "Dockerfile"
+    ],
+    "excluded_directory_names": [
+      "__pycache__"
+    ]
+  },
+  "base_files_sha256": {
+    "src/point_lio_unilidar/CMakeLists.txt": "f1af51c589d8f0e7bb53ed9851df5d451acca2fbb977159695e3d06b23931fe4",
+    "src/point_lio_unilidar/LICENSE": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "src/point_lio_unilidar/package.xml": "2921fe26b82c591014096f64eaeb33db06c637ec3cc52b407c6efffc4cc0448f",
+    "src/point_lio_unilidar/README.md": "e2f8c26da85acb8f1ac2e6a5e6c26ace777016361de838b6d50334ba19bec689",
+    "src/point_lio_unilidar/.gitignore": "27bf025903b14c7d22e5415f78b31443828f0a7ecff34a2d7e722624550282d6",
+    "src/go2_p9/package.xml": "de5e078373dfbee4deaa394efa0714835b469dc94d89bb9a3155368a81f5bff6",
+    "src/go2_p9/setup.py": "af1adf40a139bfe63b818512e6c3ed82f0a82b6d2db813820a1816b2489ad77b",
+    "src/go2_p9/setup.cfg": "b0172dfa42bb9ec955cb40ebc7d064debaf0b07c56195444b1b8083260e956e4",
+    "src/point_lio_unilidar/config/ouster64.yaml": "12219a55a4adabc778298df2248dfdf684fad25e0142f2a9491598a34bc7451f",
+    "src/point_lio_unilidar/config/horizon.yaml": "0cb4c48d71fa759e811abf4367613f9d43afca75c20aa628ab15eb41f4bff398",
+    "src/point_lio_unilidar/config/utlidar.yaml": "1af1481363341db7e46be97a08d52c2089684e44466d5c1fe7a25b5c08fadb5f",
+    "src/point_lio_unilidar/config/velody16.yaml": "8e0704fc6f01fd381ced913eff55ca5fd139b94243aabd700131d13cb1563a76",
+    "src/point_lio_unilidar/config/unilidar.yaml": "808e6ebb843409ace29073be82fc7d5359e87a833de63509452ab64cf6fdf03c",
+    "src/point_lio_unilidar/config/avia.yaml": "ed0d8e098a93623beb73270e9fc7184aa43fda020b819991c5051f9a4478970e",
+    "src/point_lio_unilidar/launch/mapping_ouster64.launch": "589e5124e914dabf3bb0d701fd716aa102e65e10f177c92ef307fd798ebb226a",
+    "src/point_lio_unilidar/launch/mapping_utlidar.launch": "df1a13bb81c603ba4ec5ce1b2570f07671df3d2625649345af708ba8e23dd3a9",
+    "src/point_lio_unilidar/launch/mapping_velody16.launch": "1ed493e861eb1bc69613e50f240ccae0d5851aa7f978567b954c4ceb715714c3",
+    "src/point_lio_unilidar/launch/mapping_unilidar.launch": "57035d422026bc1163729fefd42e0deefe643f098d170827f80b5abe8448325b",
+    "src/point_lio_unilidar/launch/gdb_debug_example.launch": "50ae9976543258f37743b3308d1a48131797c939b13c1b920e71b4c8bc64752f",
+    "src/point_lio_unilidar/launch/mapping_avia.launch": "b370e101d5361bdff7feadf5f259d1d5b253eaaa729372053d42e41dfea07304",
+    "src/point_lio_unilidar/launch/mapping_horizon.launch": "a251ff4d8a4e0930b253f87ca36998064ff93a89b6301efc79039dbeae8fd41d",
+    "src/point_lio_unilidar/include/so3_math.h": "59f15756e7b6a06c2a093b794d4e70e6e726243605c7bcfa46806a7decf91c63",
+    "src/point_lio_unilidar/include/common_lib.h": "627cef3c355bcd5278e01dd28d57d5e39cc5dd76d967d9a7f3e5ddb055f4b73b",
+    "src/point_lio_unilidar/doc/icon.png": "946561a6da9c178f1456527141cfb248d469b9f5c2a59bdbbd40c6eb66cc5d80",
+    "src/point_lio_unilidar/doc/demo.png": "f6ab2d7db54f78038d1bebdbf26d1dfc03f9be8bf4dea583a0da62c516eee325",
+    "src/point_lio_unilidar/doc/video.png": "3f3c3024bceadd24456095443b0071802f3e67530adb81f28db0ea5ec7cb0722",
+    "src/point_lio_unilidar/rviz_cfg/loam_unilidar_display.rviz": "3cdbe2c3b782fb0dc202cf43a94b0404a4dd8f45f818c8df083558fb0b80b2b8",
+    "src/point_lio_unilidar/rviz_cfg/loam_livox2.rviz": "abb3493475e6e9335c85e728b4e44df86da74fc9d3619d9b48a7081574a4ae92",
+    "src/point_lio_unilidar/rviz_cfg/.gitignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/point_lio_unilidar/rviz_cfg/loam_livox.rviz": "b75ec1de86730424f85606b18ea5bd787045cd4de198ded515b1c69d95b43b03",
+    "src/point_lio_unilidar/rviz_cfg/loam_unilidar_default.rviz": "a2efc5e373edb02f4b7a933e821f8793ce91b0b5b8180d5841e33454e15602c3",
+    "src/point_lio_unilidar/src/preprocess.h": "c572df366af1d274bdcc9650c9c24d8d69a7a808fafa37d2322a42989e7634bb",
+    "src/point_lio_unilidar/src/parameters.cpp": "39a8ef3f75da3e3a79bd2a068134e2c2796fddbd391d9aede2724ceb82470bda",
+    "src/point_lio_unilidar/src/laserMapping.cpp": "aaa6fdc595a0d162df92f87e9a226cebe6ac79d9bfcc790dce7b6a06945b2ffe",
+    "src/point_lio_unilidar/src/Estimator.cpp": "fc5615c59591f44416e3062957bfd748ce5218212f26d68ac4a2c1ef5d1a9ce5",
+    "src/point_lio_unilidar/src/Estimator.h": "65f6a11646ca9205a6e49c5ebecd5ce89e4fcf7cae8a3ce9f0888bfef2acbe6e",
+    "src/point_lio_unilidar/src/parameters.h": "0e0d4d8f3b48e279f74ae7292477d5eb076f7a88cf4b7aee5779cd7ad1ea442b",
+    "src/point_lio_unilidar/src/IMU_Processing.hpp": "1ae25097bc55e669061be2f9597c3e3e62d9d241902eca68c2b00b7c620c972c",
+    "src/point_lio_unilidar/src/preprocess.cpp": "885db240dd192c1c9c574afa98dbdb4ff8e7e88b6b602804359cd3e8779cabee",
+    "src/point_lio_unilidar/include/IKFoM/LICENSE": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "src/point_lio_unilidar/include/IKFoM/README.md": "69f46f94d72f19eb1ddeb50f2515fbc3654720e12d127df6f1bfe9545f4e8e0d",
+    "src/point_lio_unilidar/include/IKFoM/.gitignore": "3ba2020da55f76620d61950cb88f0d6cc0d5852eae7b2c03f8487a64c87da959",
+    "src/point_lio_unilidar/include/ikd-Tree/ikd_Tree.h": "bb87cab944c6c59e0be61cb0b3a2cd0e334d93dc1bf768875058857278135a4b",
+    "src/point_lio_unilidar/include/ikd-Tree/README.md": "a7f6feab008dc54a053963fb518e360389ee807af63ebddcc15e90b1ede78073",
+    "src/point_lio_unilidar/include/ikd-Tree/ikd_Tree.cpp": "ec3cbbbb6386eb6c68f9aa081c48b5d62209ada44fe167a002d4e3b112a1ea9f",
+    "src/point_lio_unilidar/include/FOV_Checker/FOV_Checker.h": "4cae4e3670211a8c85b5514c6198c5d3365897c9755172064ca60e071b79a0f4",
+    "src/point_lio_unilidar/include/FOV_Checker/FOV_Checker.cpp": "5ebbd98bdb4ad270bd0d84dba12fa98bfe58e919fe7accbe69cde6ec59f29a46",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/startIdx.hpp": "79cdc368bb4e083f5fda7549094c0aba8b599aee1f88e9f2a8b7fa785bf1f757",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/build_manifold.hpp": "fe018230140bfab649b7acdf43f2f063a64d2805a64b93438f22b676b7e23959",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/kalman_gain.hpp": "52ce454b642c7cb8e4e975a860f586fb4a421a35c85baad1bc6862fcb6f748cb",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/util.hpp": "3c4265d25ea3f8c7f586d1e34bc352e981e09e30555e42011cd23a0a147d6918",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/esekfom.hpp": "796d8f886aeaa1c679bbe9e6c260f5e87c91117df72f0dd0e480fd0ad7dd4c99",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/vect.hpp": "5bb37a64384334de1bc339519580b5a6b33af6451e0ec98964ffadbebd9e4f5f",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/SOn.hpp": "394aa660f0d9051d97fca57b1cbcea2bfa923634cc53675ee183349df71bd2a2",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/S2.hpp": "0aab85c23b151eefd88aad15d64b9df7f9f2e03c708b5413f5520f65c16c262a",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/SEn.hpp": "a6ebb8b341db1a07fc588fcec40a1f2de4dae30366f208fa10e9532f1da79226",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/wrapped_cv_mat.hpp": "3040f43fcb4195a2572a8819be012ebd2c4b59a38cfae86fcac3e01d7039a589",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/SubManifold.hpp": "96709f0f453a0c8776b1969064275ebf14dc5234b7024e68eb1cfc51a513864f",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/mtkmath.hpp": "d28e5f44f521ea7e953f35e8a974d8e4c8aa7e699c4339cb924f3efe91acbe49",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/vectview.hpp": "7855408124ea65df4423bae5f97d5104af5552318796bc6324bdbf98a45101f3",
+    "src/go2_p9/launch/go2_p9.launch.py": "eb7f761896d46b81530376f758dd77f236889ca36c20d2e4b29f1d0230a1ddaa",
+    "src/go2_p9/go2_p9/cloud_codec.py": "5a6cb00e1e55d82f79176b69fc354603ef898b3a9b7ab1a1143de9c538ff26ee",
+    "src/go2_p9/go2_p9/configuration.py": "35f25bcdd8c4463c2087ae9812b71502a15c03060cf721869e33b90e3dcc9fba",
+    "src/go2_p9/go2_p9/mapping_core.py": "0284c7f1b2b3db7ca023e3cf5adcf5d3f340b70201b9e3a594baa092f5ac711e",
+    "src/go2_p9/go2_p9/__init__.py": "1516c9a620f67f60a76b5c3f435a6ddcfcb1d5d53245dbdba600579176c123b7",
+    "src/go2_p9/go2_p9/sensor_core.py": "4fd5e58dd2818cf8441d776f8cfe4b7f003f3e14e7ede9e1d6db739d72f0f8ac",
+    "src/go2_p9/go2_p9/mapping_node.py": "9641818ea552e3389d5840c11fa8502d0e84bb8aa8638220c3618718131534ae",
+    "src/go2_p9/go2_p9/diagnose.py": "9fbc01dbd123ede932eb392f4a91f31ebfa1f80c04405e63e54f167a49abecd4",
+    "src/go2_p9/go2_p9/cli.py": "2be1bf640763a9221f093cd67a1b2a611ca1b1d3b3e17bd039c165cd2a7a6262",
+    "src/go2_p9/go2_p9/adapter_node.py": "69bcbbdf690391be4f1f808d7d4b0fec6256b76e308407248feffaf3a69d71fe",
+    "src/go2_p9/resource/go2_p9": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config/replay.example.yaml": "562db3d34a5477c147254e1dceb331fee88e661d214bfabbed7a87a72d5ff34b",
+    "config/replay-qos.yaml": "cef45258151a09b4535adcb120940fbcdd0a53f012d47ff6f534f0785ffe430a",
+    "config/live.example.yaml": "fd0e058d7bec1a8a8f6c2255fd0fe28a4e260f6e9641df681eeb4d8d6bba1cfc",
+    "config/p9-pointlio.yaml": "7e6610af1c9f0d5462f0af11928696dff3b3bd34d2c279248c38940f44cbd381",
+    "config/p9.rviz": "1558731625a49e40b38f7499f7935fd21a16564eccb80395d62bc6c863314447",
+    "config/live-p9-experimental.yaml": "aec76186f1556dc540fa1a2c1d08913b1e984a36697bd75065423ee70c404889",
+    "config/smoke.yaml": "c1ebf934cac478253e887d4bed5ae11a57b35727723993e228bb882ee6d744f8",
+    "scripts/fetch-base.py": "522e050f71cfea89f1ae6ffbe356e21f22768814b7e5da517d504e7388c686d2",
+    "scripts/smoke-live.sh": "d605a7fda2a5dcc929a74a9be750b8984731ba2a697753bc079692b08dd55c77",
+    "scripts/build-native.sh": "30888e898b3a65af6bf31b09e699a7057531df3c8b2fa2f8f74f5a3dd31aac18",
+    "scripts/p9": "8f9af8218a91b930b0db76c18fba137d7844596cc61130669d4a9e16ed165efe",
+    "docker/entrypoint.sh": "99b4627237242126d07185867f2671d5f63659e57786fbe0182c8a2dd5e1c67d",
+    "Dockerfile": "48e54adbe6325c970e3087df7561cbc9e8bbf3d5e7090577673c3738b3822738"
+  },
+  "base_inventory_sha256": "43eeb4740a4a0c2a3a4f78f15546de932b28b0f48ee7c7db0007fd9a02ddef1e",
+  "changes": {
+    "src/go2_p9/go2_p9/adapter_node.py": {
+      "original_sha256": "69bcbbdf690391be4f1f808d7d4b0fec6256b76e308407248feffaf3a69d71fe",
+      "new_sha256": "141e41142ef1904e3cd36f50c28f05508551c1faaf9ccda4396170a898a99145",
+      "reason": "Explicit native IMU mode, deterministic epoch/correction support; no inferred calibration"
+    },
+    "src/go2_p9/go2_p9/configuration.py": {
+      "original_sha256": "35f25bcdd8c4463c2087ae9812b71502a15c03060cf721869e33b90e3dcc9fba",
+      "new_sha256": "5359eeae7599918fb29348dd11192c0d0a635b7e5692e3bf80bfbf70c6973e1a",
+      "reason": "Explicit native IMU mode, deterministic epoch/correction support; no inferred calibration"
+    },
+    "src/go2_p9/go2_p9/sensor_core.py": {
+      "original_sha256": "4fd5e58dd2818cf8441d776f8cfe4b7f003f3e14e7ede9e1d6db739d72f0f8ac",
+      "new_sha256": "f3d7af65765502ab3f160a54601c57146d95165b88c3dd7b4c03d9be5ef151e8",
+      "reason": "Explicit native IMU mode, deterministic epoch/correction support; no inferred calibration"
+    },
+    "src/point_lio_unilidar/include/gravity_alignment.h": {
+      "original_sha256": null,
+      "new_sha256": "6911d7007989f604b61f96827e8d3d9b8b8cc4bb501b0e7c1fd924023bedce49",
+      "reason": "Proper SO(3) gravity alignment and finite/nonzero initialization rejection, with standalone numerical regression"
+    },
+    "src/point_lio_unilidar/src/IMU_Processing.hpp": {
+      "original_sha256": "1ae25097bc55e669061be2f9597c3e3e62d9d241902eca68c2b00b7c620c972c",
+      "new_sha256": "a07f4e51a0db7fc703baf2e51b66be2490dd08c9ccdf7305a10cf234a3a8990a",
+      "reason": "Proper SO(3) gravity alignment and finite/nonzero initialization rejection, with standalone numerical regression"
+    },
+    "src/point_lio_unilidar/src/laserMapping.cpp": {
+      "original_sha256": "aaa6fdc595a0d162df92f87e9a226cebe6ac79d9bfcc790dce7b6a06945b2ffe",
+      "new_sha256": "474038e588433dfa38dc643edda2bc2e716fb3f1228d27835899905727754b4b",
+      "reason": "Proper SO(3) gravity alignment and finite/nonzero initialization rejection, with standalone numerical regression"
+    },
+    "src/point_lio_unilidar/test/CMakeLists.txt": {
+      "original_sha256": null,
+      "new_sha256": "7e52b94edb511c1f8758454f60ae3bc56d5060a3aa62e46de829276b85b95aad",
+      "reason": "Proper SO(3) gravity alignment and finite/nonzero initialization rejection, with standalone numerical regression"
+    },
+    "src/point_lio_unilidar/test/gravity_alignment_test.cpp": {
+      "original_sha256": null,
+      "new_sha256": "5f93b8277c7b3794a09473f0d509b1fa6e3786ca9d86d3561e4f28664a126b87",
+      "reason": "Proper SO(3) gravity alignment and finite/nonzero initialization rejection, with standalone numerical regression"
+    },
+    "config/replay-qos.yaml": {
+      "original_sha256": "cef45258151a09b4535adcb120940fbcdd0a53f012d47ff6f534f0785ffe430a",
+      "new_sha256": "888b886c4b7795c5e00fc1cd032c9d6d807584d54eca0605059671d83d89268e",
+      "reason": "Reliable replay of the native /utlidar/imu stream with depth 4000; parent-authorized interface addition."
+    },
+    "src/go2_p9/go2_p9/cli.py": {
+      "original_sha256": "2be1bf640763a9221f093cd67a1b2a611ca1b1d3b3e17bd039c165cd2a7a6262",
+      "new_sha256": "f980e7cd8dce976be0b8cb9f3e8ce473a0f51efa3acdbc297beafe049d07d7ed",
+      "reason": "Embed experimental delta and its SHA256 in effective-config.json and version output while preserving original source manifest."
+    }
+  },
+  "limitations": [
+    "No firmware root cause is asserted.",
+    "Acceleration offsets are explicit empirical candidates, not certified intrinsic bias.",
+    "Common epoch shift preserves LiDAR/IMU relative timing; it does not calibrate physical latency.",
+    "Original source-manifest.json is preserved byte-for-byte."
+  ]
+}

@@ -1,0 +1,66 @@
+# Keep Dockerfile and go2-p9:arm64 for the original localization-only release.
+# Default base is the retained P9 ARM64 image, itself derived from go2-control v4.
+ARG BASE_IMAGE=go2-p9:arm64
+FROM ${BASE_IMAGE} AS navigation-lio
+ARG BUILD_JOBS=2
+ARG EXPECTED_ARCH=arm64
+ENV DEBIAN_FRONTEND=noninteractive P9_HOME=/opt/p9 ROS_DOMAIN_ID=0 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+SHELL ["/bin/bash", "-c"]
+RUN test "$(dpkg --print-architecture)" = "${EXPECTED_ARCH}"
+COPY src/point_lio_unilidar /opt/p9_ws/src/point_lio_unilidar
+RUN mkdir -p /opt/p9_ws/src/point_lio_unilidar/Log /opt/p9_ws/src/point_lio_unilidar/PCD /opt/p9/provenance && \
+    source /opt/ros/jazzy/setup.bash && cd /opt/p9_ws && \
+    MAKEFLAGS="-j${BUILD_JOBS}" CMAKE_BUILD_PARALLEL_LEVEL="${BUILD_JOBS}" \
+      colcon build --executor sequential --event-handlers console_direct+ --packages-select point_lio_unilidar \
+        --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
+    sha256sum install/point_lio_unilidar/lib/point_lio_unilidar/pointlio_mapping > /opt/p9/provenance/binary.sha256 && \
+    rm -rf build log
+
+FROM navigation-lio AS navigation-planners
+ARG BUILD_JOBS=2
+RUN packages=(libopencv-dev ros-jazzy-rosidl-default-generators ros-jazzy-rosidl-default-runtime ros-jazzy-visualization-msgs ros-jazzy-std-srvs python3-scipy) && \
+    missing=() && for package in "${packages[@]}"; do dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed' || missing+=("$package"); done && \
+    if [ "${#missing[@]}" -gt 0 ]; then apt-get update && apt-get install -y --no-install-recommends "${missing[@]}" && rm -rf /var/lib/apt/lists/*; fi
+COPY src/visibility_graph_msg /opt/p9_ws/src/visibility_graph_msg
+COPY src/terrain_analysis /opt/p9_ws/src/terrain_analysis
+COPY src/terrain_analysis_ext /opt/p9_ws/src/terrain_analysis_ext
+COPY src/local_planner /opt/p9_ws/src/local_planner
+COPY src/far_planner /opt/p9_ws/src/far_planner
+ARG PLANNER_BUILD_JOBS=4
+RUN source /opt/ros/jazzy/setup.bash && source /opt/p9_ws/install/setup.bash && cd /opt/p9_ws && \
+    MAKEFLAGS="-j${PLANNER_BUILD_JOBS}" CMAKE_BUILD_PARALLEL_LEVEL="${PLANNER_BUILD_JOBS}" \
+      colcon build --executor sequential --event-handlers console_direct+ \
+        --packages-select visibility_graph_msg terrain_analysis terrain_analysis_ext local_planner far_planner \
+        --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && rm -rf build log
+
+FROM navigation-planners AS navigation
+RUN python3 -c 'import pytest' || (apt-get update && apt-get install -y --no-install-recommends python3-pytest && rm -rf /var/lib/apt/lists/*)
+COPY src/go2_p9 /opt/p9_ws/src/go2_p9
+COPY src/go2_p9_navigation /opt/p9_ws/src/go2_p9_navigation
+RUN source /opt/ros/jazzy/setup.bash && source /opt/p9_ws/install/setup.bash && cd /opt/p9_ws && \
+    colcon build --executor sequential --packages-select go2_p9 go2_p9_navigation && \
+    ln -sfn /opt/p9_ws/install/go2_p9/lib/go2_p9/p9 /usr/local/bin/p9 && \
+    ln -sfn /opt/p9_ws/install/go2_p9_navigation/lib/go2_p9_navigation/p9nav /usr/local/bin/p9nav && \
+    ln -sfn /opt/p9_ws/src /opt/p9/src && rm -rf build log
+COPY config /opt/p9/config
+COPY provenance /opt/p9/provenance
+COPY docs /opt/p9/docs
+COPY scripts /opt/p9/scripts
+COPY tests /opt/p9/tests
+COPY simulation /opt/p9/simulation
+COPY LICENSE THIRD_PARTY_NOTICES.md README.md Dockerfile Dockerfile.navigation .gitignore .dockerignore /opt/p9/
+COPY docker /opt/p9/docker
+COPY docker/entrypoint.sh /usr/local/bin/p9-entrypoint
+RUN chmod 755 /usr/local/bin/p9-entrypoint && \
+    source /opt/ros/jazzy/setup.bash && source /opt/p9_ws/install/setup.bash && \
+    python3 -m pytest -q /opt/p9/tests && \
+    python3 -c 'import go2_p9.adapter_node, go2_p9.mapping_node, go2_p9_navigation; from ament_index_python.packages import get_package_prefix; [print(get_package_prefix(p)) for p in ("point_lio_unilidar","far_planner","local_planner","terrain_analysis","terrain_analysis_ext")]' && \
+    dpkg-query -W > /opt/p9/provenance/packages.txt
+ARG SOURCE_REVISION=unreleased
+ENV P9_SOURCE_REVISION=${SOURCE_REVISION}
+LABEL org.opencontainers.image.title="Go2 P9 calibrated IMU localization, mapping and FAR planning" \
+      org.opencontainers.image.source="https://github.com/stfhssssy/go2-p9-localization" \
+      org.opencontainers.image.revision="${SOURCE_REVISION}"
+WORKDIR /work
+ENTRYPOINT ["/usr/local/bin/p9-entrypoint"]
+CMD ["p9", "diagnose"]

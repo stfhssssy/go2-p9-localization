@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot name="go2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Wrapper only: original robot, gait, contacts and lidar remain upstream. -->
+  <xacro:include filename="$(find unitree_go2_description)/urdf/unitree_go2_robot.xacro"/>
+
+  <!-- The existing D455 mount is trunk -> mounting link: [0.28,0,0.062].
+       Define a NEW physical simulation IMU at that mounting origin. This is
+       not a claim about the internal D435i/D455 chip's measured lever arm.
+       Optical axes: x right=-body y; y down=-body z; z forward=body x. -->
+  <link name="camera_imu_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.000001"/>
+      <inertia ixx="0.000000001" ixy="0" ixz="0" iyy="0.000000001" iyz="0" izz="0.000000001"/>
+    </inertial>
+  </link>
+  <joint name="p9_camera_imu_joint" type="fixed">
+    <parent link="trunk"/>
+    <child link="camera_imu_optical_frame"/>
+    <origin xyz="0.28 0 0.062" rpy="-1.5707963267948966 0 -1.5707963267948966"/>
+  </joint>
+  <gazebo reference="p9_camera_imu_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <!-- Reuse the already working upstream gz::sim::systems::Imu system.
+       It discovers all IMU entities. Do not add a second system instance.
+       Both sensors measure this actual camera link, including its lever arm.
+       Only angular_velocity of the first and linear_acceleration of the
+       second are estimator inputs. Each transport message is a full Imu. -->
+  <xacro:macro name="p9_imu_sensor" params="name topic rate gyro_std accel_std">
+    <gazebo reference="camera_imu_optical_frame">
+      <sensor name="${name}" type="imu">
+        <pose>0 0 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <update_rate>${rate}</update_rate>
+        <visualize>false</visualize>
+        <topic>${topic}</topic>
+        <gz_frame_id>camera_imu_optical_frame</gz_frame_id>
+        <imu>
+          <orientation_reference_frame><localization>ENU</localization></orientation_reference_frame>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0</mean><stddev>${gyro_std}</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>${gyro_std}</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>${gyro_std}</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0</mean><stddev>${accel_std}</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0</mean><stddev>${accel_std}</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0</mean><stddev>${accel_std}</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <xacro:p9_imu_sensor name="p9_camera_gyro_sensor" topic="/p9_sim/gyro" rate="200" gyro_std="0.0002" accel_std="0"/>
+  <xacro:p9_imu_sensor name="p9_camera_accel_sensor" topic="/p9_sim/accel" rate="100" gyro_std="0" accel_std="0.017"/>
+</robot>

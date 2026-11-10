@@ -1,5 +1,13 @@
 # Go2 P9 localization and geometry mapping
 
+## 新的 B1 定位、建图与规划版本（2026-11-10）
+
+本分支在保留原 P9 配置和 `p9` 入口的基础上，新增 `p9nav`：采用 C 组 R/t 与 B1 静态陀螺仪偏置，连接 **Point-LIO → 地图累积 → 地形分析 → FAR → 局部规划与路径跟随**。原 P9 发布仍在原 `main` 和旧镜像中。
+
+新镜像：`go2-p9-nav:arm64-20261110`，构建文件 `Dockerfile.navigation`。三种独立配置为 `config/p9nav-replay.yaml`、`p9nav-live.yaml`、`p9nav-sim.yaml`。实时配置的时钟和机身变换需要现场复核，不能直接沿用历史 bag 的时间偏移。规划默认输出隔离的速度建议，只有仿真显式开关连接 `/cmd_vel`；镜像不向真狗发送动作。
+
+请从 [新方案完整说明](docs/navigation.md) 开始；下面保留原 P9 的使用说明。新版本验证结果、源码提交、镜像 ID 和下载校验以 HF `releases/p9-nav-20261110/` 的发行记录为准。
+
 独立 ROS 2 Jazzy / ARM64 发行包，基于 `go2-control:arm64-v4`，包含实际历史 P9 使用的 Point-LIO 源码快照、新的传感器接口、地图累积器和 RViz 配置。
 
 ```

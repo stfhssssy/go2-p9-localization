@@ -23,3 +23,9 @@
   depth: 100
   reliability: reliable
   durability: transient_local
+
+/utlidar/imu:
+  history: keep_last
+  depth: 4000
+  reliability: reliable
+  durability: volatile

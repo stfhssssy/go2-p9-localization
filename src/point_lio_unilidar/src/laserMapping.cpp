@@ -840,6 +840,7 @@ int main(int argc, char **argv)
     path.header.frame_id = "camera_init";
 
     int frame_num = 0;
+    bool gravity_initialization_failed = false;
     double aver_time_consu = 0,
            aver_time_icp = 0,
            aver_time_match = 0,
@@ -1008,7 +1009,13 @@ int main(int argc, char **argv)
                 {
                     Eigen::Matrix3d rot_init;
                     p_imu->gravity_ << VEC_FROM_ARRAY(gravity);
-                    p_imu->Set_init(state_in.gravity, rot_init);
+                    if (!p_imu->Set_init(state_in.gravity, rot_init)) {
+                        RCLCPP_ERROR(node->get_logger(),
+                            "Cannot initialize gravity: measured and configured gravity must be finite and nonzero. "
+                            "Check the IMU specific-force convention and restart while stationary.");
+                        gravity_initialization_failed = true;
+                        break;
+                    }
                     state_in.gravity = state_out.gravity = p_imu->gravity_;
                     state_in.rot = state_out.rot = rot_init;
                     state_in.rot.normalize();
@@ -1501,5 +1508,5 @@ int main(int argc, char **argv)
     fout_out.close();
     fout_imu_pbp.close();
 
-    return 0;
+    return gravity_initialization_failed ? 1 : 0;
 }

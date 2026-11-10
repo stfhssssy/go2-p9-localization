@@ -12,7 +12,7 @@ import yaml
 SENSOR_NODE_PARAMETERS = frozenset({
     'input_cloud_topic', 'input_imu_topic', 'output_cloud_topic', 'output_imu_topic',
     'gyro_topic', 'accel_topic', 'mode', 'imu_mode', 'cloud_frame', 'imu_frame',
-    'clock_offset_sec', 'point_time_field', 'point_time_scale', 'min_range', 'max_range',
+    'clock_offset_sec', 'common_clock_offset_sec', 'accel_offset', 'gyro_bias', 'point_time_field', 'point_time_scale', 'min_range', 'max_range',
     'max_scan_duration_sec', 'raw_gyro_frame', 'raw_accel_frame', 'max_accel_gap_sec',
     'raw_queue_size', 'raw_buffer_sec', 'raw_pending_timeout_sec', 'cloud_queue_size',
     'imu_queue_size', 'max_message_age_sec', 'future_tolerance_sec',
@@ -48,22 +48,45 @@ def home():
     return Path(os.environ.get('P9_HOME', str(Path(__file__).resolve().parents[3])))
 
 
+def estimator_config_path(profile_path, config):
+    """Resolve an optional engine profile without changing legacy defaults."""
+    estimator = _section(config, 'estimator', {'config'})
+    if not estimator:
+        return (home()/'config/p9-pointlio.yaml').resolve()
+    value = estimator.get('config')
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError('estimator.config must be a nonempty YAML file path')
+    candidate = Path(value).expanduser()
+    if not candidate.is_absolute():
+        candidate = Path(profile_path).expanduser().resolve().parent/candidate
+    candidate = candidate.resolve()
+    if not candidate.is_file():
+        raise ValueError('estimator.config does not name a readable file: ' + str(candidate))
+    return candidate
+
+
 def load(path, mode):
-    if mode not in ('live', 'replay'):
-        raise ValueError('mode must be live or replay')
+    if mode not in ('live', 'replay', 'sim'):
+        raise ValueError('mode must be live, replay or sim')
     config = yaml.safe_load(Path(path).read_text())
     if not isinstance(config, dict) or type(config.get('version')) is not int or config['version'] != 1:
         raise ValueError('Expected a version: 1 P9 configuration')
     if any(not isinstance(key, str) for key in config):
         raise ValueError('Configuration section names must be strings')
-    unknown = set(config) - {'version', 'calibration', 'sensor', 'mapping'}
+    unknown = set(config) - {'version', 'profile_mode', 'calibration', 'sensor', 'mapping', 'estimator'}
     if unknown:
         raise ValueError(f'Unknown config sections: {sorted(unknown)}')
+    if 'profile_mode' in config:
+        intended_mode = config['profile_mode']
+        if intended_mode not in ('live', 'replay', 'sim'):
+            raise ValueError('profile_mode must be live, replay or sim')
+        if intended_mode != mode:
+            raise ValueError(f'profile_mode is {intended_mode}, but requested mode is {mode}; select the matching profile')
     c = _section(config, 'calibration', {'status', 'rotation', 'translation', 'note'})
     rotation = np.asarray(c.get('rotation'), dtype=float)
     translation = np.asarray(c.get('translation'), dtype=float)
     if rotation.size != 9 or translation.size != 3:
-        raise ValueError('Enter explicit LiDAR -> camera IMU rotation[9] and translation[3]; see docs/calibration.md. Historical experimental profile is separately named.')
+        raise ValueError('Enter explicit LiDAR -> selected IMU rotation[9] and translation[3]; see docs/calibration.md. Historical experimental profile is separately named.')
     rotation = rotation.reshape(3, 3)
     if (not np.isfinite(rotation).all() or not np.isfinite(translation).all()
             or not np.allclose(rotation.T@rotation, np.eye(3), atol=1e-5)
@@ -72,23 +95,52 @@ def load(path, mode):
     if c.get('status') not in ('measured', 'experimental', 'synthetic'):
         raise ValueError('Set calibration.status to measured, experimental or synthetic, accurately')
     sensor = _section(config, 'sensor', SENSOR_NODE_PARAMETERS, SENSOR_ENTRYPOINT_PARAMETERS)
-    if sensor.get('imu_mode', 'merged_linear') not in ('merged_linear', 'raw_linear'):
-        raise ValueError('sensor.imu_mode must be merged_linear or raw_linear')
-    clock_offset = sensor.get('clock_offset_sec', 0.)
-    if isinstance(clock_offset, bool) or not isinstance(clock_offset, (int, float)) or not math.isfinite(clock_offset):
-        raise ValueError('clock_offset_sec must be finite')
-    if 'clock_offset_sec' in sensor:
-        sensor['clock_offset_sec'] = float(clock_offset)
-    sensor.update(mode=mode, use_sim_time=(mode == 'replay'))
+    for key in ('accel_offset', 'gyro_bias'):
+        if key in sensor:
+            value = sensor[key]
+            if not isinstance(value, (list, tuple)) or len(value) != 3 or any(
+                    isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x)
+                    for x in value):
+                raise ValueError(key + ' must contain three finite numeric native-axis values')
+            sensor[key] = [float(x) for x in value]
+    if sensor.get('imu_mode', 'merged_linear') not in ('merged_linear', 'raw_linear', 'native'):
+        raise ValueError('sensor.imu_mode must be merged_linear, raw_linear or native')
+    for key in ('clock_offset_sec', 'common_clock_offset_sec'):
+        clock_offset = sensor.get(key, 0.)
+        if (isinstance(clock_offset, bool) or not isinstance(clock_offset, (int, float))
+                or not math.isfinite(clock_offset) or abs(clock_offset) > 2_147_483_648):
+            raise ValueError(key + ' must be finite numeric seconds within ROS Time range')
+        if key in sensor:
+            sensor[key] = float(clock_offset)
+    # The adapter's replay policy means "no wall-clock epoch age check".
+    # In sim, /clock comes from Gazebo; the launch must not create a bag player.
+    use_sim_time = mode in ('replay', 'sim')
+    sensor.update(mode='live' if mode == 'live' else 'replay', use_sim_time=use_sim_time)
     mapping = _section(config, 'mapping', MAPPING_NODE_PARAMETERS, MAPPING_ENTRYPOINT_PARAMETERS)
     if mapping.get('input_reliability', 'best_effort') not in ('best_effort', 'reliable'):
         raise ValueError('mapping.input_reliability must be best_effort or reliable')
     for key in ('publish_terrain_inputs', 'publish_map_alias', 'publish_base_frame'):
         if key in mapping and not isinstance(mapping[key], bool):
             raise ValueError(f'mapping.{key} must be a YAML boolean')
-    mapping.update(use_sim_time=(mode == 'replay'))
-    pointlio = copy.deepcopy(yaml.safe_load((home()/'config/p9-pointlio.yaml').read_text())['/**']['ros__parameters'])
-    pointlio['use_sim_time'] = mode == 'replay'
+    if mapping.get('publish_base_frame', False):
+        body_r = np.asarray(mapping.get('T_imu_base_rotation'), dtype=float)
+        body_t = np.asarray(mapping.get('T_imu_base_translation'), dtype=float)
+        if body_r.size != 9 or body_t.size != 3:
+            raise ValueError('publish_base_frame requires explicit T_imu_base_rotation[9] and translation[3]')
+        body_r = body_r.reshape(3, 3)
+        if (not np.isfinite(body_r).all() or not np.isfinite(body_t).all()
+                or not np.allclose(body_r.T@body_r, np.eye(3), atol=1e-5)
+                or not np.isclose(np.linalg.det(body_r), 1., atol=1e-5)):
+            raise ValueError('T_imu_base must be a finite proper rigid transform (det(R)=+1)')
+    mapping.update(use_sim_time=use_sim_time)
+    engine_document = yaml.safe_load(estimator_config_path(path, config).read_text())
+    if (not isinstance(engine_document, dict) or not isinstance(engine_document.get('/**'), dict)
+            or not isinstance(engine_document['/**'].get('ros__parameters'), dict)):
+        raise ValueError('estimator.config must contain /**: ros__parameters: mapping')
+    pointlio = copy.deepcopy(engine_document['/**']['ros__parameters'])
+    if not isinstance(pointlio.get('mapping'), dict):
+        raise ValueError('estimator.config requires Point-LIO mapping parameters')
+    pointlio['use_sim_time'] = use_sim_time
     pointlio['mapping']['extrinsic_R'] = [float(v) for v in rotation.flat]
     pointlio['mapping']['extrinsic_T'] = [float(v) for v in translation.flat]
     return config, sensor, mapping, pointlio

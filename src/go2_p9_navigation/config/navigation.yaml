@@ -1,0 +1,23 @@
+# Overrides for the separately enabled P9 navigation pipeline.
+# Goals are XY targets in camera_init; orientation is not constrained.
+# replay/live emit only /p9/navigation/cmd_vel. No Unitree driver is started.
+version: 1
+local_planner: {}
+path_follower: {}
+terrain_analysis: {}
+terrain_analysis_ext: {}
+far_planner: {}
+guard:
+  max_forward_m_s: 0.25
+  max_lateral_m_s: 0.20
+  max_yaw_rad_s: 0.50
+  sensor_timeout_sec: 1.0
+  tracking_timeout_sec: 1.0
+  graph_timeout_sec: 2.0
+  path_timeout_sec: 1.0
+  command_timeout_sec: 0.5
+  clock_timeout_sec: 0.5
+  future_tolerance_sec: 0.05
+  goal_gate_sec: 0.2
+  max_goal_distance_m: 30.0
+  goal_reached_distance_m: 0.4

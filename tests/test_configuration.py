@@ -3,6 +3,8 @@ import copy
 import ast
 import contextlib
 import io
+import hashlib
+import json
 import os
 from pathlib import Path
 import sys
@@ -46,10 +48,10 @@ class ConfigurationContract(unittest.TestCase):
         self.assertEqual(engine["mapping"]["extrinsic_T"], [0.0, 0.0, 0.0])
 
     def test_mode_sets_every_processing_clock_without_mutating_profile(self):
-        for mode, expected in (("live", False), ("replay", True), ("live", False)):
+        for mode, expected in (("live", False), ("replay", True), ("sim", True), ("live", False)):
             with self.subTest(mode=mode):
                 raw, sensor, mapping, engine = self.read_config(self.example, mode)
-                self.assertEqual(sensor["mode"], mode)
+                self.assertEqual(sensor["mode"], "replay" if mode == "sim" else mode)
                 self.assertIs(sensor["use_sim_time"], expected)
                 self.assertIs(mapping["use_sim_time"], expected)
                 self.assertIs(engine["use_sim_time"], expected)
@@ -151,6 +153,43 @@ class ConfigurationContract(unittest.TestCase):
         self.assertEqual(sensor['gyro_topic'], '/raw/gyro')
         self.assertTrue(sensor['use_sim_time'])
 
+    def test_native_mode_keeps_sensor_choice_calibration_and_correction_signs(self):
+        config = copy.deepcopy(self.example)
+        config['sensor'].update(imu_mode='native', input_imu_topic='/utlidar/imu',
+                                imu_frame='utlidar_imu', common_clock_offset_sec=2245.232644025,
+                                clock_offset_sec=-.001, accel_offset=[1, -2, -19.1],
+                                gyro_bias=[.01, -.02, .03])
+        config['calibration'].update(rotation=np.eye(3).ravel().tolist(),
+                                     translation=[.007698, .014655, -.00667])
+        before = copy.deepcopy(config)
+        for mode in ('replay', 'live'):
+            _, sensor, _, engine = self.read_config(config, mode)
+            self.assertEqual(sensor['imu_mode'], 'native')
+            self.assertEqual(sensor['input_imu_topic'], '/utlidar/imu')
+            self.assertEqual(sensor['imu_frame'], 'utlidar_imu')
+            self.assertEqual(sensor['common_clock_offset_sec'], 2245.232644025)
+            self.assertEqual(sensor['clock_offset_sec'], -.001)
+            self.assertEqual(sensor['accel_offset'], [1., -2., -19.1])
+            self.assertEqual(sensor['gyro_bias'], [.01, -.02, .03])
+            self.assertEqual(engine['mapping']['extrinsic_R'], config['calibration']['rotation'])
+            self.assertEqual(engine['mapping']['extrinsic_T'], config['calibration']['translation'])
+            self.assertEqual(config, before)
+
+    def test_native_correction_fields_reject_nonfinite_or_ambiguous_types(self):
+        for name in ('accel_offset', 'gyro_bias'):
+            for value in (None, '123', [], [1, 2], [0, 0, 0, 0],
+                          [True, 0, 0], ['1', 0, 0], [0, float('nan'), 0], [0, 0, float('inf')]):
+                config = copy.deepcopy(self.example)
+                config['sensor'].update(imu_mode='native', **{name: value})
+                with self.subTest(name=name, value=value), self.assertRaises(ValueError):
+                    self.read_config(config)
+        for name in ('clock_offset_sec', 'common_clock_offset_sec'):
+            for value in (True, None, '1', float('nan'), float('inf'), 1e308):
+                config = copy.deepcopy(self.example)
+                config['sensor'][name] = value
+                with self.subTest(name=name, value=value), self.assertRaisesRegex(ValueError, 'finite'):
+                    self.read_config(config)
+
     def test_allowed_parameter_names_match_node_declarations_without_importing_ros(self):
         for filename, expected in (('adapter_node.py', SENSOR_NODE_PARAMETERS),
                                    ('mapping_node.py', MAPPING_NODE_PARAMETERS)):
@@ -182,6 +221,43 @@ class ConfigurationContract(unittest.TestCase):
         execute.assert_not_called()
         self.assertEqual(prior.read_text(), "previous run\n")
         self.assertFalse((output / "effective-config.json").exists())
+
+    def test_cli_records_experiment_delta_and_original_provenance_before_launch(self):
+        from go2_p9 import cli
+        output = Path(self.temp.name)/'new-experiment'
+        argv = ['p9', 'live', '--config', str(ROOT/'config/live-p9-experimental.yaml'),
+                '--output', str(output)]
+        with patch.object(sys, 'argv', argv), patch.object(cli.os, 'execvp') as execute, \
+                contextlib.redirect_stdout(io.StringIO()):
+            cli.main()
+        execute.assert_called_once()
+        record = json.loads((output/'effective-config.json').read_text())
+        delta_bytes = (ROOT/'provenance/experiment-delta.json').read_bytes()
+        self.assertEqual(record['experimental_delta']['sha256'], hashlib.sha256(delta_bytes).hexdigest())
+        self.assertEqual(record['experimental_delta']['manifest'], json.loads(delta_bytes))
+        self.assertEqual(record['source_manifest'], json.loads((ROOT/'provenance/source-manifest.json').read_text()))
+        self.assertIn('go2-native-imu-repair', record['experimental_delta']['manifest']['experiment'])
+
+    def test_cli_version_exposes_delta_without_rewriting_original_manifest(self):
+        from go2_p9 import cli
+        original_path = ROOT/'provenance/source-manifest.json'
+        original_bytes = original_path.read_bytes()
+        stream = io.StringIO()
+        with patch.object(sys, 'argv', ['p9', 'version']), contextlib.redirect_stdout(stream):
+            cli.main()
+        version = json.loads(stream.getvalue())
+        self.assertEqual(version['source_manifest'], json.loads(original_bytes))
+        self.assertEqual(version['experimental_delta'], cli.experimental_delta())
+        self.assertEqual(original_path.read_bytes(), original_bytes)
+        # An original release with no delta keeps its previous version format.
+        old_home = Path(self.temp.name)/'original-release'
+        (old_home/'provenance').mkdir(parents=True)
+        (old_home/'provenance/source-manifest.json').write_bytes(original_bytes)
+        stream = io.StringIO()
+        with patch.object(cli, 'home', return_value=old_home), \
+                patch.object(sys, 'argv', ['p9', 'version']), contextlib.redirect_stdout(stream):
+            cli.main()
+        self.assertEqual(json.loads(stream.getvalue()), json.loads(original_bytes))
 
 
 if __name__ == "__main__":

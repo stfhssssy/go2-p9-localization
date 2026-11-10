@@ -26,6 +26,9 @@ class AdapterOptions:
     cloud_frame: str = 'utlidar_lidar'
     imu_frame: str = 'camera_imu_optical_frame'
     clock_offset_sec: float = 0.0  # cloud header only; never per-point offsets
+    common_clock_offset_sec: float = 0.0  # both cloud and IMU; preserves relative timing
+    accel_offset: tuple = (0.0, 0.0, 0.0)  # add in declared native IMU axes; explicit candidate
+    gyro_bias: tuple = (0.0, 0.0, 0.0)  # subtract in declared native IMU axes
     point_time_field: str = 'time'
     point_time_scale: float = 1.0
     min_range: float = 0.2
@@ -35,8 +38,19 @@ class AdapterOptions:
     def __post_init__(self):
         if not self.cloud_frame or not self.imu_frame:
             raise ValueError('sensor frame IDs must be explicit and nonempty')
-        if not math.isfinite(self.clock_offset_sec) or abs(self.clock_offset_sec) > 2_147_483_648:
-            raise ValueError('clock_offset_sec must be finite and within ROS Time range')
+        for name in ('clock_offset_sec', 'common_clock_offset_sec'):
+            value = getattr(self, name)
+            if (isinstance(value, bool) or not isinstance(value, (int, float))
+                    or not math.isfinite(value) or abs(value) > 2_147_483_648):
+                raise ValueError(name + ' must be finite numeric seconds within ROS Time range')
+        for name in ('accel_offset', 'gyro_bias'):
+            value = getattr(self, name)
+            if (not isinstance(value, (list, tuple)) or len(value) != 3
+                    or any(isinstance(x, bool) or not isinstance(x, (int, float))
+                           or not math.isfinite(x) for x in value)):
+                raise ValueError(name + ' must contain three finite numeric native-axis values')
+            # Do not retain mutable parameter lists after validating them.
+            object.__setattr__(self, name, tuple(float(x) for x in value))
         if (not math.isfinite(self.min_range) or not math.isfinite(self.max_range)
                 or not 0 <= self.min_range < self.max_range):
             raise ValueError('require finite 0 <= min_range < max_range')
@@ -46,7 +60,11 @@ class AdapterOptions:
 
     @property
     def cloud_offset_ns(self):
-        return round(self.clock_offset_sec * NS_PER_SEC)
+        return round(self.clock_offset_sec * NS_PER_SEC) + self.imu_offset_ns
+
+    @property
+    def imu_offset_ns(self):
+        return round(self.common_clock_offset_sec * NS_PER_SEC)
 
 
 @dataclass
@@ -113,6 +131,29 @@ def validate_merged_imu(msg, previous_stamp_ns=None, frame='camera_imu_optical_f
     stamp = checked_stamp(msg, previous_stamp_ns)
     validate_imu(msg)
     return stamp
+
+
+def prepare_imu(msg, previous_input_stamp_ns=None, options=None):
+    """Apply explicit epoch/constant corrections once, without axis or gravity inference.
+
+    An accel_offset is an empirical candidate, not certified intrinsic bias.
+    Covariances are preserved; calibration uncertainty is not estimated here.
+    """
+    options = options or AdapterOptions()
+    stamp = validate_merged_imu(msg, previous_input_stamp_ns, options.imu_frame)
+    shifted = stamp + options.imu_offset_ns
+    if not 0 <= shifted < 2_147_483_648 * NS_PER_SEC:
+        raise InvalidSensorData('shifted IMU header is outside ROS Time range')
+    modifies_vectors = any(options.accel_offset) or any(options.gyro_bias)
+    output = copy.deepcopy(msg) if options.imu_offset_ns or modifies_vectors else msg
+    if options.imu_offset_ns:
+        output.header.stamp.sec, output.header.stamp.nanosec = divmod(shifted, NS_PER_SEC)
+    if modifies_vectors:
+        for axis, offset, bias in zip('xyz', options.accel_offset, options.gyro_bias):
+            setattr(output.linear_acceleration, axis, getattr(msg.linear_acceleration, axis) + offset)
+            setattr(output.angular_velocity, axis, getattr(msg.angular_velocity, axis) - bias)
+        validate_merged_imu(output, frame=options.imu_frame)
+    return output, stamp, shifted
 
 
 def validate_component(msg, component, frame, previous_stamp_ns=None):

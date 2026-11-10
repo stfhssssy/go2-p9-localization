@@ -1,0 +1,1586 @@
+{
+  "schema_version": 1,
+  "release": "p9-navigation-20261110",
+  "status": "experimental; runtime and calibration validation recorded separately",
+  "upstream_repository": "https://github.com/jizhang-cmu/autonomy_stack_go2",
+  "observed_checkout_head": "43d5f54b389b251713f0097893c30fa76c870d54",
+  "upstream_checkout_clean_certified": false,
+  "upstream_authority": "Git HEAD is only the base reference. Actual vendor input is the separately hashed server archive, which has no Git metadata.",
+  "server_snapshot": {
+    "host": "10.96.45.13",
+    "workspace": "/data/t9/liuxu/go2-autonomy/src/autonomy_stack_go2",
+    "git_metadata_available": false,
+    "clean_upstream_checkout_certified": false,
+    "archive_name": "planner-source-reference.tar",
+    "archive_sha256": "885a46f0a1c1e558fe99a5c3d85c738b21847fe054ea3bf10ee6ac3fc14efac0",
+    "archive_size_bytes": 34816000,
+    "authority": "Exact archived source bytes and per-package original hashes; server source is not represented as clean Git HEAD"
+  },
+  "original_source_manifest_sha256": "5d3345a330e94542a0399b9e8d3311d24438d763bcee575058c2b12c44838b8d",
+  "common_fix_delta_sha256": "1b0a93225c8df2774e98ddff3c46367b19bff346b1f464adee9bc23cde868c9f",
+  "common_fix_runtime_inventory_sha256": "9a56b407711a20d3d1e7c410d287c80b758c215964ed903ca3b84f7dc2399e99",
+  "runtime_scope": {
+    "directories": [
+      "src",
+      "config",
+      "scripts",
+      "docker",
+      "simulation"
+    ],
+    "files": [
+      "Dockerfile",
+      "Dockerfile.navigation"
+    ],
+    "excluded_directory_names": [
+      "__pycache__"
+    ]
+  },
+  "runtime_files_sha256": {
+    "Dockerfile": "48e54adbe6325c970e3087df7561cbc9e8bbf3d5e7090577673c3738b3822738",
+    "Dockerfile.navigation": "c85acbdd79f979f1f8f128e579b6e97718501e557f8608ff629675c674bbaf3f",
+    "config/live-p9-experimental.yaml": "aec76186f1556dc540fa1a2c1d08913b1e984a36697bd75065423ee70c404889",
+    "config/live.example.yaml": "fd0e058d7bec1a8a8f6c2255fd0fe28a4e260f6e9641df681eeb4d8d6bba1cfc",
+    "config/p9-pointlio.yaml": "7e6610af1c9f0d5462f0af11928696dff3b3bd34d2c279248c38940f44cbd381",
+    "config/p9.rviz": "1558731625a49e40b38f7499f7935fd21a16564eccb80395d62bc6c863314447",
+    "config/p9nav-live.yaml": "663b31f4cd230e06b842e2d83ab5f4d00211420a70e91a28e7ac7736c35c2984",
+    "config/p9nav-replay.yaml": "0d40c350b6f42825346d635b7bcc8c635b340fba8f5f30be45751340adb91b58",
+    "config/p9nav-sim.yaml": "3725427ad71954e4b2966310509b913067c308f6f579c53778d8722bcb735897",
+    "config/pointlio-sim.yaml": "02eb38cdba3f7859ad878b87a812e48e549fbc073f35d7fcbbd3294aeb55a658",
+    "config/replay-qos.yaml": "888b886c4b7795c5e00fc1cd032c9d6d807584d54eca0605059671d83d89268e",
+    "config/replay.example.yaml": "562db3d34a5477c147254e1dceb331fee88e661d214bfabbed7a87a72d5ff34b",
+    "config/smoke.yaml": "c1ebf934cac478253e887d4bed5ae11a57b35727723993e228bb882ee6d744f8",
+    "docker/entrypoint.sh": "99b4627237242126d07185867f2671d5f63659e57786fbe0182c8a2dd5e1c67d",
+    "scripts/build-native.sh": "30888e898b3a65af6bf31b09e699a7057531df3c8b2fa2f8f74f5a3dd31aac18",
+    "scripts/build-navigation-native.sh": "db386f66b30b6d8591feabdb82ddced7758d609830939d68c6209b5e22dd6fd5",
+    "scripts/fetch-base.py": "522e050f71cfea89f1ae6ffbe356e21f22768814b7e5da517d504e7388c686d2",
+    "scripts/freeze-navigation-provenance.py": "12f498808451b17165a0a899448538d9c13dd756ad141a763395fed9d1734225",
+    "scripts/p9": "8f9af8218a91b930b0db76c18fba137d7844596cc61130669d4a9e16ed165efe",
+    "scripts/p9nav": "e79865b56957b1e9a5877fe117bbb7b1ab6d04ec5b1c5b90a07ba914e224c910",
+    "scripts/smoke-live.sh": "d605a7fda2a5dcc929a74a9be750b8984731ba2a697753bc079692b08dd55c77",
+    "simulation/README.txt": "c4009656fcf3d3c1d45fb8299c6b944d122df1e7b376fe5f6d2d52c9f47aed60",
+    "simulation/inside.sh": "b7da383247ea923e2057726e84105fc0ff5f327781b6f42829598359a6c84e98",
+    "simulation/p9_sensor_adapter.py": "78f819c0cc616c370a4b3cc0862cf9448136c9d2e0e49d588a45c7276b5cc5e2",
+    "simulation/prepare_runtime.py": "0993a88bfec0bec900804df63710e80a6c89ea059e1a7bfd5edd2e5da8b686b6",
+    "simulation/run_simulation.py": "b7c7a32fabc46b1685c1d6835d88c52c0e191f562c6f73f19578ebe45b703658",
+    "simulation/sensor_model/README.txt": "1bcfbed4314cccb92c09b0510168f732e5d82c8f188e0bf0827b56a647be7321",
+    "simulation/sensor_model/bridges.launch.py": "0b4d2e8bb3d6a6d9f406addda827e0d6c7857cce487b10fdf7c243ca0a05b62b",
+    "simulation/sensor_model/go2_p9_camera_imu.urdf.xacro": "46ece9e4cd9c48b13a3c64e7bb1de75151e821347d44f20a87dee0a0f69eb34e",
+    "simulation/sensor_model/model_contract.py": "9802407562759346c8e7cad583f2a79834757467b7036564e5ed43c277436cbf",
+    "simulation/sensor_model/model_manifest.json": "c36b988488a7ebb6aafa375d0524748216349ba934339267d0ea2bbdcf2786fc",
+    "simulation/simulation.launch.py": "f33763e916ac7d13309cb3602f2bba3dab8e803046df3319375fec273ba6666b",
+    "simulation/simulator.launch.py": "ba147e087a2ce8c942214b21ec7fbd0020816be87320a968c5b17cd51a465661",
+    "simulation/source-provenance.json": "aa6d07051dcbd4a27244fba6d042f04f35898c73d281fe19d27c3e680e6af765",
+    "simulation/test_contracts.py": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+    "simulation/validate_navigation.py": "1b40cb65e59069daf7057a43327319cdf71c4b84e7c4fac3397194d00c92459b",
+    "simulation/xwd_to_png.py": "f1efde03a8a4338132e3a1c6a7cba5a1c9d0221cc552f583628f2954d9e12636",
+    "src/far_planner/CMakeLists.txt": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6",
+    "src/far_planner/config/default.yaml": "d3b648548518494d3e6ebfcae2db5436c0f3cdd00b5402668dca27b7fd20c448",
+    "src/far_planner/config/matterport.yaml": "aff673fbddfc30e993ad5710f2a531a7d8d4b740379d1a74a533718a56de0d8f",
+    "src/far_planner/data/boundary.ply": "ad351ed09c41c40859dfb6bca1fbad8070fe95afe28ca876aed208ed5019ee13",
+    "src/far_planner/data/boundary_graph.vgh": "8699438de77c089a8248e2c4f91a9da62515117091fdef4f28197da478003094",
+    "src/far_planner/data/indoor.vgh": "12940ea4b1688fdb18b54c7a9ec370c17e39fe620880ea602e34f4433fefe3ee",
+    "src/far_planner/data/trajectory.txt": "ae646dd1544477f42bb87d3001db82bfe059eac87250b0924e879abd65547dbe",
+    "src/far_planner/include/far_planner/contour_detector.h": "1f0355b55adb40f6a6e3c71ce0a5584654a3967e956b56bfc3fa32c723962e82",
+    "src/far_planner/include/far_planner/contour_graph.h": "2a7f5bf89230e47eb7294c2486027facab9acbaa56b237008906078a35ae882d",
+    "src/far_planner/include/far_planner/dynamic_graph.h": "39f4c09bb34769e67d41d87e2be77f4d5a7db4ac82324907582dac1845ff3486",
+    "src/far_planner/include/far_planner/far_planner.h": "65ccfc63fd3d88aa3c11fded60af054309781570680183c7e699f0610b8942cf",
+    "src/far_planner/include/far_planner/graph_msger.h": "c838c2e5edacba72e40b722c05c0965349fa0240bb9a9810b7ea880250018bfa",
+    "src/far_planner/include/far_planner/graph_planner.h": "45868004264260f15f2ad29acf2a8b978570f3b3aca948ed540b8f0827614e8d",
+    "src/far_planner/include/far_planner/grid.h": "ace0548f36a3a8f9ed1a21f5d1dc3f47bb2951279d06e9544f0d81d117743ab1",
+    "src/far_planner/include/far_planner/intersection.h": "85a742951056da8b04bb04def545c9c21b8b571245e5204f8900ae3b9eb53031",
+    "src/far_planner/include/far_planner/map_handler.h": "7800f16145a49723212a88eecaf536762878971ea94d88be270eec1da3874ca8",
+    "src/far_planner/include/far_planner/node_struct.h": "c9dd9df57ecfd84ce0c4dad3906171228b8a56e68e9948b0117531691f3c5b6f",
+    "src/far_planner/include/far_planner/planner_visualizer.h": "7c7c10bf243e2ddc3310a750559da36a460c9d6217a0e292e95422f9c7cbc364",
+    "src/far_planner/include/far_planner/point_struct.h": "7fa8d4e485542d89217c81df65bdd74b6723cf47cf0815ed2a77ee5a74c38cf1",
+    "src/far_planner/include/far_planner/scan_handler.h": "8bf753a5d0fdfe9a17a4bab08360c9e85ada8b9dac1fc7585865920ca35f7dcc",
+    "src/far_planner/include/far_planner/terrain_kdtree.h": "1404e8b6944875e1261face8d8dcb1ca3e474436c1625c91f8cf255f3b42fac9",
+    "src/far_planner/include/far_planner/terrain_planner.h": "bb8ede012d01155707685679ffd53907228da3992981dbb9ed425c4b9ee72ce5",
+    "src/far_planner/include/far_planner/time_measure.h": "85d30a4ee4e67bd185d57ce1d53acd9995a2f0d74202afc37dcca572f6469567",
+    "src/far_planner/include/far_planner/utility.h": "f31e70e249331ac52d4be989a78be9c75d0f248920c9d891a91281e7d7834a88",
+    "src/far_planner/launch/far_planner.launch": "1b49f779645848cee92c3d67186d9c0a7fd9608aeb3a7203c26809c25eaf1b71",
+    "src/far_planner/package.xml": "a1792c11f025c1eb187002c0c94b4d5ad3f3277899189cdb2d49d42224f8d70e",
+    "src/far_planner/rviz/default.rviz": "1ea999e5768502ecad7c1112482964ce1297caab7d8c6f2e12975dbfd86ea3c4",
+    "src/far_planner/rviz/matterport.rviz": "c767bc103298bf1b6a4d56b8821b7ae2c079681e569a4bf9082a044c125265cd",
+    "src/far_planner/src/contour_detector.cpp": "8f1ae7139e5cb75f9c68fb6ed234a64e3ad6580231ac4e82eb2730b8b9dd4d40",
+    "src/far_planner/src/contour_graph.cpp": "e38adbd90371799a6c07c4448acff69fe1cbeebbb92dd8ffbcdf4742e04acac2",
+    "src/far_planner/src/dynamic_graph.cpp": "5dcd8db1e6a59daa1f736ab672eace6f004066e035f125209562eb12e9adf0f7",
+    "src/far_planner/src/far_planner.cpp": "efd4cf46ebca15acffda1b34ac1377f30e32139474fd97de0feee680738ea5bf",
+    "src/far_planner/src/graph_msger.cpp": "ab752bb5310cfbcd943dc4b476a5afbd7220f188d6bff969aaa42b6a08d68266",
+    "src/far_planner/src/graph_planner.cpp": "e63df5395bfaadd6e2c5cd37d7e6bb102c74625d23f6ffc6c40823c523ba9add",
+    "src/far_planner/src/map_handler.cpp": "8d0776e812f78953c2f058ffae91ef7f6f1b7a43458fec0b818e4f56f159a894",
+    "src/far_planner/src/planner_visualizer.cpp": "5401f842f64cdae8b878645f19fb144ea81cc0fa61548191ccfc8e36f4dd5f0c",
+    "src/far_planner/src/scan_handler.cpp": "a67438fd6d05bc659402dab9b81b590cc3140d8d6c3abd1a19eb18043f473ae9",
+    "src/far_planner/src/terrain_planner.cpp": "fc99e463f62471b2512de25638be2efc7f482a4ce3b829bc379eb897bf016007",
+    "src/far_planner/src/utility.cpp": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135",
+    "src/far_planner/test/terrain_kdtree_regression.cpp": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8",
+    "src/go2_p9/go2_p9/__init__.py": "1516c9a620f67f60a76b5c3f435a6ddcfcb1d5d53245dbdba600579176c123b7",
+    "src/go2_p9/go2_p9/adapter_node.py": "141e41142ef1904e3cd36f50c28f05508551c1faaf9ccda4396170a898a99145",
+    "src/go2_p9/go2_p9/cli.py": "b95da3503c682fb74a24b27074a57ad9d5242819c92125d10e4e03a752ffe810",
+    "src/go2_p9/go2_p9/cloud_codec.py": "5a6cb00e1e55d82f79176b69fc354603ef898b3a9b7ab1a1143de9c538ff26ee",
+    "src/go2_p9/go2_p9/configuration.py": "afdc604b509b380455a48a65b50f4fa9fdabe335fdf53f9346bfb8029c0f1322",
+    "src/go2_p9/go2_p9/diagnose.py": "9fbc01dbd123ede932eb392f4a91f31ebfa1f80c04405e63e54f167a49abecd4",
+    "src/go2_p9/go2_p9/mapping_core.py": "0284c7f1b2b3db7ca023e3cf5adcf5d3f340b70201b9e3a594baa092f5ac711e",
+    "src/go2_p9/go2_p9/mapping_node.py": "9641818ea552e3389d5840c11fa8502d0e84bb8aa8638220c3618718131534ae",
+    "src/go2_p9/go2_p9/sensor_core.py": "f3d7af65765502ab3f160a54601c57146d95165b88c3dd7b4c03d9be5ef151e8",
+    "src/go2_p9/launch/go2_p9.launch.py": "e8ba133a33795267dbc547f13ecdb5afc984cfb4bd9929cc8d5ed8db53f61816",
+    "src/go2_p9/package.xml": "de5e078373dfbee4deaa394efa0714835b469dc94d89bb9a3155368a81f5bff6",
+    "src/go2_p9/resource/go2_p9": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/go2_p9/setup.cfg": "b0172dfa42bb9ec955cb40ebc7d064debaf0b07c56195444b1b8083260e956e4",
+    "src/go2_p9/setup.py": "af1adf40a139bfe63b818512e6c3ed82f0a82b6d2db813820a1816b2489ad77b",
+    "src/go2_p9_navigation/config/navigation.rviz": "0d9a13d1429b8c2c1cee39b21f1ad6f78cad47df0dc8dbe16574ab2307cbd146",
+    "src/go2_p9_navigation/config/navigation.yaml": "fbf5a47158626f00f4271768325368a37db834faf6e4f2528309e9aba600aa4e",
+    "src/go2_p9_navigation/config/planner-defaults.yaml": "1b34d1cd5ed9a524cc52126459130b1c812efd21217b022bdb6fefe9d40686f9",
+    "src/go2_p9_navigation/go2_p9_navigation/__init__.py": "3a9a46424a1b8b7c8f2c7c48bd4c9f11866bbfa0259c1eb284b6ce107480a482",
+    "src/go2_p9_navigation/go2_p9_navigation/cli.py": "b866e3db8a9d8594cfba3504dbed91bc4071ab5ca7ffdd95bf02129545761b88",
+    "src/go2_p9_navigation/go2_p9_navigation/configuration.py": "d7724dae0c78712e73cb4160afc523f939739486c5f3b6138bbbcd3920ca39ce",
+    "src/go2_p9_navigation/go2_p9_navigation/guard_core.py": "d5912849d4c467d944a498a72cca89fb9cefd96baf1aa89285029de69c5a63a6",
+    "src/go2_p9_navigation/go2_p9_navigation/guard_node.py": "b8c4f2caf4d90391c50ee9ecf0ea1908444a34488b0d1c7f3b68d9a1864a06d7",
+    "src/go2_p9_navigation/launch/navigation.launch.py": "bcff7f60b5dee9bf52481100a2016753bf34524db69b4346ffec01fe7418e27b",
+    "src/go2_p9_navigation/package.xml": "713287c86f24221e0bce61d24be37533cd21a51ada75a434420e7bc8bc3e4f3b",
+    "src/go2_p9_navigation/provenance/vendor-source.json": "4b96b7a1d3fea6af75b415df980bd51d2e66800fefe906a885e5f8d58d077723",
+    "src/go2_p9_navigation/resource/go2_p9_navigation": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/go2_p9_navigation/setup.cfg": "0436ec1b1901fd0e530ed6b5a375e9cc78b013025ae5b167514d30bcdfa4a316",
+    "src/go2_p9_navigation/setup.py": "0a1dfa7d69df4214740429ef545b428ab2a3cb130c3e1c30f731f2ebf0eb0afc",
+    "src/local_planner/CMakeLists.txt": "41ec2ea96078a2cab370a8f7a665c8542241a7f938339abae0b0536fc114bed3",
+    "src/local_planner/include/common/motor_crc.h": "46e942ca7d1dde44251ad437219b42ecf4cf6125e9010434c607909a35b9a809",
+    "src/local_planner/include/common/ros2_sport_client.h": "170ccd1d98db9a9b970e774b5ef2f1811442dd9d1178c19628c1eff122643705",
+    "src/local_planner/include/nlohmann/adl_serializer.hpp": "0c4ce295a3f4092cff092901c340c961b10c48ec8d555110fe3df9f619740a19",
+    "src/local_planner/include/nlohmann/byte_container_with_subtype.hpp": "b56733d3a5b84004f4c7da8ac29ff030509d6a013eeb090541bfcdc46c1a5dc0",
+    "src/local_planner/include/nlohmann/detail/abi_macros.hpp": "702af5c60305125d8e5a4c813d271882b93bb2ba43cdfe91ee4edcef3fbeeb71",
+    "src/local_planner/include/nlohmann/detail/conversions/from_json.hpp": "8cad2ff4a90591110a5cc6134eef25e5a16c33f97b531e1576ed551319d16896",
+    "src/local_planner/include/nlohmann/detail/conversions/to_chars.hpp": "1710dc29a710e8a2121872aefcdd5667c88d3b41b3f863e793a6265106ec237c",
+    "src/local_planner/include/nlohmann/detail/conversions/to_json.hpp": "8d725eca0c56c3f36e64f2d98b701e900d381c6155d0ca98f75ee23173933aef",
+    "src/local_planner/include/nlohmann/detail/exceptions.hpp": "f3621e521c99f4bbfdb0da3aa7b29ff6ceef03163ca62c1ff07efaf06cf1c03c",
+    "src/local_planner/include/nlohmann/detail/hash.hpp": "54f7dd4f4d6cc7bd4c09fec7bda7e47992ee5799bf235104384ee70108023cff",
+    "src/local_planner/include/nlohmann/detail/input/binary_reader.hpp": "2d9cd443303da37c1f5a88b6e1358309c233e54899f82682f33bc6f42c5de97a",
+    "src/local_planner/include/nlohmann/detail/input/input_adapters.hpp": "581e5a0982c01bf63449479547e555101b70641dbfc65c31078e0fc4a4e61671",
+    "src/local_planner/include/nlohmann/detail/input/json_sax.hpp": "be444c45a477d6a26e8bfbb13965e29fc91734a5d06e13b8f34e3b065cf21438",
+    "src/local_planner/include/nlohmann/detail/input/lexer.hpp": "723a7ae568a1460da5235cd1f844db6b12b0f684b5284d5a4c7db4dbe165c980",
+    "src/local_planner/include/nlohmann/detail/input/parser.hpp": "fd687a688fc68835ee1337f4e1e7e935bea6cd17dffabb43399628a69424d669",
+    "src/local_planner/include/nlohmann/detail/input/position_t.hpp": "9007ed8be12f1b0d001c292c1525fdeb1418bed8cd63bf8a00b118574f5bd5d1",
+    "src/local_planner/include/nlohmann/detail/iterators/internal_iterator.hpp": "2414d89c20b4eb1278672a21b0f09858c4861ffe878432ec942e23e4d277479a",
+    "src/local_planner/include/nlohmann/detail/iterators/iter_impl.hpp": "68d4b911bfdef6dfb0d14f3c6c58cc7bb1a15f7464dd784ebeb8f753991074b2",
+    "src/local_planner/include/nlohmann/detail/iterators/iteration_proxy.hpp": "5a04f88931571c197aaec348575f42e27007b990e528b8405b6544425ba5a70f",
+    "src/local_planner/include/nlohmann/detail/iterators/iterator_traits.hpp": "78a1c32b2bad6782f97063cf642a6dc02588960b9420c1924ca5ef76fb8df9d8",
+    "src/local_planner/include/nlohmann/detail/iterators/json_reverse_iterator.hpp": "3872b8f61110ff09a77c3a3dca852c0fee9defcaab5b778dc990a253883a5329",
+    "src/local_planner/include/nlohmann/detail/iterators/primitive_iterator.hpp": "274ba54c5c2b2cd8e7c1e635392b09e73fd65d4183571f821ad149b3954ed818",
+    "src/local_planner/include/nlohmann/detail/json_custom_base_class.hpp": "bd8766af0922ce350f00da817c5544b009bd3dbe701d6afd8e5809cedd6e6405",
+    "src/local_planner/include/nlohmann/detail/json_pointer.hpp": "89e228596dccae2f4d0f45cfd40097ad29ef2670e8bf461b1a7ee823d5a03834",
+    "src/local_planner/include/nlohmann/detail/json_ref.hpp": "ef04660db0236f2f3341bd36de00cbc3f494018278800294be82f85e1fcc4b7c",
+    "src/local_planner/include/nlohmann/detail/macro_scope.hpp": "586645c0e64aefc9aa6550f26a32938c4e272f5afc6e63de81e09c1723d2d5e6",
+    "src/local_planner/include/nlohmann/detail/macro_unscope.hpp": "65bb2a65eb2935643f5b788efb7b4092f1a329d0b4fbbc9a1b7343775f58797f",
+    "src/local_planner/include/nlohmann/detail/meta/call_std/begin.hpp": "f79ecf122600e2e64f344dd95277910816206e37a80bed18737d22f281dbb465",
+    "src/local_planner/include/nlohmann/detail/meta/call_std/end.hpp": "f0d1493594068a73102b52c47f48d3443ea589afbcaaa2672b0e71499f61d696",
+    "src/local_planner/include/nlohmann/detail/meta/cpp_future.hpp": "519285d9ceca3d6d3afa0c647c71f8790b91179da66a08b68a9f73a8218016f3",
+    "src/local_planner/include/nlohmann/detail/meta/detected.hpp": "01963ca48427b32286a4bda3741c0817648af65eef673fe7cc9fc9d94cf343a8",
+    "src/local_planner/include/nlohmann/detail/meta/identity_tag.hpp": "9a95aaad68fe15b01570b4f9efaebd1ed2e5ad703767f4b93fc2cd855142199c",
+    "src/local_planner/include/nlohmann/detail/meta/is_sax.hpp": "876aaf9f4ccbed679a9340cf51b3dbe38eaf0b18122e0affe0c5e711a2f73533",
+    "src/local_planner/include/nlohmann/detail/meta/std_fs.hpp": "68e8e979cca53bd97bc2e85b9e8a78066b5e791a951b0c73290cd7e5c740bc6a",
+    "src/local_planner/include/nlohmann/detail/meta/type_traits.hpp": "b13c458f9cd6a2d8577031f12e11a951e4ae7b508cce64ffadff42f248ad8b4b",
+    "src/local_planner/include/nlohmann/detail/meta/void_t.hpp": "30cf458ad751b37097da34c3e28d9e387bbb37fab29d180984baba4e67d3a831",
+    "src/local_planner/include/nlohmann/detail/output/binary_writer.hpp": "fa372506e0779ac7e989c5dcd57b065eb741abc260ededb7ed9fcd848cc6f6ad",
+    "src/local_planner/include/nlohmann/detail/output/output_adapters.hpp": "fec93f451953874aad7a30c79b921cd0c4ade1698e36e964bfe89f1a4a6a3c0f",
+    "src/local_planner/include/nlohmann/detail/output/serializer.hpp": "ede7f1d89e8ba0b2744b5cadd60e99f2e6012abccf1c04aab7356c94a2448fcb",
+    "src/local_planner/include/nlohmann/detail/string_concat.hpp": "9cc995f50f574dab3da7e98aae81ac50c3b0c2ca8eb29f95d2f7172f4865b273",
+    "src/local_planner/include/nlohmann/detail/string_escape.hpp": "16899a2c01c9aee2cd0af5b9ede0d3f579af00b58303197e2692f756310317c9",
+    "src/local_planner/include/nlohmann/detail/value_t.hpp": "f16e2a05c4fdfbe22fc2cee90f7adc0e6ca2c5345348fa1f8c855a8e04f263b6",
+    "src/local_planner/include/nlohmann/json.hpp": "30d91841e7f24bb63fba92165dc389a363b6e18055d7c2749dbf891e986d085c",
+    "src/local_planner/include/nlohmann/json_fwd.hpp": "7f50d7790bcfc96394a6f1a1e6635d4b2c8e08e48081ea2e9129df071cb871ef",
+    "src/local_planner/include/nlohmann/ordered_map.hpp": "117612ea3fca3a4fb6ea2e5b529984c232a4c6deab312a7c7edfe11ff8451534",
+    "src/local_planner/include/nlohmann/thirdparty/hedley/hedley.hpp": "6c5cdf981e43776f4cd320dc7476309efa7332f457288c4f33051b7fa4f7611d",
+    "src/local_planner/include/nlohmann/thirdparty/hedley/hedley_undef.hpp": "2e5aff1a15cbfd8786a2776d0ec0e38e14d2ceadeea229bce5c583bafc26803c",
+    "src/local_planner/launch/local_planner.launch": "950dc096cd5230a9645a4297f90e983fe477d83235eb1f8ff3021c4e5b3508af",
+    "src/local_planner/package.xml": "fe4cf66ffe8179079c656f3132eb0cfaf85fc89feb7f1ec179037c2793bdae63",
+    "src/local_planner/paths/correspondences.txt": "3a8621d56fb4c2f5bf83cbff9eb32134f209bcc7bd5fa46ba95bf98b1656b914",
+    "src/local_planner/paths/pathList.ply": "115bd9b0f8e950779b327ea20438deac2cb7b0967cade33da40c4552a28aaf7b",
+    "src/local_planner/paths/path_generator.m": "3e1d175b2a39c9a9bb4286c7f71dd68cc620928f7b2493d255e93d7ff737cf2a",
+    "src/local_planner/paths/paths.ply": "262ad9308e269454a50f45baa2e7030d86ed88c32db73c679cee4973cd70a991",
+    "src/local_planner/paths/startPaths.ply": "5be6026aa9a2eb028d0a5829638304a95b2674265efacb35975363d740b0318a",
+    "src/local_planner/src/localPlanner.cpp": "ec8b305879b215b7e374ecf2fc6900b5021b26a1c22ca0d2a1b78232bff9e26c",
+    "src/local_planner/src/pathFollower.cpp": "c14f77fb28c0016513c3c3989b513005c80f78e6c9c7f90032607a171213812a",
+    "src/point_lio_unilidar/.gitignore": "27bf025903b14c7d22e5415f78b31443828f0a7ecff34a2d7e722624550282d6",
+    "src/point_lio_unilidar/CMakeLists.txt": "f1af51c589d8f0e7bb53ed9851df5d451acca2fbb977159695e3d06b23931fe4",
+    "src/point_lio_unilidar/LICENSE": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "src/point_lio_unilidar/README.md": "e2f8c26da85acb8f1ac2e6a5e6c26ace777016361de838b6d50334ba19bec689",
+    "src/point_lio_unilidar/config/avia.yaml": "ed0d8e098a93623beb73270e9fc7184aa43fda020b819991c5051f9a4478970e",
+    "src/point_lio_unilidar/config/horizon.yaml": "0cb4c48d71fa759e811abf4367613f9d43afca75c20aa628ab15eb41f4bff398",
+    "src/point_lio_unilidar/config/ouster64.yaml": "12219a55a4adabc778298df2248dfdf684fad25e0142f2a9491598a34bc7451f",
+    "src/point_lio_unilidar/config/unilidar.yaml": "808e6ebb843409ace29073be82fc7d5359e87a833de63509452ab64cf6fdf03c",
+    "src/point_lio_unilidar/config/utlidar.yaml": "1af1481363341db7e46be97a08d52c2089684e44466d5c1fe7a25b5c08fadb5f",
+    "src/point_lio_unilidar/config/velody16.yaml": "8e0704fc6f01fd381ced913eff55ca5fd139b94243aabd700131d13cb1563a76",
+    "src/point_lio_unilidar/doc/demo.png": "f6ab2d7db54f78038d1bebdbf26d1dfc03f9be8bf4dea583a0da62c516eee325",
+    "src/point_lio_unilidar/doc/icon.png": "946561a6da9c178f1456527141cfb248d469b9f5c2a59bdbbd40c6eb66cc5d80",
+    "src/point_lio_unilidar/doc/video.png": "3f3c3024bceadd24456095443b0071802f3e67530adb81f28db0ea5ec7cb0722",
+    "src/point_lio_unilidar/include/FOV_Checker/FOV_Checker.cpp": "5ebbd98bdb4ad270bd0d84dba12fa98bfe58e919fe7accbe69cde6ec59f29a46",
+    "src/point_lio_unilidar/include/FOV_Checker/FOV_Checker.h": "4cae4e3670211a8c85b5514c6198c5d3365897c9755172064ca60e071b79a0f4",
+    "src/point_lio_unilidar/include/IKFoM/.gitignore": "3ba2020da55f76620d61950cb88f0d6cc0d5852eae7b2c03f8487a64c87da959",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/esekfom.hpp": "796d8f886aeaa1c679bbe9e6c260f5e87c91117df72f0dd0e480fd0ad7dd4c99",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/kalman_gain.hpp": "52ce454b642c7cb8e4e975a860f586fb4a421a35c85baad1bc6862fcb6f748cb",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/esekfom/util.hpp": "3c4265d25ea3f8c7f586d1e34bc352e981e09e30555e42011cd23a0a147d6918",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/build_manifold.hpp": "fe018230140bfab649b7acdf43f2f063a64d2805a64b93438f22b676b7e23959",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/SubManifold.hpp": "96709f0f453a0c8776b1969064275ebf14dc5234b7024e68eb1cfc51a513864f",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/mtkmath.hpp": "d28e5f44f521ea7e953f35e8a974d8e4c8aa7e699c4339cb924f3efe91acbe49",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/src/vectview.hpp": "7855408124ea65df4423bae5f97d5104af5552318796bc6324bdbf98a45101f3",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/startIdx.hpp": "79cdc368bb4e083f5fda7549094c0aba8b599aee1f88e9f2a8b7fa785bf1f757",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/S2.hpp": "0aab85c23b151eefd88aad15d64b9df7f9f2e03c708b5413f5520f65c16c262a",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/SEn.hpp": "a6ebb8b341db1a07fc588fcec40a1f2de4dae30366f208fa10e9532f1da79226",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/SOn.hpp": "394aa660f0d9051d97fca57b1cbcea2bfa923634cc53675ee183349df71bd2a2",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/vect.hpp": "5bb37a64384334de1bc339519580b5a6b33af6451e0ec98964ffadbebd9e4f5f",
+    "src/point_lio_unilidar/include/IKFoM/IKFoM_toolkit/mtk/types/wrapped_cv_mat.hpp": "3040f43fcb4195a2572a8819be012ebd2c4b59a38cfae86fcac3e01d7039a589",
+    "src/point_lio_unilidar/include/IKFoM/LICENSE": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "src/point_lio_unilidar/include/IKFoM/README.md": "69f46f94d72f19eb1ddeb50f2515fbc3654720e12d127df6f1bfe9545f4e8e0d",
+    "src/point_lio_unilidar/include/common_lib.h": "627cef3c355bcd5278e01dd28d57d5e39cc5dd76d967d9a7f3e5ddb055f4b73b",
+    "src/point_lio_unilidar/include/gravity_alignment.h": "6911d7007989f604b61f96827e8d3d9b8b8cc4bb501b0e7c1fd924023bedce49",
+    "src/point_lio_unilidar/include/ikd-Tree/README.md": "a7f6feab008dc54a053963fb518e360389ee807af63ebddcc15e90b1ede78073",
+    "src/point_lio_unilidar/include/ikd-Tree/ikd_Tree.cpp": "ec3cbbbb6386eb6c68f9aa081c48b5d62209ada44fe167a002d4e3b112a1ea9f",
+    "src/point_lio_unilidar/include/ikd-Tree/ikd_Tree.h": "bb87cab944c6c59e0be61cb0b3a2cd0e334d93dc1bf768875058857278135a4b",
+    "src/point_lio_unilidar/include/so3_math.h": "59f15756e7b6a06c2a093b794d4e70e6e726243605c7bcfa46806a7decf91c63",
+    "src/point_lio_unilidar/launch/gdb_debug_example.launch": "50ae9976543258f37743b3308d1a48131797c939b13c1b920e71b4c8bc64752f",
+    "src/point_lio_unilidar/launch/mapping_avia.launch": "b370e101d5361bdff7feadf5f259d1d5b253eaaa729372053d42e41dfea07304",
+    "src/point_lio_unilidar/launch/mapping_horizon.launch": "a251ff4d8a4e0930b253f87ca36998064ff93a89b6301efc79039dbeae8fd41d",
+    "src/point_lio_unilidar/launch/mapping_ouster64.launch": "589e5124e914dabf3bb0d701fd716aa102e65e10f177c92ef307fd798ebb226a",
+    "src/point_lio_unilidar/launch/mapping_unilidar.launch": "57035d422026bc1163729fefd42e0deefe643f098d170827f80b5abe8448325b",
+    "src/point_lio_unilidar/launch/mapping_utlidar.launch": "df1a13bb81c603ba4ec5ce1b2570f07671df3d2625649345af708ba8e23dd3a9",
+    "src/point_lio_unilidar/launch/mapping_velody16.launch": "1ed493e861eb1bc69613e50f240ccae0d5851aa7f978567b954c4ceb715714c3",
+    "src/point_lio_unilidar/package.xml": "2921fe26b82c591014096f64eaeb33db06c637ec3cc52b407c6efffc4cc0448f",
+    "src/point_lio_unilidar/rviz_cfg/.gitignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/point_lio_unilidar/rviz_cfg/loam_livox.rviz": "b75ec1de86730424f85606b18ea5bd787045cd4de198ded515b1c69d95b43b03",
+    "src/point_lio_unilidar/rviz_cfg/loam_livox2.rviz": "abb3493475e6e9335c85e728b4e44df86da74fc9d3619d9b48a7081574a4ae92",
+    "src/point_lio_unilidar/rviz_cfg/loam_unilidar_default.rviz": "a2efc5e373edb02f4b7a933e821f8793ce91b0b5b8180d5841e33454e15602c3",
+    "src/point_lio_unilidar/rviz_cfg/loam_unilidar_display.rviz": "3cdbe2c3b782fb0dc202cf43a94b0404a4dd8f45f818c8df083558fb0b80b2b8",
+    "src/point_lio_unilidar/src/Estimator.cpp": "fc5615c59591f44416e3062957bfd748ce5218212f26d68ac4a2c1ef5d1a9ce5",
+    "src/point_lio_unilidar/src/Estimator.h": "65f6a11646ca9205a6e49c5ebecd5ce89e4fcf7cae8a3ce9f0888bfef2acbe6e",
+    "src/point_lio_unilidar/src/IMU_Processing.hpp": "a07f4e51a0db7fc703baf2e51b66be2490dd08c9ccdf7305a10cf234a3a8990a",
+    "src/point_lio_unilidar/src/laserMapping.cpp": "474038e588433dfa38dc643edda2bc2e716fb3f1228d27835899905727754b4b",
+    "src/point_lio_unilidar/src/parameters.cpp": "39a8ef3f75da3e3a79bd2a068134e2c2796fddbd391d9aede2724ceb82470bda",
+    "src/point_lio_unilidar/src/parameters.h": "0e0d4d8f3b48e279f74ae7292477d5eb076f7a88cf4b7aee5779cd7ad1ea442b",
+    "src/point_lio_unilidar/src/preprocess.cpp": "885db240dd192c1c9c574afa98dbdb4ff8e7e88b6b602804359cd3e8779cabee",
+    "src/point_lio_unilidar/src/preprocess.h": "c572df366af1d274bdcc9650c9c24d8d69a7a808fafa37d2322a42989e7634bb",
+    "src/point_lio_unilidar/test/CMakeLists.txt": "7e52b94edb511c1f8758454f60ae3bc56d5060a3aa62e46de829276b85b95aad",
+    "src/point_lio_unilidar/test/gravity_alignment_test.cpp": "5f93b8277c7b3794a09473f0d509b1fa6e3786ca9d86d3561e4f28664a126b87",
+    "src/terrain_analysis/CMakeLists.txt": "bc27a2a9982058f0b329ca2118b4fa48d0e625081bba3aa2be0c34663cd3364a",
+    "src/terrain_analysis/launch/terrain_analysis.launch": "4e13110913f3afe3a72ea3e08670ec2fe6aa7a3b55c40ac63d7c461f1c9daf08",
+    "src/terrain_analysis/package.xml": "69cc515424c30557335b59fc90ecaf140668b5e9bf338106a8d253a3243d3262",
+    "src/terrain_analysis/src/terrainAnalysis.cpp": "f8cd8c30cdc1a1db1a806782871edbd29b366923c935a02e495956cf5f0bef1d",
+    "src/terrain_analysis_ext/CMakeLists.txt": "63af56cfdb1d1d6e316567a563ccb4ffc45e7d30ac80eff6aa55f22df2d53768",
+    "src/terrain_analysis_ext/launch/terrain_analysis_ext.launch": "2f3ec249aff49fce565925d2abd559ad5d78497193d9409d5fece3100b27533c",
+    "src/terrain_analysis_ext/package.xml": "974995c5bc2541f12ddf7449c26af2a333cb309d529ac64c14b40fc5ad2e35a4",
+    "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": "d57b07dbe5e5549232924ae8c9fba16d7075658ac2a5a87f594897600ed9bb44",
+    "src/visibility_graph_msg/CMakeLists.txt": "6e2c750d8d0da022f12d2be0735fea626fe6a0b47a84d7a1c90d418ffc5afa16",
+    "src/visibility_graph_msg/msg/Graph.msg": "d18e360599f292767a1718c75b3ce8374fddf82b4ff5d43436dd8bdaac47c9dd",
+    "src/visibility_graph_msg/msg/Node.msg": "9f36f41356e6976227605658d6d881440ef2d41f05bd1b98d31a1967e2fc4747",
+    "src/visibility_graph_msg/package.xml": "954517697460ba969d17404bfd00de5a66966cb2d90b7d62ed23b8c59d62399a"
+  },
+  "changes_from_common_fix": {
+    "Dockerfile.navigation": {
+      "common_fix_sha256": null,
+      "release_sha256": "c85acbdd79f979f1f8f128e579b6e97718501e557f8608ff629675c674bbaf3f",
+      "reason": "ARM64 navigation build and offline runtime entrypoints"
+    },
+    "config/p9nav-live.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "663b31f4cd230e06b842e2d83ab5f4d00211420a70e91a28e7ac7736c35c2984",
+      "reason": "Explicit navigation, replay/live/simulation, B1 compensation, and visualization configuration"
+    },
+    "config/p9nav-replay.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "0d40c350b6f42825346d635b7bcc8c635b340fba8f5f30be45751340adb91b58",
+      "reason": "Explicit navigation, replay/live/simulation, B1 compensation, and visualization configuration"
+    },
+    "config/p9nav-sim.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "3725427ad71954e4b2966310509b913067c308f6f579c53778d8722bcb735897",
+      "reason": "Explicit navigation, replay/live/simulation, B1 compensation, and visualization configuration"
+    },
+    "config/pointlio-sim.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "02eb38cdba3f7859ad878b87a812e48e549fbc073f35d7fcbbd3294aeb55a658",
+      "reason": "Explicit navigation, replay/live/simulation, B1 compensation, and visualization configuration"
+    },
+    "scripts/build-navigation-native.sh": {
+      "common_fix_sha256": null,
+      "release_sha256": "db386f66b30b6d8591feabdb82ddced7758d609830939d68c6209b5e22dd6fd5",
+      "reason": "Offline build, navigation entrypoint, provenance, or release verification tooling"
+    },
+    "scripts/freeze-navigation-provenance.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "12f498808451b17165a0a899448538d9c13dd756ad141a763395fed9d1734225",
+      "reason": "Offline build, navigation entrypoint, provenance, or release verification tooling"
+    },
+    "scripts/p9nav": {
+      "common_fix_sha256": null,
+      "release_sha256": "e79865b56957b1e9a5877fe117bbb7b1ab6d04ec5b1c5b90a07ba914e224c910",
+      "reason": "Offline build, navigation entrypoint, provenance, or release verification tooling"
+    },
+    "simulation/README.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "c4009656fcf3d3c1d45fb8299c6b944d122df1e7b376fe5f6d2d52c9f47aed60",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/inside.sh": {
+      "common_fix_sha256": null,
+      "release_sha256": "b7da383247ea923e2057726e84105fc0ff5f327781b6f42829598359a6c84e98",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/p9_sensor_adapter.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "78f819c0cc616c370a4b3cc0862cf9448136c9d2e0e49d588a45c7276b5cc5e2",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/prepare_runtime.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "0993a88bfec0bec900804df63710e80a6c89ea059e1a7bfd5edd2e5da8b686b6",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/run_simulation.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "b7c7a32fabc46b1685c1d6835d88c52c0e191f562c6f73f19578ebe45b703658",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/sensor_model/README.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "1bcfbed4314cccb92c09b0510168f732e5d82c8f188e0bf0827b56a647be7321",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/sensor_model/bridges.launch.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "0b4d2e8bb3d6a6d9f406addda827e0d6c7857cce487b10fdf7c243ca0a05b62b",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/sensor_model/go2_p9_camera_imu.urdf.xacro": {
+      "common_fix_sha256": null,
+      "release_sha256": "46ece9e4cd9c48b13a3c64e7bb1de75151e821347d44f20a87dee0a0f69eb34e",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/sensor_model/model_contract.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "9802407562759346c8e7cad583f2a79834757467b7036564e5ed43c277436cbf",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/sensor_model/model_manifest.json": {
+      "common_fix_sha256": null,
+      "release_sha256": "c36b988488a7ebb6aafa375d0524748216349ba934339267d0ea2bbdcf2786fc",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/simulation.launch.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "f33763e916ac7d13309cb3602f2bba3dab8e803046df3319375fec273ba6666b",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/simulator.launch.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "ba147e087a2ce8c942214b21ec7fbd0020816be87320a968c5b17cd51a465661",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/source-provenance.json": {
+      "common_fix_sha256": null,
+      "release_sha256": "aa6d07051dcbd4a27244fba6d042f04f35898c73d281fe19d27c3e680e6af765",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/test_contracts.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/validate_navigation.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "1b40cb65e59069daf7057a43327319cdf71c4b84e7c4fac3397194d00c92459b",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "simulation/xwd_to_png.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "f1efde03a8a4338132e3a1c6a7cba5a1c9d0221cc552f583628f2954d9e12636",
+      "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
+    },
+    "src/far_planner/CMakeLists.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/config/default.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "d3b648548518494d3e6ebfcae2db5436c0f3cdd00b5402668dca27b7fd20c448",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/config/matterport.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "aff673fbddfc30e993ad5710f2a531a7d8d4b740379d1a74a533718a56de0d8f",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/data/boundary.ply": {
+      "common_fix_sha256": null,
+      "release_sha256": "ad351ed09c41c40859dfb6bca1fbad8070fe95afe28ca876aed208ed5019ee13",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/data/boundary_graph.vgh": {
+      "common_fix_sha256": null,
+      "release_sha256": "8699438de77c089a8248e2c4f91a9da62515117091fdef4f28197da478003094",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/data/indoor.vgh": {
+      "common_fix_sha256": null,
+      "release_sha256": "12940ea4b1688fdb18b54c7a9ec370c17e39fe620880ea602e34f4433fefe3ee",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/data/trajectory.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "ae646dd1544477f42bb87d3001db82bfe059eac87250b0924e879abd65547dbe",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/contour_detector.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "1f0355b55adb40f6a6e3c71ce0a5584654a3967e956b56bfc3fa32c723962e82",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/contour_graph.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "2a7f5bf89230e47eb7294c2486027facab9acbaa56b237008906078a35ae882d",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/dynamic_graph.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "39f4c09bb34769e67d41d87e2be77f4d5a7db4ac82324907582dac1845ff3486",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/far_planner.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "65ccfc63fd3d88aa3c11fded60af054309781570680183c7e699f0610b8942cf",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/graph_msger.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "c838c2e5edacba72e40b722c05c0965349fa0240bb9a9810b7ea880250018bfa",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/graph_planner.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "45868004264260f15f2ad29acf2a8b978570f3b3aca948ed540b8f0827614e8d",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/grid.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "ace0548f36a3a8f9ed1a21f5d1dc3f47bb2951279d06e9544f0d81d117743ab1",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/intersection.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "85a742951056da8b04bb04def545c9c21b8b571245e5204f8900ae3b9eb53031",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/map_handler.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "7800f16145a49723212a88eecaf536762878971ea94d88be270eec1da3874ca8",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/node_struct.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "c9dd9df57ecfd84ce0c4dad3906171228b8a56e68e9948b0117531691f3c5b6f",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/planner_visualizer.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "7c7c10bf243e2ddc3310a750559da36a460c9d6217a0e292e95422f9c7cbc364",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/point_struct.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "7fa8d4e485542d89217c81df65bdd74b6723cf47cf0815ed2a77ee5a74c38cf1",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/scan_handler.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "8bf753a5d0fdfe9a17a4bab08360c9e85ada8b9dac1fc7585865920ca35f7dcc",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/terrain_kdtree.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "1404e8b6944875e1261face8d8dcb1ca3e474436c1625c91f8cf255f3b42fac9",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/terrain_planner.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "bb8ede012d01155707685679ffd53907228da3992981dbb9ed425c4b9ee72ce5",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/time_measure.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "85d30a4ee4e67bd185d57ce1d53acd9995a2f0d74202afc37dcca572f6469567",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/include/far_planner/utility.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "f31e70e249331ac52d4be989a78be9c75d0f248920c9d891a91281e7d7834a88",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/launch/far_planner.launch": {
+      "common_fix_sha256": null,
+      "release_sha256": "1b49f779645848cee92c3d67186d9c0a7fd9608aeb3a7203c26809c25eaf1b71",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "a1792c11f025c1eb187002c0c94b4d5ad3f3277899189cdb2d49d42224f8d70e",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/rviz/default.rviz": {
+      "common_fix_sha256": null,
+      "release_sha256": "1ea999e5768502ecad7c1112482964ce1297caab7d8c6f2e12975dbfd86ea3c4",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/rviz/matterport.rviz": {
+      "common_fix_sha256": null,
+      "release_sha256": "c767bc103298bf1b6a4d56b8821b7ae2c079681e569a4bf9082a044c125265cd",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/contour_detector.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "8f1ae7139e5cb75f9c68fb6ed234a64e3ad6580231ac4e82eb2730b8b9dd4d40",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/contour_graph.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "e38adbd90371799a6c07c4448acff69fe1cbeebbb92dd8ffbcdf4742e04acac2",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/dynamic_graph.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "5dcd8db1e6a59daa1f736ab672eace6f004066e035f125209562eb12e9adf0f7",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/far_planner.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "efd4cf46ebca15acffda1b34ac1377f30e32139474fd97de0feee680738ea5bf",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/graph_msger.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "ab752bb5310cfbcd943dc4b476a5afbd7220f188d6bff969aaa42b6a08d68266",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/graph_planner.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "e63df5395bfaadd6e2c5cd37d7e6bb102c74625d23f6ffc6c40823c523ba9add",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/map_handler.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "8d0776e812f78953c2f058ffae91ef7f6f1b7a43458fec0b818e4f56f159a894",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/planner_visualizer.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "5401f842f64cdae8b878645f19fb144ea81cc0fa61548191ccfc8e36f4dd5f0c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/scan_handler.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "a67438fd6d05bc659402dab9b81b590cc3140d8d6c3abd1a19eb18043f473ae9",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/terrain_planner.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "fc99e463f62471b2512de25638be2efc7f482a4ce3b829bc379eb897bf016007",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/src/utility.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/far_planner/test/terrain_kdtree_regression.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/go2_p9/go2_p9/cli.py": {
+      "common_fix_sha256": "f980e7cd8dce976be0b8cb9f3e8ce473a0f51efa3acdbc297beafe049d07d7ed",
+      "release_sha256": "b95da3503c682fb74a24b27074a57ad9d5242819c92125d10e4e03a752ffe810",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
+    "src/go2_p9/go2_p9/configuration.py": {
+      "common_fix_sha256": "5359eeae7599918fb29348dd11192c0d0a635b7e5692e3bf80bfbf70c6973e1a",
+      "release_sha256": "afdc604b509b380455a48a65b50f4fa9fdabe335fdf53f9346bfb8029c0f1322",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
+    "src/go2_p9/launch/go2_p9.launch.py": {
+      "common_fix_sha256": "eb7f761896d46b81530376f758dd77f236889ca36c20d2e4b29f1d0230a1ddaa",
+      "release_sha256": "e8ba133a33795267dbc547f13ecdb5afc984cfb4bd9929cc8d5ed8db53f61816",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
+    "src/go2_p9_navigation/config/navigation.rviz": {
+      "common_fix_sha256": null,
+      "release_sha256": "0d9a13d1429b8c2c1cee39b21f1ad6f78cad47df0dc8dbe16574ab2307cbd146",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/config/navigation.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "fbf5a47158626f00f4271768325368a37db834faf6e4f2528309e9aba600aa4e",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/config/planner-defaults.yaml": {
+      "common_fix_sha256": null,
+      "release_sha256": "1b34d1cd5ed9a524cc52126459130b1c812efd21217b022bdb6fefe9d40686f9",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/go2_p9_navigation/__init__.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "3a9a46424a1b8b7c8f2c7c48bd4c9f11866bbfa0259c1eb284b6ce107480a482",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/go2_p9_navigation/cli.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "b866e3db8a9d8594cfba3504dbed91bc4071ab5ca7ffdd95bf02129545761b88",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/go2_p9_navigation/configuration.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "d7724dae0c78712e73cb4160afc523f939739486c5f3b6138bbbcd3920ca39ce",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/go2_p9_navigation/guard_core.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "d5912849d4c467d944a498a72cca89fb9cefd96baf1aa89285029de69c5a63a6",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/go2_p9_navigation/guard_node.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "b8c4f2caf4d90391c50ee9ecf0ea1908444a34488b0d1c7f3b68d9a1864a06d7",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/launch/navigation.launch.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "bcff7f60b5dee9bf52481100a2016753bf34524db69b4346ffec01fe7418e27b",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "713287c86f24221e0bce61d24be37533cd21a51ada75a434420e7bc8bc3e4f3b",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/provenance/vendor-source.json": {
+      "common_fix_sha256": null,
+      "release_sha256": "4b96b7a1d3fea6af75b415df980bd51d2e66800fefe906a885e5f8d58d077723",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/resource/go2_p9_navigation": {
+      "common_fix_sha256": null,
+      "release_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/setup.cfg": {
+      "common_fix_sha256": null,
+      "release_sha256": "0436ec1b1901fd0e530ed6b5a375e9cc78b013025ae5b167514d30bcdfa4a316",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/go2_p9_navigation/setup.py": {
+      "common_fix_sha256": null,
+      "release_sha256": "0a1dfa7d69df4214740429ef545b428ab2a3cb130c3e1c30f731f2ebf0eb0afc",
+      "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
+    },
+    "src/local_planner/CMakeLists.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "41ec2ea96078a2cab370a8f7a665c8542241a7f938339abae0b0536fc114bed3",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/common/motor_crc.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "46e942ca7d1dde44251ad437219b42ecf4cf6125e9010434c607909a35b9a809",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/common/ros2_sport_client.h": {
+      "common_fix_sha256": null,
+      "release_sha256": "170ccd1d98db9a9b970e774b5ef2f1811442dd9d1178c19628c1eff122643705",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/adl_serializer.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "0c4ce295a3f4092cff092901c340c961b10c48ec8d555110fe3df9f619740a19",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/byte_container_with_subtype.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "b56733d3a5b84004f4c7da8ac29ff030509d6a013eeb090541bfcdc46c1a5dc0",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/abi_macros.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "702af5c60305125d8e5a4c813d271882b93bb2ba43cdfe91ee4edcef3fbeeb71",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/conversions/from_json.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "8cad2ff4a90591110a5cc6134eef25e5a16c33f97b531e1576ed551319d16896",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/conversions/to_chars.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "1710dc29a710e8a2121872aefcdd5667c88d3b41b3f863e793a6265106ec237c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/conversions/to_json.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "8d725eca0c56c3f36e64f2d98b701e900d381c6155d0ca98f75ee23173933aef",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/exceptions.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "f3621e521c99f4bbfdb0da3aa7b29ff6ceef03163ca62c1ff07efaf06cf1c03c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/hash.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "54f7dd4f4d6cc7bd4c09fec7bda7e47992ee5799bf235104384ee70108023cff",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/binary_reader.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "2d9cd443303da37c1f5a88b6e1358309c233e54899f82682f33bc6f42c5de97a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/input_adapters.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "581e5a0982c01bf63449479547e555101b70641dbfc65c31078e0fc4a4e61671",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/json_sax.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "be444c45a477d6a26e8bfbb13965e29fc91734a5d06e13b8f34e3b065cf21438",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/lexer.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "723a7ae568a1460da5235cd1f844db6b12b0f684b5284d5a4c7db4dbe165c980",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/parser.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "fd687a688fc68835ee1337f4e1e7e935bea6cd17dffabb43399628a69424d669",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/input/position_t.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "9007ed8be12f1b0d001c292c1525fdeb1418bed8cd63bf8a00b118574f5bd5d1",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/internal_iterator.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "2414d89c20b4eb1278672a21b0f09858c4861ffe878432ec942e23e4d277479a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/iter_impl.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "68d4b911bfdef6dfb0d14f3c6c58cc7bb1a15f7464dd784ebeb8f753991074b2",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/iteration_proxy.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "5a04f88931571c197aaec348575f42e27007b990e528b8405b6544425ba5a70f",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/iterator_traits.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "78a1c32b2bad6782f97063cf642a6dc02588960b9420c1924ca5ef76fb8df9d8",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/json_reverse_iterator.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "3872b8f61110ff09a77c3a3dca852c0fee9defcaab5b778dc990a253883a5329",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/iterators/primitive_iterator.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "274ba54c5c2b2cd8e7c1e635392b09e73fd65d4183571f821ad149b3954ed818",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/json_custom_base_class.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "bd8766af0922ce350f00da817c5544b009bd3dbe701d6afd8e5809cedd6e6405",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/json_pointer.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "89e228596dccae2f4d0f45cfd40097ad29ef2670e8bf461b1a7ee823d5a03834",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/json_ref.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "ef04660db0236f2f3341bd36de00cbc3f494018278800294be82f85e1fcc4b7c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/macro_scope.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "586645c0e64aefc9aa6550f26a32938c4e272f5afc6e63de81e09c1723d2d5e6",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/macro_unscope.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "65bb2a65eb2935643f5b788efb7b4092f1a329d0b4fbbc9a1b7343775f58797f",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/call_std/begin.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "f79ecf122600e2e64f344dd95277910816206e37a80bed18737d22f281dbb465",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/call_std/end.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "f0d1493594068a73102b52c47f48d3443ea589afbcaaa2672b0e71499f61d696",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/cpp_future.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "519285d9ceca3d6d3afa0c647c71f8790b91179da66a08b68a9f73a8218016f3",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/detected.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "01963ca48427b32286a4bda3741c0817648af65eef673fe7cc9fc9d94cf343a8",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/identity_tag.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "9a95aaad68fe15b01570b4f9efaebd1ed2e5ad703767f4b93fc2cd855142199c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/is_sax.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "876aaf9f4ccbed679a9340cf51b3dbe38eaf0b18122e0affe0c5e711a2f73533",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/std_fs.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "68e8e979cca53bd97bc2e85b9e8a78066b5e791a951b0c73290cd7e5c740bc6a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/type_traits.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "b13c458f9cd6a2d8577031f12e11a951e4ae7b508cce64ffadff42f248ad8b4b",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/meta/void_t.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "30cf458ad751b37097da34c3e28d9e387bbb37fab29d180984baba4e67d3a831",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/output/binary_writer.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "fa372506e0779ac7e989c5dcd57b065eb741abc260ededb7ed9fcd848cc6f6ad",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/output/output_adapters.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "fec93f451953874aad7a30c79b921cd0c4ade1698e36e964bfe89f1a4a6a3c0f",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/output/serializer.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "ede7f1d89e8ba0b2744b5cadd60e99f2e6012abccf1c04aab7356c94a2448fcb",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/string_concat.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "9cc995f50f574dab3da7e98aae81ac50c3b0c2ca8eb29f95d2f7172f4865b273",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/string_escape.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "16899a2c01c9aee2cd0af5b9ede0d3f579af00b58303197e2692f756310317c9",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/detail/value_t.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "f16e2a05c4fdfbe22fc2cee90f7adc0e6ca2c5345348fa1f8c855a8e04f263b6",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/json.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "30d91841e7f24bb63fba92165dc389a363b6e18055d7c2749dbf891e986d085c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/json_fwd.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "7f50d7790bcfc96394a6f1a1e6635d4b2c8e08e48081ea2e9129df071cb871ef",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/ordered_map.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "117612ea3fca3a4fb6ea2e5b529984c232a4c6deab312a7c7edfe11ff8451534",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/thirdparty/hedley/hedley.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "6c5cdf981e43776f4cd320dc7476309efa7332f457288c4f33051b7fa4f7611d",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/include/nlohmann/thirdparty/hedley/hedley_undef.hpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "2e5aff1a15cbfd8786a2776d0ec0e38e14d2ceadeea229bce5c583bafc26803c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/launch/local_planner.launch": {
+      "common_fix_sha256": null,
+      "release_sha256": "950dc096cd5230a9645a4297f90e983fe477d83235eb1f8ff3021c4e5b3508af",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "fe4cf66ffe8179079c656f3132eb0cfaf85fc89feb7f1ec179037c2793bdae63",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/paths/correspondences.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "3a8621d56fb4c2f5bf83cbff9eb32134f209bcc7bd5fa46ba95bf98b1656b914",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/paths/pathList.ply": {
+      "common_fix_sha256": null,
+      "release_sha256": "115bd9b0f8e950779b327ea20438deac2cb7b0967cade33da40c4552a28aaf7b",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/paths/path_generator.m": {
+      "common_fix_sha256": null,
+      "release_sha256": "3e1d175b2a39c9a9bb4286c7f71dd68cc620928f7b2493d255e93d7ff737cf2a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/paths/paths.ply": {
+      "common_fix_sha256": null,
+      "release_sha256": "262ad9308e269454a50f45baa2e7030d86ed88c32db73c679cee4973cd70a991",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/paths/startPaths.ply": {
+      "common_fix_sha256": null,
+      "release_sha256": "5be6026aa9a2eb028d0a5829638304a95b2674265efacb35975363d740b0318a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/src/localPlanner.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "ec8b305879b215b7e374ecf2fc6900b5021b26a1c22ca0d2a1b78232bff9e26c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/local_planner/src/pathFollower.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "c14f77fb28c0016513c3c3989b513005c80f78e6c9c7f90032607a171213812a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis/CMakeLists.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "bc27a2a9982058f0b329ca2118b4fa48d0e625081bba3aa2be0c34663cd3364a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis/launch/terrain_analysis.launch": {
+      "common_fix_sha256": null,
+      "release_sha256": "4e13110913f3afe3a72ea3e08670ec2fe6aa7a3b55c40ac63d7c461f1c9daf08",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "69cc515424c30557335b59fc90ecaf140668b5e9bf338106a8d253a3243d3262",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis/src/terrainAnalysis.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "f8cd8c30cdc1a1db1a806782871edbd29b366923c935a02e495956cf5f0bef1d",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis_ext/CMakeLists.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "63af56cfdb1d1d6e316567a563ccb4ffc45e7d30ac80eff6aa55f22df2d53768",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis_ext/launch/terrain_analysis_ext.launch": {
+      "common_fix_sha256": null,
+      "release_sha256": "2f3ec249aff49fce565925d2abd559ad5d78497193d9409d5fece3100b27533c",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis_ext/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "974995c5bc2541f12ddf7449c26af2a333cb309d529ac64c14b40fc5ad2e35a4",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": {
+      "common_fix_sha256": null,
+      "release_sha256": "d57b07dbe5e5549232924ae8c9fba16d7075658ac2a5a87f594897600ed9bb44",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/visibility_graph_msg/CMakeLists.txt": {
+      "common_fix_sha256": null,
+      "release_sha256": "6e2c750d8d0da022f12d2be0735fea626fe6a0b47a84d7a1c90d418ffc5afa16",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/visibility_graph_msg/msg/Graph.msg": {
+      "common_fix_sha256": null,
+      "release_sha256": "d18e360599f292767a1718c75b3ce8374fddf82b4ff5d43436dd8bdaac47c9dd",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/visibility_graph_msg/msg/Node.msg": {
+      "common_fix_sha256": null,
+      "release_sha256": "9f36f41356e6976227605658d6d881440ef2d41f05bd1b98d31a1967e2fc4747",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    },
+    "src/visibility_graph_msg/package.xml": {
+      "common_fix_sha256": null,
+      "release_sha256": "954517697460ba969d17404bfd00de5a66966cb2d90b7d62ed23b8c59d62399a",
+      "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
+    }
+  },
+  "document_scope": {
+    "directories": [
+      "docs"
+    ],
+    "files": [
+      "README.md",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md",
+      ".dockerignore",
+      ".gitignore"
+    ],
+    "excluded_directory_names": [
+      "__pycache__"
+    ]
+  },
+  "document_files_sha256": {
+    ".dockerignore": "4b8b5e6e2da7aa63edb2632efd2f94c03bee1ab32a8952b3386b5d0dd0ce672b",
+    ".gitignore": "51e8b4411f455705649f27a4c507e1ad6b883a291426f99b4f30c0008380790f",
+    "LICENSE": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "README.md": "eb1f4a1905aef05eff194589525b1380e3c29e7da304c4d163a625437c7fe25c",
+    "THIRD_PARTY_NOTICES.md": "3add44b528726b6d4354546bb247d28b40403559c7ad1eab5dfde7dfb0d4ef4e",
+    "docs/calibration.md": "65dcc206ef0f5b949cefa95b4e981f4546a077cded33ecec89030a38f03e83e7",
+    "docs/deployment.md": "0eef3615266d6155511525c30d0604810bb7d368de3519569f147a5ccf833487",
+    "docs/native.md": "066d35011c319cf69b99b3d8b5eb7f15144f24c19785aeeb75d918da1a4b4dc1",
+    "docs/navigation.md": "f4c5d6967ccb2ce51ccd25edce2f701b2c7cab489a4eed51501684c6b07170ee",
+    "docs/provenance.md": "bc8c067ed4d7db0d5066d4d5509bd75e86229d487de0c4d7a30a68284ed836b9"
+  },
+  "packages": {
+    "terrain_analysis": {
+      "repository_path": "src/base_autonomy/terrain_analysis",
+      "revision": "43d5f54b389b251713f0097893c30fa76c870d54",
+      "upstream_files_sha256": {
+        "src/terrain_analysis/CMakeLists.txt": "ed5f8d705cfde976e242c545211a7dce37d4f579b225b3c9ce212602f21f9da6",
+        "src/terrain_analysis/launch/terrain_analysis.launch": "4e13110913f3afe3a72ea3e08670ec2fe6aa7a3b55c40ac63d7c461f1c9daf08",
+        "src/terrain_analysis/package.xml": "69cc515424c30557335b59fc90ecaf140668b5e9bf338106a8d253a3243d3262",
+        "src/terrain_analysis/src/terrainAnalysis.cpp": "64bd3024406ebbc55bf231a58b4de15b0a1fcb9e976acef60d75e540b0e9cf0c"
+      },
+      "server_snapshot_files_sha256": {
+        "src/terrain_analysis/CMakeLists.txt": "bc27a2a9982058f0b329ca2118b4fa48d0e625081bba3aa2be0c34663cd3364a",
+        "src/terrain_analysis/launch/terrain_analysis.launch": "4e13110913f3afe3a72ea3e08670ec2fe6aa7a3b55c40ac63d7c461f1c9daf08",
+        "src/terrain_analysis/package.xml": "69cc515424c30557335b59fc90ecaf140668b5e9bf338106a8d253a3243d3262",
+        "src/terrain_analysis/src/terrainAnalysis.cpp": "b8f91ded202e8fe246c1c4d11e445c97451bc8e9c60cdf3dce497e39ba3d3abf"
+      },
+      "release_files_sha256": {
+        "src/terrain_analysis/CMakeLists.txt": "bc27a2a9982058f0b329ca2118b4fa48d0e625081bba3aa2be0c34663cd3364a",
+        "src/terrain_analysis/launch/terrain_analysis.launch": "4e13110913f3afe3a72ea3e08670ec2fe6aa7a3b55c40ac63d7c461f1c9daf08",
+        "src/terrain_analysis/package.xml": "69cc515424c30557335b59fc90ecaf140668b5e9bf338106a8d253a3243d3262",
+        "src/terrain_analysis/src/terrainAnalysis.cpp": "f8cd8c30cdc1a1db1a806782871edbd29b366923c935a02e495956cf5f0bef1d"
+      },
+      "differences_from_upstream": {
+        "src/terrain_analysis/CMakeLists.txt": {
+          "upstream_sha256": "ed5f8d705cfde976e242c545211a7dce37d4f579b225b3c9ce212602f21f9da6",
+          "release_sha256": "bc27a2a9982058f0b329ca2118b4fa48d0e625081bba3aa2be0c34663cd3364a"
+        },
+        "src/terrain_analysis/src/terrainAnalysis.cpp": {
+          "upstream_sha256": "64bd3024406ebbc55bf231a58b4de15b0a1fcb9e976acef60d75e540b0e9cf0c",
+          "release_sha256": "f8cd8c30cdc1a1db1a806782871edbd29b366923c935a02e495956cf5f0bef1d"
+        }
+      },
+      "differences_from_server_snapshot": {
+        "src/terrain_analysis/src/terrainAnalysis.cpp": {
+          "server_sha256": "b8f91ded202e8fe246c1c4d11e445c97451bc8e9c60cdf3dce497e39ba3d3abf",
+          "release_sha256": "f8cd8c30cdc1a1db1a806782871edbd29b366923c935a02e495956cf5f0bef1d"
+        }
+      },
+      "local_change_description": "Preserve audited world-frame/original-stamp, optional acknowledgement, and Jazzy compatibility changes"
+    },
+    "terrain_analysis_ext": {
+      "repository_path": "src/base_autonomy/terrain_analysis_ext",
+      "revision": "43d5f54b389b251713f0097893c30fa76c870d54",
+      "upstream_files_sha256": {
+        "src/terrain_analysis_ext/CMakeLists.txt": "292dd84a5bf91d0ac0fe3bf9f41f6fc285fec6f172d823c28078b1103b72c2f1",
+        "src/terrain_analysis_ext/launch/terrain_analysis_ext.launch": "2f3ec249aff49fce565925d2abd559ad5d78497193d9409d5fece3100b27533c",
+        "src/terrain_analysis_ext/package.xml": "974995c5bc2541f12ddf7449c26af2a333cb309d529ac64c14b40fc5ad2e35a4",
+        "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": "1e5fff88f2f42626482d2e351cc7b45a3c05e615ca7a24edc36ae90a0243809f"
+      },
+      "server_snapshot_files_sha256": {
+        "src/terrain_analysis_ext/CMakeLists.txt": "63af56cfdb1d1d6e316567a563ccb4ffc45e7d30ac80eff6aa55f22df2d53768",
+        "src/terrain_analysis_ext/launch/terrain_analysis_ext.launch": "2f3ec249aff49fce565925d2abd559ad5d78497193d9409d5fece3100b27533c",
+        "src/terrain_analysis_ext/package.xml": "974995c5bc2541f12ddf7449c26af2a333cb309d529ac64c14b40fc5ad2e35a4",
+        "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": "240768c3016a7130a3c0406eeff9449f0b2bd9ee1c50a7b7736e7b8d9292e72c"
+      },
+      "release_files_sha256": {
+        "src/terrain_analysis_ext/CMakeLists.txt": "63af56cfdb1d1d6e316567a563ccb4ffc45e7d30ac80eff6aa55f22df2d53768",
+        "src/terrain_analysis_ext/launch/terrain_analysis_ext.launch": "2f3ec249aff49fce565925d2abd559ad5d78497193d9409d5fece3100b27533c",
+        "src/terrain_analysis_ext/package.xml": "974995c5bc2541f12ddf7449c26af2a333cb309d529ac64c14b40fc5ad2e35a4",
+        "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": "d57b07dbe5e5549232924ae8c9fba16d7075658ac2a5a87f594897600ed9bb44"
+      },
+      "differences_from_upstream": {
+        "src/terrain_analysis_ext/CMakeLists.txt": {
+          "upstream_sha256": "292dd84a5bf91d0ac0fe3bf9f41f6fc285fec6f172d823c28078b1103b72c2f1",
+          "release_sha256": "63af56cfdb1d1d6e316567a563ccb4ffc45e7d30ac80eff6aa55f22df2d53768"
+        },
+        "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": {
+          "upstream_sha256": "1e5fff88f2f42626482d2e351cc7b45a3c05e615ca7a24edc36ae90a0243809f",
+          "release_sha256": "d57b07dbe5e5549232924ae8c9fba16d7075658ac2a5a87f594897600ed9bb44"
+        }
+      },
+      "differences_from_server_snapshot": {
+        "src/terrain_analysis_ext/src/terrainAnalysisExt.cpp": {
+          "server_sha256": "240768c3016a7130a3c0406eeff9449f0b2bd9ee1c50a7b7736e7b8d9292e72c",
+          "release_sha256": "d57b07dbe5e5549232924ae8c9fba16d7075658ac2a5a87f594897600ed9bb44"
+        }
+      },
+      "local_change_description": "Preserve audited world-frame/original-stamp, optional acknowledgement, and Jazzy compatibility changes"
+    },
+    "local_planner": {
+      "repository_path": "src/base_autonomy/local_planner",
+      "revision": "43d5f54b389b251713f0097893c30fa76c870d54",
+      "upstream_files_sha256": {
+        "src/local_planner/CMakeLists.txt": "fcea1f2a30d45a9bdb5334098460a7aef0510f1f7a77bcd7d621d06944f2b4a8",
+        "src/local_planner/include/common/motor_crc.h": "46e942ca7d1dde44251ad437219b42ecf4cf6125e9010434c607909a35b9a809",
+        "src/local_planner/include/common/ros2_sport_client.h": "170ccd1d98db9a9b970e774b5ef2f1811442dd9d1178c19628c1eff122643705",
+        "src/local_planner/include/nlohmann/adl_serializer.hpp": "0c4ce295a3f4092cff092901c340c961b10c48ec8d555110fe3df9f619740a19",
+        "src/local_planner/include/nlohmann/byte_container_with_subtype.hpp": "b56733d3a5b84004f4c7da8ac29ff030509d6a013eeb090541bfcdc46c1a5dc0",
+        "src/local_planner/include/nlohmann/detail/abi_macros.hpp": "702af5c60305125d8e5a4c813d271882b93bb2ba43cdfe91ee4edcef3fbeeb71",
+        "src/local_planner/include/nlohmann/detail/conversions/from_json.hpp": "8cad2ff4a90591110a5cc6134eef25e5a16c33f97b531e1576ed551319d16896",
+        "src/local_planner/include/nlohmann/detail/conversions/to_chars.hpp": "1710dc29a710e8a2121872aefcdd5667c88d3b41b3f863e793a6265106ec237c",
+        "src/local_planner/include/nlohmann/detail/conversions/to_json.hpp": "8d725eca0c56c3f36e64f2d98b701e900d381c6155d0ca98f75ee23173933aef",
+        "src/local_planner/include/nlohmann/detail/exceptions.hpp": "f3621e521c99f4bbfdb0da3aa7b29ff6ceef03163ca62c1ff07efaf06cf1c03c",
+        "src/local_planner/include/nlohmann/detail/hash.hpp": "54f7dd4f4d6cc7bd4c09fec7bda7e47992ee5799bf235104384ee70108023cff",
+        "src/local_planner/include/nlohmann/detail/input/binary_reader.hpp": "2d9cd443303da37c1f5a88b6e1358309c233e54899f82682f33bc6f42c5de97a",
+        "src/local_planner/include/nlohmann/detail/input/input_adapters.hpp": "581e5a0982c01bf63449479547e555101b70641dbfc65c31078e0fc4a4e61671",
+        "src/local_planner/include/nlohmann/detail/input/json_sax.hpp": "be444c45a477d6a26e8bfbb13965e29fc91734a5d06e13b8f34e3b065cf21438",
+        "src/local_planner/include/nlohmann/detail/input/lexer.hpp": "723a7ae568a1460da5235cd1f844db6b12b0f684b5284d5a4c7db4dbe165c980",
+        "src/local_planner/include/nlohmann/detail/input/parser.hpp": "fd687a688fc68835ee1337f4e1e7e935bea6cd17dffabb43399628a69424d669",
+        "src/local_planner/include/nlohmann/detail/input/position_t.hpp": "9007ed8be12f1b0d001c292c1525fdeb1418bed8cd63bf8a00b118574f5bd5d1",
+        "src/local_planner/include/nlohmann/detail/iterators/internal_iterator.hpp": "2414d89c20b4eb1278672a21b0f09858c4861ffe878432ec942e23e4d277479a",
+        "src/local_planner/include/nlohmann/detail/iterators/iter_impl.hpp": "68d4b911bfdef6dfb0d14f3c6c58cc7bb1a15f7464dd784ebeb8f753991074b2",
+        "src/local_planner/include/nlohmann/detail/iterators/iteration_proxy.hpp": "5a04f88931571c197aaec348575f42e27007b990e528b8405b6544425ba5a70f",
+        "src/local_planner/include/nlohmann/detail/iterators/iterator_traits.hpp": "78a1c32b2bad6782f97063cf642a6dc02588960b9420c1924ca5ef76fb8df9d8",
+        "src/local_planner/include/nlohmann/detail/iterators/json_reverse_iterator.hpp": "3872b8f61110ff09a77c3a3dca852c0fee9defcaab5b778dc990a253883a5329",
+        "src/local_planner/include/nlohmann/detail/iterators/primitive_iterator.hpp": "274ba54c5c2b2cd8e7c1e635392b09e73fd65d4183571f821ad149b3954ed818",
+        "src/local_planner/include/nlohmann/detail/json_custom_base_class.hpp": "bd8766af0922ce350f00da817c5544b009bd3dbe701d6afd8e5809cedd6e6405",
+        "src/local_planner/include/nlohmann/detail/json_pointer.hpp": "89e228596dccae2f4d0f45cfd40097ad29ef2670e8bf461b1a7ee823d5a03834",
+        "src/local_planner/include/nlohmann/detail/json_ref.hpp": "ef04660db0236f2f3341bd36de00cbc3f494018278800294be82f85e1fcc4b7c",
+        "src/local_planner/include/nlohmann/detail/macro_scope.hpp": "586645c0e64aefc9aa6550f26a32938c4e272f5afc6e63de81e09c1723d2d5e6",
+        "src/local_planner/include/nlohmann/detail/macro_unscope.hpp": "65bb2a65eb2935643f5b788efb7b4092f1a329d0b4fbbc9a1b7343775f58797f",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/begin.hpp": "f79ecf122600e2e64f344dd95277910816206e37a80bed18737d22f281dbb465",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/end.hpp": "f0d1493594068a73102b52c47f48d3443ea589afbcaaa2672b0e71499f61d696",
+        "src/local_planner/include/nlohmann/detail/meta/cpp_future.hpp": "519285d9ceca3d6d3afa0c647c71f8790b91179da66a08b68a9f73a8218016f3",
+        "src/local_planner/include/nlohmann/detail/meta/detected.hpp": "01963ca48427b32286a4bda3741c0817648af65eef673fe7cc9fc9d94cf343a8",
+        "src/local_planner/include/nlohmann/detail/meta/identity_tag.hpp": "9a95aaad68fe15b01570b4f9efaebd1ed2e5ad703767f4b93fc2cd855142199c",
+        "src/local_planner/include/nlohmann/detail/meta/is_sax.hpp": "876aaf9f4ccbed679a9340cf51b3dbe38eaf0b18122e0affe0c5e711a2f73533",
+        "src/local_planner/include/nlohmann/detail/meta/std_fs.hpp": "68e8e979cca53bd97bc2e85b9e8a78066b5e791a951b0c73290cd7e5c740bc6a",
+        "src/local_planner/include/nlohmann/detail/meta/type_traits.hpp": "b13c458f9cd6a2d8577031f12e11a951e4ae7b508cce64ffadff42f248ad8b4b",
+        "src/local_planner/include/nlohmann/detail/meta/void_t.hpp": "30cf458ad751b37097da34c3e28d9e387bbb37fab29d180984baba4e67d3a831",
+        "src/local_planner/include/nlohmann/detail/output/binary_writer.hpp": "fa372506e0779ac7e989c5dcd57b065eb741abc260ededb7ed9fcd848cc6f6ad",
+        "src/local_planner/include/nlohmann/detail/output/output_adapters.hpp": "fec93f451953874aad7a30c79b921cd0c4ade1698e36e964bfe89f1a4a6a3c0f",
+        "src/local_planner/include/nlohmann/detail/output/serializer.hpp": "ede7f1d89e8ba0b2744b5cadd60e99f2e6012abccf1c04aab7356c94a2448fcb",
+        "src/local_planner/include/nlohmann/detail/string_concat.hpp": "9cc995f50f574dab3da7e98aae81ac50c3b0c2ca8eb29f95d2f7172f4865b273",
+        "src/local_planner/include/nlohmann/detail/string_escape.hpp": "16899a2c01c9aee2cd0af5b9ede0d3f579af00b58303197e2692f756310317c9",
+        "src/local_planner/include/nlohmann/detail/value_t.hpp": "f16e2a05c4fdfbe22fc2cee90f7adc0e6ca2c5345348fa1f8c855a8e04f263b6",
+        "src/local_planner/include/nlohmann/json.hpp": "30d91841e7f24bb63fba92165dc389a363b6e18055d7c2749dbf891e986d085c",
+        "src/local_planner/include/nlohmann/json_fwd.hpp": "7f50d7790bcfc96394a6f1a1e6635d4b2c8e08e48081ea2e9129df071cb871ef",
+        "src/local_planner/include/nlohmann/ordered_map.hpp": "117612ea3fca3a4fb6ea2e5b529984c232a4c6deab312a7c7edfe11ff8451534",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley.hpp": "6c5cdf981e43776f4cd320dc7476309efa7332f457288c4f33051b7fa4f7611d",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley_undef.hpp": "2e5aff1a15cbfd8786a2776d0ec0e38e14d2ceadeea229bce5c583bafc26803c",
+        "src/local_planner/launch/local_planner.launch": "f84478be40daad7301085869c48869c399e0a5df57af69127ac2b3cdd4bdbf4f",
+        "src/local_planner/package.xml": "ac0302e1fef4c0f483b94d3e36255577687062d68fff4e1c4046654c7340478b",
+        "src/local_planner/paths/correspondences.txt": "3a8621d56fb4c2f5bf83cbff9eb32134f209bcc7bd5fa46ba95bf98b1656b914",
+        "src/local_planner/paths/pathList.ply": "115bd9b0f8e950779b327ea20438deac2cb7b0967cade33da40c4552a28aaf7b",
+        "src/local_planner/paths/path_generator.m": "3e1d175b2a39c9a9bb4286c7f71dd68cc620928f7b2493d255e93d7ff737cf2a",
+        "src/local_planner/paths/paths.ply": "262ad9308e269454a50f45baa2e7030d86ed88c32db73c679cee4973cd70a991",
+        "src/local_planner/paths/startPaths.ply": "5be6026aa9a2eb028d0a5829638304a95b2674265efacb35975363d740b0318a",
+        "src/local_planner/src/localPlanner.cpp": "82afc27f1ccbace48b8953edc3edfbe048d98fee93f14b467853275ac01d6c0e",
+        "src/local_planner/src/pathFollower.cpp": "c7193a0da03725f0bc8b48d0927069f6b2e40c2cf6d78c956c83d3aa015a8454"
+      },
+      "server_snapshot_files_sha256": {
+        "src/local_planner/CMakeLists.txt": "78a9666e0dfdcfb9f435c20964f03251e656d0e5b0db9acccd4bab89cceab0d7",
+        "src/local_planner/include/common/motor_crc.h": "46e942ca7d1dde44251ad437219b42ecf4cf6125e9010434c607909a35b9a809",
+        "src/local_planner/include/common/ros2_sport_client.h": "170ccd1d98db9a9b970e774b5ef2f1811442dd9d1178c19628c1eff122643705",
+        "src/local_planner/include/nlohmann/adl_serializer.hpp": "0c4ce295a3f4092cff092901c340c961b10c48ec8d555110fe3df9f619740a19",
+        "src/local_planner/include/nlohmann/byte_container_with_subtype.hpp": "b56733d3a5b84004f4c7da8ac29ff030509d6a013eeb090541bfcdc46c1a5dc0",
+        "src/local_planner/include/nlohmann/detail/abi_macros.hpp": "702af5c60305125d8e5a4c813d271882b93bb2ba43cdfe91ee4edcef3fbeeb71",
+        "src/local_planner/include/nlohmann/detail/conversions/from_json.hpp": "8cad2ff4a90591110a5cc6134eef25e5a16c33f97b531e1576ed551319d16896",
+        "src/local_planner/include/nlohmann/detail/conversions/to_chars.hpp": "1710dc29a710e8a2121872aefcdd5667c88d3b41b3f863e793a6265106ec237c",
+        "src/local_planner/include/nlohmann/detail/conversions/to_json.hpp": "8d725eca0c56c3f36e64f2d98b701e900d381c6155d0ca98f75ee23173933aef",
+        "src/local_planner/include/nlohmann/detail/exceptions.hpp": "f3621e521c99f4bbfdb0da3aa7b29ff6ceef03163ca62c1ff07efaf06cf1c03c",
+        "src/local_planner/include/nlohmann/detail/hash.hpp": "54f7dd4f4d6cc7bd4c09fec7bda7e47992ee5799bf235104384ee70108023cff",
+        "src/local_planner/include/nlohmann/detail/input/binary_reader.hpp": "2d9cd443303da37c1f5a88b6e1358309c233e54899f82682f33bc6f42c5de97a",
+        "src/local_planner/include/nlohmann/detail/input/input_adapters.hpp": "581e5a0982c01bf63449479547e555101b70641dbfc65c31078e0fc4a4e61671",
+        "src/local_planner/include/nlohmann/detail/input/json_sax.hpp": "be444c45a477d6a26e8bfbb13965e29fc91734a5d06e13b8f34e3b065cf21438",
+        "src/local_planner/include/nlohmann/detail/input/lexer.hpp": "723a7ae568a1460da5235cd1f844db6b12b0f684b5284d5a4c7db4dbe165c980",
+        "src/local_planner/include/nlohmann/detail/input/parser.hpp": "fd687a688fc68835ee1337f4e1e7e935bea6cd17dffabb43399628a69424d669",
+        "src/local_planner/include/nlohmann/detail/input/position_t.hpp": "9007ed8be12f1b0d001c292c1525fdeb1418bed8cd63bf8a00b118574f5bd5d1",
+        "src/local_planner/include/nlohmann/detail/iterators/internal_iterator.hpp": "2414d89c20b4eb1278672a21b0f09858c4861ffe878432ec942e23e4d277479a",
+        "src/local_planner/include/nlohmann/detail/iterators/iter_impl.hpp": "68d4b911bfdef6dfb0d14f3c6c58cc7bb1a15f7464dd784ebeb8f753991074b2",
+        "src/local_planner/include/nlohmann/detail/iterators/iteration_proxy.hpp": "5a04f88931571c197aaec348575f42e27007b990e528b8405b6544425ba5a70f",
+        "src/local_planner/include/nlohmann/detail/iterators/iterator_traits.hpp": "78a1c32b2bad6782f97063cf642a6dc02588960b9420c1924ca5ef76fb8df9d8",
+        "src/local_planner/include/nlohmann/detail/iterators/json_reverse_iterator.hpp": "3872b8f61110ff09a77c3a3dca852c0fee9defcaab5b778dc990a253883a5329",
+        "src/local_planner/include/nlohmann/detail/iterators/primitive_iterator.hpp": "274ba54c5c2b2cd8e7c1e635392b09e73fd65d4183571f821ad149b3954ed818",
+        "src/local_planner/include/nlohmann/detail/json_custom_base_class.hpp": "bd8766af0922ce350f00da817c5544b009bd3dbe701d6afd8e5809cedd6e6405",
+        "src/local_planner/include/nlohmann/detail/json_pointer.hpp": "89e228596dccae2f4d0f45cfd40097ad29ef2670e8bf461b1a7ee823d5a03834",
+        "src/local_planner/include/nlohmann/detail/json_ref.hpp": "ef04660db0236f2f3341bd36de00cbc3f494018278800294be82f85e1fcc4b7c",
+        "src/local_planner/include/nlohmann/detail/macro_scope.hpp": "586645c0e64aefc9aa6550f26a32938c4e272f5afc6e63de81e09c1723d2d5e6",
+        "src/local_planner/include/nlohmann/detail/macro_unscope.hpp": "65bb2a65eb2935643f5b788efb7b4092f1a329d0b4fbbc9a1b7343775f58797f",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/begin.hpp": "f79ecf122600e2e64f344dd95277910816206e37a80bed18737d22f281dbb465",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/end.hpp": "f0d1493594068a73102b52c47f48d3443ea589afbcaaa2672b0e71499f61d696",
+        "src/local_planner/include/nlohmann/detail/meta/cpp_future.hpp": "519285d9ceca3d6d3afa0c647c71f8790b91179da66a08b68a9f73a8218016f3",
+        "src/local_planner/include/nlohmann/detail/meta/detected.hpp": "01963ca48427b32286a4bda3741c0817648af65eef673fe7cc9fc9d94cf343a8",
+        "src/local_planner/include/nlohmann/detail/meta/identity_tag.hpp": "9a95aaad68fe15b01570b4f9efaebd1ed2e5ad703767f4b93fc2cd855142199c",
+        "src/local_planner/include/nlohmann/detail/meta/is_sax.hpp": "876aaf9f4ccbed679a9340cf51b3dbe38eaf0b18122e0affe0c5e711a2f73533",
+        "src/local_planner/include/nlohmann/detail/meta/std_fs.hpp": "68e8e979cca53bd97bc2e85b9e8a78066b5e791a951b0c73290cd7e5c740bc6a",
+        "src/local_planner/include/nlohmann/detail/meta/type_traits.hpp": "b13c458f9cd6a2d8577031f12e11a951e4ae7b508cce64ffadff42f248ad8b4b",
+        "src/local_planner/include/nlohmann/detail/meta/void_t.hpp": "30cf458ad751b37097da34c3e28d9e387bbb37fab29d180984baba4e67d3a831",
+        "src/local_planner/include/nlohmann/detail/output/binary_writer.hpp": "fa372506e0779ac7e989c5dcd57b065eb741abc260ededb7ed9fcd848cc6f6ad",
+        "src/local_planner/include/nlohmann/detail/output/output_adapters.hpp": "fec93f451953874aad7a30c79b921cd0c4ade1698e36e964bfe89f1a4a6a3c0f",
+        "src/local_planner/include/nlohmann/detail/output/serializer.hpp": "ede7f1d89e8ba0b2744b5cadd60e99f2e6012abccf1c04aab7356c94a2448fcb",
+        "src/local_planner/include/nlohmann/detail/string_concat.hpp": "9cc995f50f574dab3da7e98aae81ac50c3b0c2ca8eb29f95d2f7172f4865b273",
+        "src/local_planner/include/nlohmann/detail/string_escape.hpp": "16899a2c01c9aee2cd0af5b9ede0d3f579af00b58303197e2692f756310317c9",
+        "src/local_planner/include/nlohmann/detail/value_t.hpp": "f16e2a05c4fdfbe22fc2cee90f7adc0e6ca2c5345348fa1f8c855a8e04f263b6",
+        "src/local_planner/include/nlohmann/json.hpp": "30d91841e7f24bb63fba92165dc389a363b6e18055d7c2749dbf891e986d085c",
+        "src/local_planner/include/nlohmann/json_fwd.hpp": "7f50d7790bcfc96394a6f1a1e6635d4b2c8e08e48081ea2e9129df071cb871ef",
+        "src/local_planner/include/nlohmann/ordered_map.hpp": "117612ea3fca3a4fb6ea2e5b529984c232a4c6deab312a7c7edfe11ff8451534",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley.hpp": "6c5cdf981e43776f4cd320dc7476309efa7332f457288c4f33051b7fa4f7611d",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley_undef.hpp": "2e5aff1a15cbfd8786a2776d0ec0e38e14d2ceadeea229bce5c583bafc26803c",
+        "src/local_planner/launch/local_planner.launch": "f84478be40daad7301085869c48869c399e0a5df57af69127ac2b3cdd4bdbf4f",
+        "src/local_planner/package.xml": "ac0302e1fef4c0f483b94d3e36255577687062d68fff4e1c4046654c7340478b",
+        "src/local_planner/paths/correspondences.txt": "3a8621d56fb4c2f5bf83cbff9eb32134f209bcc7bd5fa46ba95bf98b1656b914",
+        "src/local_planner/paths/pathList.ply": "115bd9b0f8e950779b327ea20438deac2cb7b0967cade33da40c4552a28aaf7b",
+        "src/local_planner/paths/path_generator.m": "3e1d175b2a39c9a9bb4286c7f71dd68cc620928f7b2493d255e93d7ff737cf2a",
+        "src/local_planner/paths/paths.ply": "262ad9308e269454a50f45baa2e7030d86ed88c32db73c679cee4973cd70a991",
+        "src/local_planner/paths/startPaths.ply": "5be6026aa9a2eb028d0a5829638304a95b2674265efacb35975363d740b0318a",
+        "src/local_planner/src/localPlanner.cpp": "5bded73bed1e254e7781a0458117ad2a940e0cfa621121a76dc7d6b600710c0c",
+        "src/local_planner/src/pathFollower.cpp": "c939f4f87c292cf04bf4c4a0a7451727952827c4b1e9da668a6a9d7c31728aa1"
+      },
+      "release_files_sha256": {
+        "src/local_planner/CMakeLists.txt": "41ec2ea96078a2cab370a8f7a665c8542241a7f938339abae0b0536fc114bed3",
+        "src/local_planner/include/common/motor_crc.h": "46e942ca7d1dde44251ad437219b42ecf4cf6125e9010434c607909a35b9a809",
+        "src/local_planner/include/common/ros2_sport_client.h": "170ccd1d98db9a9b970e774b5ef2f1811442dd9d1178c19628c1eff122643705",
+        "src/local_planner/include/nlohmann/adl_serializer.hpp": "0c4ce295a3f4092cff092901c340c961b10c48ec8d555110fe3df9f619740a19",
+        "src/local_planner/include/nlohmann/byte_container_with_subtype.hpp": "b56733d3a5b84004f4c7da8ac29ff030509d6a013eeb090541bfcdc46c1a5dc0",
+        "src/local_planner/include/nlohmann/detail/abi_macros.hpp": "702af5c60305125d8e5a4c813d271882b93bb2ba43cdfe91ee4edcef3fbeeb71",
+        "src/local_planner/include/nlohmann/detail/conversions/from_json.hpp": "8cad2ff4a90591110a5cc6134eef25e5a16c33f97b531e1576ed551319d16896",
+        "src/local_planner/include/nlohmann/detail/conversions/to_chars.hpp": "1710dc29a710e8a2121872aefcdd5667c88d3b41b3f863e793a6265106ec237c",
+        "src/local_planner/include/nlohmann/detail/conversions/to_json.hpp": "8d725eca0c56c3f36e64f2d98b701e900d381c6155d0ca98f75ee23173933aef",
+        "src/local_planner/include/nlohmann/detail/exceptions.hpp": "f3621e521c99f4bbfdb0da3aa7b29ff6ceef03163ca62c1ff07efaf06cf1c03c",
+        "src/local_planner/include/nlohmann/detail/hash.hpp": "54f7dd4f4d6cc7bd4c09fec7bda7e47992ee5799bf235104384ee70108023cff",
+        "src/local_planner/include/nlohmann/detail/input/binary_reader.hpp": "2d9cd443303da37c1f5a88b6e1358309c233e54899f82682f33bc6f42c5de97a",
+        "src/local_planner/include/nlohmann/detail/input/input_adapters.hpp": "581e5a0982c01bf63449479547e555101b70641dbfc65c31078e0fc4a4e61671",
+        "src/local_planner/include/nlohmann/detail/input/json_sax.hpp": "be444c45a477d6a26e8bfbb13965e29fc91734a5d06e13b8f34e3b065cf21438",
+        "src/local_planner/include/nlohmann/detail/input/lexer.hpp": "723a7ae568a1460da5235cd1f844db6b12b0f684b5284d5a4c7db4dbe165c980",
+        "src/local_planner/include/nlohmann/detail/input/parser.hpp": "fd687a688fc68835ee1337f4e1e7e935bea6cd17dffabb43399628a69424d669",
+        "src/local_planner/include/nlohmann/detail/input/position_t.hpp": "9007ed8be12f1b0d001c292c1525fdeb1418bed8cd63bf8a00b118574f5bd5d1",
+        "src/local_planner/include/nlohmann/detail/iterators/internal_iterator.hpp": "2414d89c20b4eb1278672a21b0f09858c4861ffe878432ec942e23e4d277479a",
+        "src/local_planner/include/nlohmann/detail/iterators/iter_impl.hpp": "68d4b911bfdef6dfb0d14f3c6c58cc7bb1a15f7464dd784ebeb8f753991074b2",
+        "src/local_planner/include/nlohmann/detail/iterators/iteration_proxy.hpp": "5a04f88931571c197aaec348575f42e27007b990e528b8405b6544425ba5a70f",
+        "src/local_planner/include/nlohmann/detail/iterators/iterator_traits.hpp": "78a1c32b2bad6782f97063cf642a6dc02588960b9420c1924ca5ef76fb8df9d8",
+        "src/local_planner/include/nlohmann/detail/iterators/json_reverse_iterator.hpp": "3872b8f61110ff09a77c3a3dca852c0fee9defcaab5b778dc990a253883a5329",
+        "src/local_planner/include/nlohmann/detail/iterators/primitive_iterator.hpp": "274ba54c5c2b2cd8e7c1e635392b09e73fd65d4183571f821ad149b3954ed818",
+        "src/local_planner/include/nlohmann/detail/json_custom_base_class.hpp": "bd8766af0922ce350f00da817c5544b009bd3dbe701d6afd8e5809cedd6e6405",
+        "src/local_planner/include/nlohmann/detail/json_pointer.hpp": "89e228596dccae2f4d0f45cfd40097ad29ef2670e8bf461b1a7ee823d5a03834",
+        "src/local_planner/include/nlohmann/detail/json_ref.hpp": "ef04660db0236f2f3341bd36de00cbc3f494018278800294be82f85e1fcc4b7c",
+        "src/local_planner/include/nlohmann/detail/macro_scope.hpp": "586645c0e64aefc9aa6550f26a32938c4e272f5afc6e63de81e09c1723d2d5e6",
+        "src/local_planner/include/nlohmann/detail/macro_unscope.hpp": "65bb2a65eb2935643f5b788efb7b4092f1a329d0b4fbbc9a1b7343775f58797f",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/begin.hpp": "f79ecf122600e2e64f344dd95277910816206e37a80bed18737d22f281dbb465",
+        "src/local_planner/include/nlohmann/detail/meta/call_std/end.hpp": "f0d1493594068a73102b52c47f48d3443ea589afbcaaa2672b0e71499f61d696",
+        "src/local_planner/include/nlohmann/detail/meta/cpp_future.hpp": "519285d9ceca3d6d3afa0c647c71f8790b91179da66a08b68a9f73a8218016f3",
+        "src/local_planner/include/nlohmann/detail/meta/detected.hpp": "01963ca48427b32286a4bda3741c0817648af65eef673fe7cc9fc9d94cf343a8",
+        "src/local_planner/include/nlohmann/detail/meta/identity_tag.hpp": "9a95aaad68fe15b01570b4f9efaebd1ed2e5ad703767f4b93fc2cd855142199c",
+        "src/local_planner/include/nlohmann/detail/meta/is_sax.hpp": "876aaf9f4ccbed679a9340cf51b3dbe38eaf0b18122e0affe0c5e711a2f73533",
+        "src/local_planner/include/nlohmann/detail/meta/std_fs.hpp": "68e8e979cca53bd97bc2e85b9e8a78066b5e791a951b0c73290cd7e5c740bc6a",
+        "src/local_planner/include/nlohmann/detail/meta/type_traits.hpp": "b13c458f9cd6a2d8577031f12e11a951e4ae7b508cce64ffadff42f248ad8b4b",
+        "src/local_planner/include/nlohmann/detail/meta/void_t.hpp": "30cf458ad751b37097da34c3e28d9e387bbb37fab29d180984baba4e67d3a831",
+        "src/local_planner/include/nlohmann/detail/output/binary_writer.hpp": "fa372506e0779ac7e989c5dcd57b065eb741abc260ededb7ed9fcd848cc6f6ad",
+        "src/local_planner/include/nlohmann/detail/output/output_adapters.hpp": "fec93f451953874aad7a30c79b921cd0c4ade1698e36e964bfe89f1a4a6a3c0f",
+        "src/local_planner/include/nlohmann/detail/output/serializer.hpp": "ede7f1d89e8ba0b2744b5cadd60e99f2e6012abccf1c04aab7356c94a2448fcb",
+        "src/local_planner/include/nlohmann/detail/string_concat.hpp": "9cc995f50f574dab3da7e98aae81ac50c3b0c2ca8eb29f95d2f7172f4865b273",
+        "src/local_planner/include/nlohmann/detail/string_escape.hpp": "16899a2c01c9aee2cd0af5b9ede0d3f579af00b58303197e2692f756310317c9",
+        "src/local_planner/include/nlohmann/detail/value_t.hpp": "f16e2a05c4fdfbe22fc2cee90f7adc0e6ca2c5345348fa1f8c855a8e04f263b6",
+        "src/local_planner/include/nlohmann/json.hpp": "30d91841e7f24bb63fba92165dc389a363b6e18055d7c2749dbf891e986d085c",
+        "src/local_planner/include/nlohmann/json_fwd.hpp": "7f50d7790bcfc96394a6f1a1e6635d4b2c8e08e48081ea2e9129df071cb871ef",
+        "src/local_planner/include/nlohmann/ordered_map.hpp": "117612ea3fca3a4fb6ea2e5b529984c232a4c6deab312a7c7edfe11ff8451534",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley.hpp": "6c5cdf981e43776f4cd320dc7476309efa7332f457288c4f33051b7fa4f7611d",
+        "src/local_planner/include/nlohmann/thirdparty/hedley/hedley_undef.hpp": "2e5aff1a15cbfd8786a2776d0ec0e38e14d2ceadeea229bce5c583bafc26803c",
+        "src/local_planner/launch/local_planner.launch": "950dc096cd5230a9645a4297f90e983fe477d83235eb1f8ff3021c4e5b3508af",
+        "src/local_planner/package.xml": "fe4cf66ffe8179079c656f3132eb0cfaf85fc89feb7f1ec179037c2793bdae63",
+        "src/local_planner/paths/correspondences.txt": "3a8621d56fb4c2f5bf83cbff9eb32134f209bcc7bd5fa46ba95bf98b1656b914",
+        "src/local_planner/paths/pathList.ply": "115bd9b0f8e950779b327ea20438deac2cb7b0967cade33da40c4552a28aaf7b",
+        "src/local_planner/paths/path_generator.m": "3e1d175b2a39c9a9bb4286c7f71dd68cc620928f7b2493d255e93d7ff737cf2a",
+        "src/local_planner/paths/paths.ply": "262ad9308e269454a50f45baa2e7030d86ed88c32db73c679cee4973cd70a991",
+        "src/local_planner/paths/startPaths.ply": "5be6026aa9a2eb028d0a5829638304a95b2674265efacb35975363d740b0318a",
+        "src/local_planner/src/localPlanner.cpp": "ec8b305879b215b7e374ecf2fc6900b5021b26a1c22ca0d2a1b78232bff9e26c",
+        "src/local_planner/src/pathFollower.cpp": "c14f77fb28c0016513c3c3989b513005c80f78e6c9c7f90032607a171213812a"
+      },
+      "differences_from_upstream": {
+        "src/local_planner/CMakeLists.txt": {
+          "upstream_sha256": "fcea1f2a30d45a9bdb5334098460a7aef0510f1f7a77bcd7d621d06944f2b4a8",
+          "release_sha256": "41ec2ea96078a2cab370a8f7a665c8542241a7f938339abae0b0536fc114bed3"
+        },
+        "src/local_planner/launch/local_planner.launch": {
+          "upstream_sha256": "f84478be40daad7301085869c48869c399e0a5df57af69127ac2b3cdd4bdbf4f",
+          "release_sha256": "950dc096cd5230a9645a4297f90e983fe477d83235eb1f8ff3021c4e5b3508af"
+        },
+        "src/local_planner/package.xml": {
+          "upstream_sha256": "ac0302e1fef4c0f483b94d3e36255577687062d68fff4e1c4046654c7340478b",
+          "release_sha256": "fe4cf66ffe8179079c656f3132eb0cfaf85fc89feb7f1ec179037c2793bdae63"
+        },
+        "src/local_planner/src/localPlanner.cpp": {
+          "upstream_sha256": "82afc27f1ccbace48b8953edc3edfbe048d98fee93f14b467853275ac01d6c0e",
+          "release_sha256": "ec8b305879b215b7e374ecf2fc6900b5021b26a1c22ca0d2a1b78232bff9e26c"
+        },
+        "src/local_planner/src/pathFollower.cpp": {
+          "upstream_sha256": "c7193a0da03725f0bc8b48d0927069f6b2e40c2cf6d78c956c83d3aa015a8454",
+          "release_sha256": "c14f77fb28c0016513c3c3989b513005c80f78e6c9c7f90032607a171213812a"
+        }
+      },
+      "differences_from_server_snapshot": {
+        "src/local_planner/CMakeLists.txt": {
+          "server_sha256": "78a9666e0dfdcfb9f435c20964f03251e656d0e5b0db9acccd4bab89cceab0d7",
+          "release_sha256": "41ec2ea96078a2cab370a8f7a665c8542241a7f938339abae0b0536fc114bed3"
+        },
+        "src/local_planner/launch/local_planner.launch": {
+          "server_sha256": "f84478be40daad7301085869c48869c399e0a5df57af69127ac2b3cdd4bdbf4f",
+          "release_sha256": "950dc096cd5230a9645a4297f90e983fe477d83235eb1f8ff3021c4e5b3508af"
+        },
+        "src/local_planner/package.xml": {
+          "server_sha256": "ac0302e1fef4c0f483b94d3e36255577687062d68fff4e1c4046654c7340478b",
+          "release_sha256": "fe4cf66ffe8179079c656f3132eb0cfaf85fc89feb7f1ec179037c2793bdae63"
+        },
+        "src/local_planner/src/localPlanner.cpp": {
+          "server_sha256": "5bded73bed1e254e7781a0458117ad2a940e0cfa621121a76dc7d6b600710c0c",
+          "release_sha256": "ec8b305879b215b7e374ecf2fc6900b5021b26a1c22ca0d2a1b78232bff9e26c"
+        },
+        "src/local_planner/src/pathFollower.cpp": {
+          "server_sha256": "c939f4f87c292cf04bf4c4a0a7451727952827c4b1e9da668a6a9d7c31728aa1",
+          "release_sha256": "c14f77fb28c0016513c3c3989b513005c80f78e6c9c7f90032607a171213812a"
+        }
+      },
+      "local_change_description": "Remove direct Unitree SportClient/API actuation and dependencies; retain path-following TwistStamped output and Jazzy compatibility"
+    },
+    "far_planner": {
+      "repository_path": "src/route_planner/far_planner",
+      "revision": "43d5f54b389b251713f0097893c30fa76c870d54",
+      "upstream_files_sha256": {
+        "src/far_planner/CMakeLists.txt": "43e33235b87e2128597f5ca0dfba3882e6bb89ee8681abedaf14bbde9a93f563",
+        "src/far_planner/config/default.yaml": "d3b648548518494d3e6ebfcae2db5436c0f3cdd00b5402668dca27b7fd20c448",
+        "src/far_planner/config/matterport.yaml": "aff673fbddfc30e993ad5710f2a531a7d8d4b740379d1a74a533718a56de0d8f",
+        "src/far_planner/data/boundary.ply": "ad351ed09c41c40859dfb6bca1fbad8070fe95afe28ca876aed208ed5019ee13",
+        "src/far_planner/data/boundary_graph.vgh": "8699438de77c089a8248e2c4f91a9da62515117091fdef4f28197da478003094",
+        "src/far_planner/data/indoor.vgh": "12940ea4b1688fdb18b54c7a9ec370c17e39fe620880ea602e34f4433fefe3ee",
+        "src/far_planner/data/trajectory.txt": "ae646dd1544477f42bb87d3001db82bfe059eac87250b0924e879abd65547dbe",
+        "src/far_planner/include/far_planner/contour_detector.h": "1f0355b55adb40f6a6e3c71ce0a5584654a3967e956b56bfc3fa32c723962e82",
+        "src/far_planner/include/far_planner/contour_graph.h": "2a7f5bf89230e47eb7294c2486027facab9acbaa56b237008906078a35ae882d",
+        "src/far_planner/include/far_planner/dynamic_graph.h": "39f4c09bb34769e67d41d87e2be77f4d5a7db4ac82324907582dac1845ff3486",
+        "src/far_planner/include/far_planner/far_planner.h": "151695e4ddd7519a00c5da4af7dfdcd3f1bc7cdfd67ddc27f6e13c9b2ee03edd",
+        "src/far_planner/include/far_planner/graph_msger.h": "c838c2e5edacba72e40b722c05c0965349fa0240bb9a9810b7ea880250018bfa",
+        "src/far_planner/include/far_planner/graph_planner.h": "45868004264260f15f2ad29acf2a8b978570f3b3aca948ed540b8f0827614e8d",
+        "src/far_planner/include/far_planner/grid.h": "ace0548f36a3a8f9ed1a21f5d1dc3f47bb2951279d06e9544f0d81d117743ab1",
+        "src/far_planner/include/far_planner/intersection.h": "85a742951056da8b04bb04def545c9c21b8b571245e5204f8900ae3b9eb53031",
+        "src/far_planner/include/far_planner/map_handler.h": "cc53ad77461b12cb11526ddd2041f19c5dcc65ec64e5a4e68a616afd84dd6de0",
+        "src/far_planner/include/far_planner/node_struct.h": "c9dd9df57ecfd84ce0c4dad3906171228b8a56e68e9948b0117531691f3c5b6f",
+        "src/far_planner/include/far_planner/planner_visualizer.h": "7c7c10bf243e2ddc3310a750559da36a460c9d6217a0e292e95422f9c7cbc364",
+        "src/far_planner/include/far_planner/point_struct.h": "7fa8d4e485542d89217c81df65bdd74b6723cf47cf0815ed2a77ee5a74c38cf1",
+        "src/far_planner/include/far_planner/scan_handler.h": "8bf753a5d0fdfe9a17a4bab08360c9e85ada8b9dac1fc7585865920ca35f7dcc",
+        "src/far_planner/include/far_planner/terrain_planner.h": "bb8ede012d01155707685679ffd53907228da3992981dbb9ed425c4b9ee72ce5",
+        "src/far_planner/include/far_planner/time_measure.h": "85d30a4ee4e67bd185d57ce1d53acd9995a2f0d74202afc37dcca572f6469567",
+        "src/far_planner/include/far_planner/utility.h": "0c4c4713d9636d3393cd041c09ab575b413fd8d2f9e95e712cd411a4366d5025",
+        "src/far_planner/launch/far_planner.launch": "1b49f779645848cee92c3d67186d9c0a7fd9608aeb3a7203c26809c25eaf1b71",
+        "src/far_planner/package.xml": "43fb8db360d6a5ce44b5ec1da9fd0a5b1b271d32cb8ceb235033363ee9bc7eee",
+        "src/far_planner/rviz/default.rviz": "1ea999e5768502ecad7c1112482964ce1297caab7d8c6f2e12975dbfd86ea3c4",
+        "src/far_planner/rviz/matterport.rviz": "c767bc103298bf1b6a4d56b8821b7ae2c079681e569a4bf9082a044c125265cd",
+        "src/far_planner/src/contour_detector.cpp": "8f1ae7139e5cb75f9c68fb6ed234a64e3ad6580231ac4e82eb2730b8b9dd4d40",
+        "src/far_planner/src/contour_graph.cpp": "e38adbd90371799a6c07c4448acff69fe1cbeebbb92dd8ffbcdf4742e04acac2",
+        "src/far_planner/src/dynamic_graph.cpp": "5dcd8db1e6a59daa1f736ab672eace6f004066e035f125209562eb12e9adf0f7",
+        "src/far_planner/src/far_planner.cpp": "207af8ccd2e4d449f4d973a5e944e614b396e26ed74eff48e24bf9245f395073",
+        "src/far_planner/src/graph_msger.cpp": "ab752bb5310cfbcd943dc4b476a5afbd7220f188d6bff969aaa42b6a08d68266",
+        "src/far_planner/src/graph_planner.cpp": "e63df5395bfaadd6e2c5cd37d7e6bb102c74625d23f6ffc6c40823c523ba9add",
+        "src/far_planner/src/map_handler.cpp": "8d0776e812f78953c2f058ffae91ef7f6f1b7a43458fec0b818e4f56f159a894",
+        "src/far_planner/src/planner_visualizer.cpp": "5401f842f64cdae8b878645f19fb144ea81cc0fa61548191ccfc8e36f4dd5f0c",
+        "src/far_planner/src/scan_handler.cpp": "a67438fd6d05bc659402dab9b81b590cc3140d8d6c3abd1a19eb18043f473ae9",
+        "src/far_planner/src/terrain_planner.cpp": "fc99e463f62471b2512de25638be2efc7f482a4ce3b829bc379eb897bf016007",
+        "src/far_planner/src/utility.cpp": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135"
+      },
+      "server_snapshot_files_sha256": {
+        "src/far_planner/CMakeLists.txt": "98f43bbac9ccf5bd756ff60ee7d66ea7104a56a6c4337e4198b71570b0c24847",
+        "src/far_planner/config/default.yaml": "d3b648548518494d3e6ebfcae2db5436c0f3cdd00b5402668dca27b7fd20c448",
+        "src/far_planner/config/matterport.yaml": "aff673fbddfc30e993ad5710f2a531a7d8d4b740379d1a74a533718a56de0d8f",
+        "src/far_planner/data/boundary.ply": "ad351ed09c41c40859dfb6bca1fbad8070fe95afe28ca876aed208ed5019ee13",
+        "src/far_planner/data/boundary_graph.vgh": "8699438de77c089a8248e2c4f91a9da62515117091fdef4f28197da478003094",
+        "src/far_planner/data/indoor.vgh": "12940ea4b1688fdb18b54c7a9ec370c17e39fe620880ea602e34f4433fefe3ee",
+        "src/far_planner/data/trajectory.txt": "ae646dd1544477f42bb87d3001db82bfe059eac87250b0924e879abd65547dbe",
+        "src/far_planner/include/far_planner/contour_detector.h": "1f0355b55adb40f6a6e3c71ce0a5584654a3967e956b56bfc3fa32c723962e82",
+        "src/far_planner/include/far_planner/contour_graph.h": "2a7f5bf89230e47eb7294c2486027facab9acbaa56b237008906078a35ae882d",
+        "src/far_planner/include/far_planner/dynamic_graph.h": "39f4c09bb34769e67d41d87e2be77f4d5a7db4ac82324907582dac1845ff3486",
+        "src/far_planner/include/far_planner/far_planner.h": "151695e4ddd7519a00c5da4af7dfdcd3f1bc7cdfd67ddc27f6e13c9b2ee03edd",
+        "src/far_planner/include/far_planner/graph_msger.h": "c838c2e5edacba72e40b722c05c0965349fa0240bb9a9810b7ea880250018bfa",
+        "src/far_planner/include/far_planner/graph_planner.h": "45868004264260f15f2ad29acf2a8b978570f3b3aca948ed540b8f0827614e8d",
+        "src/far_planner/include/far_planner/grid.h": "ace0548f36a3a8f9ed1a21f5d1dc3f47bb2951279d06e9544f0d81d117743ab1",
+        "src/far_planner/include/far_planner/intersection.h": "85a742951056da8b04bb04def545c9c21b8b571245e5204f8900ae3b9eb53031",
+        "src/far_planner/include/far_planner/map_handler.h": "cc53ad77461b12cb11526ddd2041f19c5dcc65ec64e5a4e68a616afd84dd6de0",
+        "src/far_planner/include/far_planner/node_struct.h": "c9dd9df57ecfd84ce0c4dad3906171228b8a56e68e9948b0117531691f3c5b6f",
+        "src/far_planner/include/far_planner/planner_visualizer.h": "7c7c10bf243e2ddc3310a750559da36a460c9d6217a0e292e95422f9c7cbc364",
+        "src/far_planner/include/far_planner/point_struct.h": "7fa8d4e485542d89217c81df65bdd74b6723cf47cf0815ed2a77ee5a74c38cf1",
+        "src/far_planner/include/far_planner/scan_handler.h": "8bf753a5d0fdfe9a17a4bab08360c9e85ada8b9dac1fc7585865920ca35f7dcc",
+        "src/far_planner/include/far_planner/terrain_planner.h": "bb8ede012d01155707685679ffd53907228da3992981dbb9ed425c4b9ee72ce5",
+        "src/far_planner/include/far_planner/time_measure.h": "85d30a4ee4e67bd185d57ce1d53acd9995a2f0d74202afc37dcca572f6469567",
+        "src/far_planner/include/far_planner/utility.h": "152ea210c3104d501b9bf3a9846194e41d0f3cc17762e7239d54004486aedef1",
+        "src/far_planner/launch/far_planner.launch": "1b49f779645848cee92c3d67186d9c0a7fd9608aeb3a7203c26809c25eaf1b71",
+        "src/far_planner/package.xml": "a1792c11f025c1eb187002c0c94b4d5ad3f3277899189cdb2d49d42224f8d70e",
+        "src/far_planner/rviz/default.rviz": "1ea999e5768502ecad7c1112482964ce1297caab7d8c6f2e12975dbfd86ea3c4",
+        "src/far_planner/rviz/matterport.rviz": "c767bc103298bf1b6a4d56b8821b7ae2c079681e569a4bf9082a044c125265cd",
+        "src/far_planner/src/contour_detector.cpp": "8f1ae7139e5cb75f9c68fb6ed234a64e3ad6580231ac4e82eb2730b8b9dd4d40",
+        "src/far_planner/src/contour_graph.cpp": "e38adbd90371799a6c07c4448acff69fe1cbeebbb92dd8ffbcdf4742e04acac2",
+        "src/far_planner/src/dynamic_graph.cpp": "5dcd8db1e6a59daa1f736ab672eace6f004066e035f125209562eb12e9adf0f7",
+        "src/far_planner/src/far_planner.cpp": "207af8ccd2e4d449f4d973a5e944e614b396e26ed74eff48e24bf9245f395073",
+        "src/far_planner/src/graph_msger.cpp": "ab752bb5310cfbcd943dc4b476a5afbd7220f188d6bff969aaa42b6a08d68266",
+        "src/far_planner/src/graph_planner.cpp": "e63df5395bfaadd6e2c5cd37d7e6bb102c74625d23f6ffc6c40823c523ba9add",
+        "src/far_planner/src/map_handler.cpp": "8d0776e812f78953c2f058ffae91ef7f6f1b7a43458fec0b818e4f56f159a894",
+        "src/far_planner/src/planner_visualizer.cpp": "5401f842f64cdae8b878645f19fb144ea81cc0fa61548191ccfc8e36f4dd5f0c",
+        "src/far_planner/src/scan_handler.cpp": "a67438fd6d05bc659402dab9b81b590cc3140d8d6c3abd1a19eb18043f473ae9",
+        "src/far_planner/src/terrain_planner.cpp": "fc99e463f62471b2512de25638be2efc7f482a4ce3b829bc379eb897bf016007",
+        "src/far_planner/src/utility.cpp": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135"
+      },
+      "release_files_sha256": {
+        "src/far_planner/CMakeLists.txt": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6",
+        "src/far_planner/config/default.yaml": "d3b648548518494d3e6ebfcae2db5436c0f3cdd00b5402668dca27b7fd20c448",
+        "src/far_planner/config/matterport.yaml": "aff673fbddfc30e993ad5710f2a531a7d8d4b740379d1a74a533718a56de0d8f",
+        "src/far_planner/data/boundary.ply": "ad351ed09c41c40859dfb6bca1fbad8070fe95afe28ca876aed208ed5019ee13",
+        "src/far_planner/data/boundary_graph.vgh": "8699438de77c089a8248e2c4f91a9da62515117091fdef4f28197da478003094",
+        "src/far_planner/data/indoor.vgh": "12940ea4b1688fdb18b54c7a9ec370c17e39fe620880ea602e34f4433fefe3ee",
+        "src/far_planner/data/trajectory.txt": "ae646dd1544477f42bb87d3001db82bfe059eac87250b0924e879abd65547dbe",
+        "src/far_planner/include/far_planner/contour_detector.h": "1f0355b55adb40f6a6e3c71ce0a5584654a3967e956b56bfc3fa32c723962e82",
+        "src/far_planner/include/far_planner/contour_graph.h": "2a7f5bf89230e47eb7294c2486027facab9acbaa56b237008906078a35ae882d",
+        "src/far_planner/include/far_planner/dynamic_graph.h": "39f4c09bb34769e67d41d87e2be77f4d5a7db4ac82324907582dac1845ff3486",
+        "src/far_planner/include/far_planner/far_planner.h": "65ccfc63fd3d88aa3c11fded60af054309781570680183c7e699f0610b8942cf",
+        "src/far_planner/include/far_planner/graph_msger.h": "c838c2e5edacba72e40b722c05c0965349fa0240bb9a9810b7ea880250018bfa",
+        "src/far_planner/include/far_planner/graph_planner.h": "45868004264260f15f2ad29acf2a8b978570f3b3aca948ed540b8f0827614e8d",
+        "src/far_planner/include/far_planner/grid.h": "ace0548f36a3a8f9ed1a21f5d1dc3f47bb2951279d06e9544f0d81d117743ab1",
+        "src/far_planner/include/far_planner/intersection.h": "85a742951056da8b04bb04def545c9c21b8b571245e5204f8900ae3b9eb53031",
+        "src/far_planner/include/far_planner/map_handler.h": "7800f16145a49723212a88eecaf536762878971ea94d88be270eec1da3874ca8",
+        "src/far_planner/include/far_planner/node_struct.h": "c9dd9df57ecfd84ce0c4dad3906171228b8a56e68e9948b0117531691f3c5b6f",
+        "src/far_planner/include/far_planner/planner_visualizer.h": "7c7c10bf243e2ddc3310a750559da36a460c9d6217a0e292e95422f9c7cbc364",
+        "src/far_planner/include/far_planner/point_struct.h": "7fa8d4e485542d89217c81df65bdd74b6723cf47cf0815ed2a77ee5a74c38cf1",
+        "src/far_planner/include/far_planner/scan_handler.h": "8bf753a5d0fdfe9a17a4bab08360c9e85ada8b9dac1fc7585865920ca35f7dcc",
+        "src/far_planner/include/far_planner/terrain_kdtree.h": "1404e8b6944875e1261face8d8dcb1ca3e474436c1625c91f8cf255f3b42fac9",
+        "src/far_planner/include/far_planner/terrain_planner.h": "bb8ede012d01155707685679ffd53907228da3992981dbb9ed425c4b9ee72ce5",
+        "src/far_planner/include/far_planner/time_measure.h": "85d30a4ee4e67bd185d57ce1d53acd9995a2f0d74202afc37dcca572f6469567",
+        "src/far_planner/include/far_planner/utility.h": "f31e70e249331ac52d4be989a78be9c75d0f248920c9d891a91281e7d7834a88",
+        "src/far_planner/launch/far_planner.launch": "1b49f779645848cee92c3d67186d9c0a7fd9608aeb3a7203c26809c25eaf1b71",
+        "src/far_planner/package.xml": "a1792c11f025c1eb187002c0c94b4d5ad3f3277899189cdb2d49d42224f8d70e",
+        "src/far_planner/rviz/default.rviz": "1ea999e5768502ecad7c1112482964ce1297caab7d8c6f2e12975dbfd86ea3c4",
+        "src/far_planner/rviz/matterport.rviz": "c767bc103298bf1b6a4d56b8821b7ae2c079681e569a4bf9082a044c125265cd",
+        "src/far_planner/src/contour_detector.cpp": "8f1ae7139e5cb75f9c68fb6ed234a64e3ad6580231ac4e82eb2730b8b9dd4d40",
+        "src/far_planner/src/contour_graph.cpp": "e38adbd90371799a6c07c4448acff69fe1cbeebbb92dd8ffbcdf4742e04acac2",
+        "src/far_planner/src/dynamic_graph.cpp": "5dcd8db1e6a59daa1f736ab672eace6f004066e035f125209562eb12e9adf0f7",
+        "src/far_planner/src/far_planner.cpp": "efd4cf46ebca15acffda1b34ac1377f30e32139474fd97de0feee680738ea5bf",
+        "src/far_planner/src/graph_msger.cpp": "ab752bb5310cfbcd943dc4b476a5afbd7220f188d6bff969aaa42b6a08d68266",
+        "src/far_planner/src/graph_planner.cpp": "e63df5395bfaadd6e2c5cd37d7e6bb102c74625d23f6ffc6c40823c523ba9add",
+        "src/far_planner/src/map_handler.cpp": "8d0776e812f78953c2f058ffae91ef7f6f1b7a43458fec0b818e4f56f159a894",
+        "src/far_planner/src/planner_visualizer.cpp": "5401f842f64cdae8b878645f19fb144ea81cc0fa61548191ccfc8e36f4dd5f0c",
+        "src/far_planner/src/scan_handler.cpp": "a67438fd6d05bc659402dab9b81b590cc3140d8d6c3abd1a19eb18043f473ae9",
+        "src/far_planner/src/terrain_planner.cpp": "fc99e463f62471b2512de25638be2efc7f482a4ce3b829bc379eb897bf016007",
+        "src/far_planner/src/utility.cpp": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135",
+        "src/far_planner/test/terrain_kdtree_regression.cpp": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8"
+      },
+      "differences_from_upstream": {
+        "src/far_planner/CMakeLists.txt": {
+          "upstream_sha256": "43e33235b87e2128597f5ca0dfba3882e6bb89ee8681abedaf14bbde9a93f563",
+          "release_sha256": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6"
+        },
+        "src/far_planner/include/far_planner/far_planner.h": {
+          "upstream_sha256": "151695e4ddd7519a00c5da4af7dfdcd3f1bc7cdfd67ddc27f6e13c9b2ee03edd",
+          "release_sha256": "65ccfc63fd3d88aa3c11fded60af054309781570680183c7e699f0610b8942cf"
+        },
+        "src/far_planner/include/far_planner/map_handler.h": {
+          "upstream_sha256": "cc53ad77461b12cb11526ddd2041f19c5dcc65ec64e5a4e68a616afd84dd6de0",
+          "release_sha256": "7800f16145a49723212a88eecaf536762878971ea94d88be270eec1da3874ca8"
+        },
+        "src/far_planner/include/far_planner/terrain_kdtree.h": {
+          "upstream_sha256": null,
+          "release_sha256": "1404e8b6944875e1261face8d8dcb1ca3e474436c1625c91f8cf255f3b42fac9"
+        },
+        "src/far_planner/include/far_planner/utility.h": {
+          "upstream_sha256": "0c4c4713d9636d3393cd041c09ab575b413fd8d2f9e95e712cd411a4366d5025",
+          "release_sha256": "f31e70e249331ac52d4be989a78be9c75d0f248920c9d891a91281e7d7834a88"
+        },
+        "src/far_planner/package.xml": {
+          "upstream_sha256": "43fb8db360d6a5ce44b5ec1da9fd0a5b1b271d32cb8ceb235033363ee9bc7eee",
+          "release_sha256": "a1792c11f025c1eb187002c0c94b4d5ad3f3277899189cdb2d49d42224f8d70e"
+        },
+        "src/far_planner/src/far_planner.cpp": {
+          "upstream_sha256": "207af8ccd2e4d449f4d973a5e944e614b396e26ed74eff48e24bf9245f395073",
+          "release_sha256": "efd4cf46ebca15acffda1b34ac1377f30e32139474fd97de0feee680738ea5bf"
+        },
+        "src/far_planner/test/terrain_kdtree_regression.cpp": {
+          "upstream_sha256": null,
+          "release_sha256": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8"
+        }
+      },
+      "differences_from_server_snapshot": {
+        "src/far_planner/CMakeLists.txt": {
+          "server_sha256": "98f43bbac9ccf5bd756ff60ee7d66ea7104a56a6c4337e4198b71570b0c24847",
+          "release_sha256": "2d5c42c0cf0056b252643c08a11f264cc81df53dd7704a9932431205285484f6"
+        },
+        "src/far_planner/include/far_planner/far_planner.h": {
+          "server_sha256": "151695e4ddd7519a00c5da4af7dfdcd3f1bc7cdfd67ddc27f6e13c9b2ee03edd",
+          "release_sha256": "65ccfc63fd3d88aa3c11fded60af054309781570680183c7e699f0610b8942cf"
+        },
+        "src/far_planner/include/far_planner/map_handler.h": {
+          "server_sha256": "cc53ad77461b12cb11526ddd2041f19c5dcc65ec64e5a4e68a616afd84dd6de0",
+          "release_sha256": "7800f16145a49723212a88eecaf536762878971ea94d88be270eec1da3874ca8"
+        },
+        "src/far_planner/include/far_planner/terrain_kdtree.h": {
+          "server_sha256": null,
+          "release_sha256": "1404e8b6944875e1261face8d8dcb1ca3e474436c1625c91f8cf255f3b42fac9"
+        },
+        "src/far_planner/include/far_planner/utility.h": {
+          "server_sha256": "152ea210c3104d501b9bf3a9846194e41d0f3cc17762e7239d54004486aedef1",
+          "release_sha256": "f31e70e249331ac52d4be989a78be9c75d0f248920c9d891a91281e7d7834a88"
+        },
+        "src/far_planner/src/far_planner.cpp": {
+          "server_sha256": "207af8ccd2e4d449f4d973a5e944e614b396e26ed74eff48e24bf9245f395073",
+          "release_sha256": "efd4cf46ebca15acffda1b34ac1377f30e32139474fd97de0feee680738ea5bf"
+        },
+        "src/far_planner/test/terrain_kdtree_regression.cpp": {
+          "server_sha256": null,
+          "release_sha256": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8"
+        }
+      },
+      "local_change_description": "Jazzy compatibility, corrected std_srvs metadata, empty terrain KD-tree query protection with CTest regression, and explicit far_ready graph-initialization state for guarded goal acceptance"
+    },
+    "visibility_graph_msg": {
+      "repository_path": "src/route_planner/visibility_graph_msg",
+      "revision": "43d5f54b389b251713f0097893c30fa76c870d54",
+      "upstream_files_sha256": {
+        "src/visibility_graph_msg/CMakeLists.txt": "9c47e5b5672c24787acb781da514b9c69fc869cd2c18f15ac2f90c9945b966b3",
+        "src/visibility_graph_msg/msg/Graph.msg": "d18e360599f292767a1718c75b3ce8374fddf82b4ff5d43436dd8bdaac47c9dd",
+        "src/visibility_graph_msg/msg/Node.msg": "9f36f41356e6976227605658d6d881440ef2d41f05bd1b98d31a1967e2fc4747",
+        "src/visibility_graph_msg/package.xml": "954517697460ba969d17404bfd00de5a66966cb2d90b7d62ed23b8c59d62399a"
+      },
+      "server_snapshot_files_sha256": {
+        "src/visibility_graph_msg/CMakeLists.txt": "6e2c750d8d0da022f12d2be0735fea626fe6a0b47a84d7a1c90d418ffc5afa16",
+        "src/visibility_graph_msg/msg/Graph.msg": "d18e360599f292767a1718c75b3ce8374fddf82b4ff5d43436dd8bdaac47c9dd",
+        "src/visibility_graph_msg/msg/Node.msg": "9f36f41356e6976227605658d6d881440ef2d41f05bd1b98d31a1967e2fc4747",
+        "src/visibility_graph_msg/package.xml": "954517697460ba969d17404bfd00de5a66966cb2d90b7d62ed23b8c59d62399a"
+      },
+      "release_files_sha256": {
+        "src/visibility_graph_msg/CMakeLists.txt": "6e2c750d8d0da022f12d2be0735fea626fe6a0b47a84d7a1c90d418ffc5afa16",
+        "src/visibility_graph_msg/msg/Graph.msg": "d18e360599f292767a1718c75b3ce8374fddf82b4ff5d43436dd8bdaac47c9dd",
+        "src/visibility_graph_msg/msg/Node.msg": "9f36f41356e6976227605658d6d881440ef2d41f05bd1b98d31a1967e2fc4747",
+        "src/visibility_graph_msg/package.xml": "954517697460ba969d17404bfd00de5a66966cb2d90b7d62ed23b8c59d62399a"
+      },
+      "differences_from_upstream": {
+        "src/visibility_graph_msg/CMakeLists.txt": {
+          "upstream_sha256": "9c47e5b5672c24787acb781da514b9c69fc869cd2c18f15ac2f90c9945b966b3",
+          "release_sha256": "6e2c750d8d0da022f12d2be0735fea626fe6a0b47a84d7a1c90d418ffc5afa16"
+        }
+      },
+      "differences_from_server_snapshot": {},
+      "local_change_description": "Preserve FAR visibility graph message definitions and required build compatibility"
+    }
+  },
+  "limitations": [
+    "A source hash inventory is not proof of algorithm correctness or calibration accuracy.",
+    "B1 is a frozen static gyro compensation candidate, not complete IMU intrinsic calibration.",
+    "No real robot command output is enabled by the default navigation entrypoint.",
+    "Bag replay cannot establish closed-loop navigation; target-robot validation remains separate."
+  ]
+}

@@ -22,6 +22,7 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+#include "gravity_alignment.h"
 
 
 #define MAX_INI_COUNT (100)
@@ -37,7 +38,7 @@ class ImuProcess
   void Reset();
   void Reset(double start_timestamp, const sensor_msgs::msg::Imu::ConstSharedPtr &lastimu);
   void Process(const MeasureGroup &meas, PointCloudXYZI::Ptr pcl_un_);
-  void Set_init(Eigen::Vector3d &tmp_gravity, Eigen::Matrix3d &rot);
+  bool Set_init(Eigen::Vector3d &tmp_gravity, Eigen::Matrix3d &rot);
 
   ofstream fout_imu;
  
@@ -161,32 +162,7 @@ void ImuProcess::Process(const MeasureGroup &meas, PointCloudXYZI::Ptr cur_pcl_u
   }
 }
 
-void ImuProcess::Set_init(Eigen::Vector3d &tmp_gravity, Eigen::Matrix3d &rot)
+bool ImuProcess::Set_init(Eigen::Vector3d &tmp_gravity, Eigen::Matrix3d &rot)
 {
-  /** 1. initializing the gravity, gyro bias, acc and gyro covariance
-   ** 2. normalize the acceleration measurenments to unit gravity **/
- 
-  M3D hat_grav;
-  hat_grav << 0.0, gravity_(2), -gravity_(1),
-              -gravity_(2), 0.0, gravity_(0),
-              gravity_(1), -gravity_(0), 0.0;
-  double align_norm = (hat_grav * tmp_gravity).norm() / tmp_gravity.norm() / gravity_.norm();
-  double align_cos = gravity_.transpose() * tmp_gravity;
-  align_cos = align_cos / gravity_.norm() / tmp_gravity.norm();
-  if (align_norm < 1e-6)
-  {
-    if (align_cos > 1e-6)
-    {
-      rot = Eye3d;
-    }
-    else
-    {
-      rot = -Eye3d;
-    }
-  }
-  else
-  {
-    V3D align_angle = hat_grav * tmp_gravity / (hat_grav * tmp_gravity).norm() * acos(align_cos); 
-    rot = Exp(align_angle(0), align_angle(1), align_angle(2));
-  }
+  return point_lio::gravity_alignment_rotation(tmp_gravity, gravity_, rot);
 }

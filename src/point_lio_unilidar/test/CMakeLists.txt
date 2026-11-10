@@ -1,0 +1,10 @@
+# Standalone numerical regression: no ROS or PCL runtime is required.
+cmake_minimum_required(VERSION 3.10)
+project(point_lio_gravity_regression LANGUAGES CXX)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+enable_testing()
+add_executable(gravity_alignment_test gravity_alignment_test.cpp)
+target_compile_features(gravity_alignment_test PRIVATE cxx_std_17)
+target_include_directories(gravity_alignment_test PRIVATE ../include)
+target_link_libraries(gravity_alignment_test PRIVATE Eigen3::Eigen)
+add_test(NAME gravity_alignment COMMAND gravity_alignment_test)

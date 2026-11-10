@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src/go2_p9'))
 from go2_p9.sensor_core import (  # noqa: E402
     AccelSample, AdapterOptions, FIELD_SPECS, IdentityFrameGraph, InvalidSensorData,
     NS_PER_SEC, POINT, POINT_STEP, RawImuInterpolator, check_live_age,
-    clock_relation, interpolate_acceleration, prepare_cloud, validate_merged_imu)
+    clock_relation, interpolate_acceleration, prepare_cloud, prepare_imu, validate_merged_imu)
 from go2_p9.adapter_node import write_diagnostic_report  # noqa: E402
 from go2_p9.cloud_codec import CloudOptions, normalize_cloud, normalize_cloud_numpy  # noqa: E402
 
@@ -243,6 +243,116 @@ class SensorCoreTests(unittest.TestCase):
             getattr(msg, attribute).x = float('nan')
             with self.assertRaises(InvalidSensorData):
                 validate_merged_imu(msg)
+
+    def test_native_corrections_use_declared_sign_and_preserve_other_fields(self):
+        original = imu(frame='utlidar_imu', acceleration=(1., -2., 9.81))
+        before = copy.deepcopy(original)
+        options = AdapterOptions(imu_frame='utlidar_imu', accel_offset=(.5, -1., -19.),
+                                 gyro_bias=(.01, -.02, .03))
+        output, raw_stamp, output_stamp = prepare_imu(original, options=options)
+        self.assertIsNot(output, original)
+        self.assertEqual(original, before)
+        self.assertEqual((raw_stamp, output_stamp), (EPOCH, EPOCH))
+        np.testing.assert_allclose([getattr(output.linear_acceleration, a) for a in 'xyz'],
+                                   [1.5, -3., -9.19], rtol=0., atol=1e-14)
+        np.testing.assert_allclose([getattr(output.angular_velocity, a) for a in 'xyz'],
+                                   [.10, -.20, .30], rtol=0., atol=1e-14)
+        for field in ('header', 'orientation', 'orientation_covariance',
+                      'linear_acceleration_covariance', 'angular_velocity_covariance'):
+            self.assertEqual(getattr(output, field), getattr(before, field))
+        # Reusing the original message cannot apply corrections twice.
+        self.assertEqual(prepare_imu(original, options=options)[0], output)
+        unchanged = prepare_imu(original, options=AdapterOptions(imu_frame='utlidar_imu'))
+        self.assertIs(unchanged[0], original)
+
+    def test_common_clock_preserves_relative_time_and_cloud_point_offsets(self):
+        raw_imu = imu(EPOCH+7, frame='utlidar_imu')
+        raw_cloud = cloud(ns=EPOCH)
+        before = copy.deepcopy((raw_cloud, raw_imu))
+        for common in (2245.232644025, -2.123456789):
+            options = AdapterOptions(imu_frame='utlidar_imu', common_clock_offset_sec=common)
+            prepared_cloud = prepare_cloud(raw_cloud, options=options)
+            prepared_imu, received, sent = prepare_imu(raw_imu, options=options)
+            shift = round(common*NS_PER_SEC)
+            self.assertEqual(prepared_cloud.output_stamp_ns, EPOCH+shift)
+            self.assertEqual((received, sent), (EPOCH+7, EPOCH+7+shift))
+            self.assertEqual(sent-prepared_cloud.output_stamp_ns, 7)
+            self.assertEqual(prepared_cloud.data, prepare_cloud(raw_cloud).data)
+            self.assertEqual(prepared_imu.header.stamp, stamp(sent))
+            self.assertEqual(prepared_imu.angular_velocity, raw_imu.angular_velocity)
+            self.assertEqual(prepared_imu.linear_acceleration, raw_imu.linear_acceleration)
+            # Monotonicity uses native input stamps, not the shifted output epoch.
+            prepare_imu(imu(EPOCH+8, frame='utlidar_imu'), received, options)
+            with self.assertRaisesRegex(InvalidSensorData, 'duplicate or backward'):
+                prepare_imu(raw_imu, received, options)
+        self.assertEqual((raw_cloud, raw_imu), before)
+
+    def test_common_and_cloud_only_clock_corrections_are_added_once(self):
+        options = AdapterOptions(common_clock_offset_sec=2.123456789,
+                                 clock_offset_sec=-.065432101)
+        prepared_cloud = prepare_cloud(cloud(), options=options)
+        _, raw_stamp, imu_stamp = prepare_imu(imu(), options=options)
+        self.assertEqual(raw_stamp, EPOCH)
+        self.assertEqual(imu_stamp, EPOCH+2_123_456_789)
+        self.assertEqual(prepared_cloud.output_stamp_ns, EPOCH+2_123_456_789-65_432_101)
+        self.assertEqual(imu_stamp-prepared_cloud.output_stamp_ns, 65_432_101)
+
+    def test_corrections_reject_invalid_input_and_output_without_mutation(self):
+        options = AdapterOptions(imu_frame='utlidar_imu', common_clock_offset_sec=2.)
+        for ns in (2_147_483_647*NS_PER_SEC,):
+            message = imu(ns, frame='utlidar_imu')
+            before = copy.deepcopy(message)
+            with self.assertRaisesRegex(InvalidSensorData, 'shifted IMU'):
+                prepare_imu(message, options=options)
+            self.assertEqual(message, before)
+        with self.assertRaisesRegex(InvalidSensorData, 'shifted IMU'):
+            prepare_imu(imu(1), options=AdapterOptions(common_clock_offset_sec=-1.))
+        with self.assertRaisesRegex(InvalidSensorData, 'expected native'):
+            prepare_imu(imu(), options=options)
+        for attribute, correction in (('linear_acceleration', 'accel_offset'),
+                                       ('angular_velocity', 'gyro_bias')):
+            message = imu(frame='utlidar_imu')
+            getattr(message, attribute).x = 1.7e308
+            before = copy.deepcopy(message)
+            amount = 1.7e308 if correction == 'accel_offset' else -1.7e308
+            with self.assertRaisesRegex(InvalidSensorData, 'non-finite'):
+                prepare_imu(message, options=AdapterOptions(imu_frame='utlidar_imu',
+                                                            **{correction: (amount, 0., 0.)}))
+            self.assertEqual(message, before)
+        unavailable = imu(frame='utlidar_imu')
+        unavailable.linear_acceleration_covariance[0] = -1.
+        with self.assertRaisesRegex(InvalidSensorData, 'unavailable'):
+            prepare_imu(unavailable, options=options)
+
+    def test_correction_options_reject_invalid_values_and_freeze_vectors(self):
+        for name in ('clock_offset_sec', 'common_clock_offset_sec'):
+            for value in (True, '1', None, float('nan'), float('inf'), 1e308):
+                with self.subTest(name=name, value=value), self.assertRaises(ValueError):
+                    AdapterOptions(**{name: value})
+        for name in ('accel_offset', 'gyro_bias'):
+            for value in (None, 1., '123', [], [1., 2.], [0., 0., 0., 0.],
+                          [True, 0., 0.], ['1', 0., 0.], [float('nan'), 0., 0.],
+                          [0., float('inf'), 0.]):
+                with self.subTest(name=name, value=value), self.assertRaises(ValueError):
+                    AdapterOptions(**{name: value})
+            values = [1., 2., 3.]
+            options = AdapterOptions(**{name: values})
+            values[0] = float('nan')
+            self.assertEqual(getattr(options, name), (1., 2., 3.))
+
+    def test_raw_camera_interpolation_happens_before_common_epoch_shift(self):
+        merger = RawImuInterpolator(frame_graph=graph())
+        merger.push_accel(accel(EPOCH, (0., 1., 2.)), 0.)
+        merger.push_gyro(gyro(EPOCH+5_000_000), .001)
+        raw = merger.push_accel(accel(EPOCH+10_000_000, (10., 11., 12.)), .002)[0]
+        before = copy.deepcopy(raw)
+        options = AdapterOptions(common_clock_offset_sec=3., accel_offset=(1., 0., -1.))
+        output, received, sent = prepare_imu(raw, options=options)
+        self.assertEqual(received, EPOCH+5_000_000)
+        self.assertEqual(sent, EPOCH+3_005_000_000)
+        self.assertEqual([getattr(output.linear_acceleration, a) for a in 'xyz'], [6., 6., 6.])
+        self.assertEqual(raw, before)
+        self.assertEqual(merger.max_used_bracket_ns, 10_000_000)
 
     def test_ns_interpolation_exact_hits_long_gap_and_no_extrapolation(self):
         cov = (.01, 0., 0., 0., .01, 0., 0., 0., .01)

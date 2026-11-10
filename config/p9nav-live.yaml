@@ -1,0 +1,70 @@
+# Explicit P9 navigation live profile. Legacy P9 examples are unchanged.
+# Set current-boot clock offsets after measurement. Zero is an unverified starting value.
+version: 1
+profile_mode: live
+calibration:
+  status: experimental
+  note: 'B1 static D435i gyro correction plus fixed C LiDAR-to-IMU R/t, same robot
+    and unchanged mounting. Experimental; gyro bias may vary with boot and temperature.
+    Body T_imu_base derives from the historical nominal T_LB and is not measured.
+    CLOCK OFFSETS ARE UNVERIFIED ZERO INITIAL VALUES: measure current-boot LiDAR/camera
+    clock relation and set the offsets explicitly before live operation; existing
+    timestamp/age guards remain active. raw_linear avoids relying on the observed
+    RealSense COPY merge. No image-display alignment is applied.'
+  rotation:
+  - 0.8719407787767535
+  - 0.48938821000005656
+  - -0.01478033217243356
+  - -0.12099380744880735
+  - 0.2446292590717415
+  - 0.9620379535990522
+  - 0.4744257337721345
+  - -0.8370517938090508
+  - 0.27251516951505783
+  translation:
+  - 0.04121579449303409
+  - 0.13430446475755778
+  - -0.07078958736127818
+sensor:
+  input_cloud_topic: /utlidar/cloud
+  input_imu_topic: /camera/camera/imu
+  imu_mode: raw_linear
+  cloud_frame: utlidar_lidar
+  imu_frame: camera_imu_optical_frame
+  clock_offset_sec: 0.0
+  point_time_field: time
+  point_time_scale: 1.0
+  common_clock_offset_sec: 0.0
+  accel_offset:
+  - 0.0
+  - 0.0
+  - 0.0
+  gyro_bias:
+  - 0.00028568964388210946
+  - -0.0018381138448739292
+  - 0.0005906477368247819
+  gyro_topic: /camera/camera/gyro/sample
+  accel_topic: /camera/camera/accel/sample
+  raw_gyro_frame: camera_gyro_optical_frame
+  raw_accel_frame: camera_accel_optical_frame
+  max_accel_gap_sec: 0.03
+mapping:
+  voxel_size: 0.05
+  publish_terrain_inputs: true
+  publish_base_frame: true
+  publish_map_alias: false
+  base_frame: base_link
+  T_imu_base_rotation:
+  - 0.058446516568844614
+  - -0.9978107454891997
+  - 0.03094706589087531
+  - -0.013037572697953873
+  - -0.03176035409198325
+  - -0.9994104770343848
+  - 0.9982054029101984
+  - 0.058008586383726225
+  - -0.014865312194784316
+  T_imu_base_translation:
+  - 0.02472464274290669
+  - 0.13798306516164896
+  - -0.3524431717654188

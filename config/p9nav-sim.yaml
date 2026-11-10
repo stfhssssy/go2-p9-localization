@@ -1,0 +1,67 @@
+# Explicit P9 navigation sim profile. Legacy P9 examples are unchanged.
+# Requires the bundled Gazebo sensor adapter; raw Gazebo points lack the canonical time field.
+version: 1
+profile_mode: sim
+calibration:
+  status: synthetic
+  note: 'Exact virtual sensor installation from simulation/sensor_model/model_manifest.json,
+    source SHA256=c36b988488a7ebb6aafa375d0524748216349ba934339267d0ea2bbdcf2786fc;
+    validate expanded URDF against this model at runtime. It does not represent the
+    real D435i. Uses the bundled simulation/p9_sensor_adapter.py output: original
+    LiDAR coordinates, body filtering, instantaneous point time=0 and linearly merged
+    camera-location IMU. All real-robot bias and epoch offsets are disabled; no world/screenshot
+    alignment.'
+  rotation:
+  - -0.9999999560952156
+  - 0.00028616877043835466
+  - 7.692204904555457e-05
+  - 6.579776513858822e-20
+  - -0.25958519950284786
+  - 0.9657202101018011
+  - 0.0002963267905599573
+  - 0.9657201677020635
+  - 0.2595851881058157
+  translation:
+  - 0.03799999999999999
+  - 0.092
+  - -0.030000000000000027
+sensor:
+  input_cloud_topic: /camera_linear/points
+  input_imu_topic: /camera_linear/imu
+  imu_mode: merged_linear
+  cloud_frame: lidar_l1_link
+  imu_frame: camera_imu_optical_frame
+  clock_offset_sec: 0.0
+  point_time_field: time
+  point_time_scale: 1.0
+  common_clock_offset_sec: 0.0
+  accel_offset:
+  - 0.0
+  - 0.0
+  - 0.0
+  gyro_bias:
+  - 0.0
+  - 0.0
+  - 0.0
+mapping:
+  voxel_size: 0.05
+  publish_terrain_inputs: true
+  publish_base_frame: true
+  publish_map_alias: false
+  base_frame: base_link
+  T_imu_base_rotation:
+  - 2.220446049250313e-16
+  - -1.0
+  - 4.930380657631324e-32
+  - 2.220446049250313e-16
+  - 4.930380657631324e-32
+  - -1.0
+  - 1.0
+  - 2.220446049250313e-16
+  - 2.220446049250313e-16
+  T_imu_base_translation:
+  - -6.217248937900877e-17
+  - 0.06199999999999994
+  - -0.28
+estimator:
+  config: pointlio-sim.yaml

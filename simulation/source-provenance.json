@@ -1,0 +1,19 @@
+{
+  "source": "Locally saved final outputs/p9-gazebo-integration/source snapshot",
+  "reuse_scope": "Simulator launch, virtual sensor model, sensor normalization and evaluation math only. No old planner, body bridge, controller guard or prior results copied.",
+  "original_file_sha256": {
+    "simulation.launch.py": "f33763e916ac7d13309cb3602f2bba3dab8e803046df3319375fec273ba6666b",
+    "p9_sensor_adapter.py": "ce975b245a31ff9d81a89a0d5c28ef6d7673558ba9bd17b1a918572ea8a3a0df",
+    "validate_navigation.py": "51f65e13ec06c0e13b6ba1020ae2ea79d9120cdaccf84037d4a3234536b4f2bd",
+    "sensor_model/bridges.launch.py": "0b4d2e8bb3d6a6d9f406addda827e0d6c7857cce487b10fdf7c243ca0a05b62b",
+    "sensor_model/model_contract.py": "9802407562759346c8e7cad583f2a79834757467b7036564e5ed43c277436cbf",
+    "sensor_model/README.txt": "bd52fa0e46bbe04ae683f7f3fa1629ed8cf68d759a2da25a50f142542753f7f9",
+    "sensor_model/go2_p9_camera_imu.urdf.xacro": "46ece9e4cd9c48b13a3c64e7bb1de75151e821347d44f20a87dee0a0f69eb34e",
+    "sensor_model/model_manifest.json": "c36b988488a7ebb6aafa375d0524748216349ba934339267d0ea2bbdcf2786fc"
+  },
+  "screenshot_decoder": {
+    "source": "outputs/p9-public-calibration-transfer-20261109/rviz/source/xwd_to_png.py",
+    "sha256": "f1efde03a8a4338132e3a1c6a7cba5a1c9d0221cc552f583628f2954d9e12636",
+    "role": "lossless conversion only; captures are newly generated"
+  }
+}

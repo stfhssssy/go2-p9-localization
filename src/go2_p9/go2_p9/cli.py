@@ -1,18 +1,28 @@
-"""Explicit live/replay entries. No control commands or automatic sensor drivers."""
+"""Explicit live/replay/sim entries. No control or automatic sensor drivers."""
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 import math
 import os
 from pathlib import Path
 import sys
-from .configuration import home, load
+from .configuration import home, load, estimator_config_path
+
+
+def experimental_delta():
+    """Preserve release provenance while identifying an explicit local experiment."""
+    path = home()/'provenance/experiment-delta.json'
+    if not path.exists():
+        return None
+    contents = path.read_bytes()
+    return dict(sha256=hashlib.sha256(contents).hexdigest(), manifest=json.loads(contents))
 
 
 def main():
     parser = argparse.ArgumentParser(description='P9 LiDAR/camera-IMU localization and map accumulation')
     sub = parser.add_subparsers(dest='command', required=True)
-    for mode in ('live', 'replay'):
+    for mode in ('live', 'replay', 'sim'):
         p = sub.add_parser(mode)
         p.add_argument('--config', required=True)
         p.add_argument('--output', default=None, help='New directory, normally inside a mounted host directory')
@@ -30,7 +40,12 @@ def main():
     sub.add_parser('version')
     a = parser.parse_args()
     if a.command == 'version':
-        print((home()/'provenance/source-manifest.json').read_text())
+        original = (home()/'provenance/source-manifest.json').read_text()
+        delta = experimental_delta()
+        if delta is None:
+            print(original)
+        else:
+            print(json.dumps(dict(source_manifest=json.loads(original), experimental_delta=delta), indent=2))
         return
     if a.command == 'diagnose':
         from .diagnose import run
@@ -39,7 +54,7 @@ def main():
         os.execvp('ros2', ['ros2', 'service', 'call', '/p9/save', 'std_srvs/srv/Trigger', '{}'])
     config_path = Path(a.config).expanduser().resolve()
     try:
-        config, _, _, _ = load(config_path, a.command)
+        config, _, _, engine = load(config_path, a.command)
         if a.command == 'replay' and (not math.isfinite(a.rate) or a.rate <= 0 or not Path(a.bag).exists()):
             raise ValueError('Replay needs an existing bag and a finite positive rate')
     except (ValueError, OSError, TypeError, KeyError) as error:
@@ -55,6 +70,13 @@ def main():
                   binary_sha256=(home()/'provenance/binary.sha256').read_text().strip() if (home()/'provenance/binary.sha256').exists() else None,
                   ros_domain_id=os.environ.get('ROS_DOMAIN_ID'),
                   rmw=os.environ.get('RMW_IMPLEMENTATION'), source_manifest=json.loads((home()/'provenance/source-manifest.json').read_text()))
+    engine_path = estimator_config_path(config_path, config)
+    record.update(estimator_config_path=str(engine_path),
+                  estimator_config_sha256=hashlib.sha256(engine_path.read_bytes()).hexdigest(),
+                  effective_pointlio_parameters=engine)
+    delta = experimental_delta()
+    if delta is not None:
+        record['experimental_delta'] = delta
     (output/'effective-config.json').write_text(json.dumps(record, indent=2)+'\n')
     os.environ['ROS_LOG_DIR'] = str(output/'ros-logs')
     command = ['ros2', 'launch', 'go2_p9', 'go2_p9.launch.py',

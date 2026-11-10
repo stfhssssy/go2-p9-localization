@@ -11,8 +11,8 @@ from go2_p9.configuration import home, load
 def setup(context):
     args = {key: LaunchConfiguration(key).perform(context) for key in
             ('mode', 'config', 'output', 'rviz', 'bag', 'rate', 'exit_on_finish')}
-    if args['mode'] not in ('live', 'replay'):
-        raise ValueError('mode must be live or replay')
+    if args['mode'] not in ('live', 'replay', 'sim'):
+        raise ValueError('mode must be live, replay or sim')
     _, sensor, mapping, pointlio = load(args['config'], args['mode'])
     mapping['output_dir'] = str(Path(args['output']).resolve())
     sensor['diagnostic_output_path'] = str(Path(args['output']).resolve()/'input_status.json')
@@ -20,6 +20,7 @@ def setup(context):
     engine = Node(package='point_lio_unilidar', executable='pointlio_mapping', name='pointlio_mapping',
                   parameters=[pointlio], output='screen', remappings=[
                       ('/cloud_registered', '/pointlio/registered_scan'),
+                      ('/path', '/pointlio/path'),
                       ('/aft_mapped_to_init', '/pointlio/odom'),
                       ('/slam/tracking_valid', '/pointlio/tracking_valid'),
                       ('/slam/filter_diagnostics', '/pointlio/filter_diagnostics')])
@@ -30,7 +31,7 @@ def setup(context):
             on_exit=[EmitEvent(event=Shutdown(reason='A required P9 node exited; inspect its log'))])))
     if args['rviz'] == 'true':
         actions.append(Node(package='rviz2', executable='rviz2', arguments=['-d', str(home()/'config/p9.rviz')],
-                            parameters=[{'use_sim_time': args['mode'] == 'replay'}], output='screen'))
+                            parameters=[{'use_sim_time': args['mode'] in ('replay', 'sim')}], output='screen'))
     if args['mode'] == 'replay':
         topics = [sensor.get('input_cloud_topic', '/utlidar/cloud')]
         if sensor.get('imu_mode', 'merged_linear') == 'raw_linear':

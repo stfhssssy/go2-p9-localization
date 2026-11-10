@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "mode": "P9-camera-linear-Gazebo-sensor-model",
+  "transform_convention": "parent_from_child: p_parent = R * p_child + translation; quaternions xyzw",
+  "body_frame": "base_link",
+  "imu_frame": "camera_imu_optical_frame",
+  "lidar_frame": "lidar_l1_link",
+  "raw_gyro_topic": "/p9_sim/gyro",
+  "raw_accel_topic": "/p9_sim/accel",
+  "raw_cloud_topic": "/unitree_lidar/points",
+  "gyro_rate_hz": 200,
+  "accel_rate_hz": 100,
+  "body_from_imu": {
+    "translation": [
+      0.28,
+      0.0,
+      0.062
+    ],
+    "quaternion_xyzw": [
+      -0.5,
+      0.4999999999999999,
+      -0.5,
+      0.5000000000000001
+    ],
+    "rotation_matrix": [
+      [
+        2.220446049250313e-16,
+        2.220446049250313e-16,
+        1.0
+      ],
+      [
+        -1.0,
+        0.0,
+        2.220446049250313e-16
+      ],
+      [
+        0.0,
+        -1.0,
+        2.220446049250313e-16
+      ]
+    ],
+    "homogeneous_matrix": [
+      [
+        2.220446049250313e-16,
+        2.220446049250313e-16,
+        1.0,
+        0.28
+      ],
+      [
+        -1.0,
+        0.0,
+        2.220446049250313e-16,
+        0.0
+      ],
+      [
+        0.0,
+        -1.0,
+        2.220446049250313e-16,
+        0.062
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "body_from_lidar": {
+    "translation": [
+      0.25,
+      -0.038,
+      -0.03
+    ],
+    "quaternion_xyzw": [
+      0.7011245798113911,
+      0.7009168485884761,
+      0.0925602936983206,
+      0.09258772585812962
+    ],
+    "rotation_matrix": [
+      [
+        0.00029632679055973526,
+        0.9657201677020634,
+        0.25958518810581593
+      ],
+      [
+        0.9999999560952156,
+        -0.0002861687704381402,
+        -7.692204904549693e-05
+      ],
+      [
+        0.0,
+        0.2595851995028481,
+        -0.965720210101801
+      ]
+    ],
+    "homogeneous_matrix": [
+      [
+        0.00029632679055973526,
+        0.9657201677020634,
+        0.25958518810581593,
+        0.25
+      ],
+      [
+        0.9999999560952156,
+        -0.0002861687704381402,
+        -7.692204904549693e-05,
+        -0.038
+      ],
+      [
+        0.0,
+        0.2595851995028481,
+        -0.965720210101801,
+        -0.03
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "imu_from_lidar": {
+    "translation": [
+      0.03799999999999999,
+      0.092,
+      -0.030000000000000027
+    ],
+    "quaternion_xyzw": [
+      0.00011758169136208383,
+      0.6084467044217086,
+      0.7935947239781586,
+      -9.014953155303189e-05
+    ],
+    "rotation_matrix": [
+      [
+        -0.9999999560952156,
+        0.00028616877043835466,
+        7.692204904555457e-05
+      ],
+      [
+        6.579776513858822e-20,
+        -0.25958519950284786,
+        0.9657202101018011
+      ],
+      [
+        0.0002963267905599573,
+        0.9657201677020635,
+        0.2595851881058157
+      ]
+    ],
+    "homogeneous_matrix": [
+      [
+        -0.9999999560952156,
+        0.00028616877043835466,
+        7.692204904555457e-05,
+        0.03799999999999999
+      ],
+      [
+        6.579776513858822e-20,
+        -0.25958519950284786,
+        0.9657202101018011,
+        0.092
+      ],
+      [
+        0.0002963267905599573,
+        0.9657201677020635,
+        0.2595851881058157,
+        -0.030000000000000027
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "imu_from_body": {
+    "translation": [
+      -6.217248937900877e-17,
+      0.06199999999999994,
+      -0.28
+    ],
+    "quaternion_xyzw": [
+      0.5,
+      -0.4999999999999999,
+      0.5,
+      0.5000000000000001
+    ],
+    "rotation_matrix": [
+      [
+        2.220446049250313e-16,
+        -1.0,
+        4.930380657631324e-32
+      ],
+      [
+        2.220446049250313e-16,
+        4.930380657631324e-32,
+        -1.0
+      ],
+      [
+        1.0,
+        2.220446049250313e-16,
+        2.220446049250313e-16
+      ]
+    ],
+    "homogeneous_matrix": [
+      [
+        2.220446049250313e-16,
+        -1.0,
+        4.930380657631324e-32,
+        -6.217248937900877e-17
+      ],
+      [
+        2.220446049250313e-16,
+        4.930380657631324e-32,
+        -1.0,
+        0.06199999999999994
+      ],
+      [
+        1.0,
+        2.220446049250313e-16,
+        2.220446049250313e-16,
+        -0.28
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "mounting_definition": "Virtual camera IMU at existing D455 mounting-link origin on trunk; exact simulation definition, not internal D435i/D455 chip calibration",
+  "camera_mount_source": "unitree_go2_description/urdf/realsense_d455.xacro:11-13; [0.28,0,0.062] with no mount rotation",
+  "lidar_mount_source": "unitree_go2_description/urdf/lidar_4D_lidar.xacro:33-38",
+  "body_from_lidar_rpy_xyz": [
+    2.879,
+    0.0,
+    1.5705
+  ],
+  "wrapper_sha256": "46ece9e4cd9c48b13a3c64e7bb1de75151e821347d44f20a87dee0a0f69eb34e",
+  "gyro_noise_stddev_rad_s": 0.0002,
+  "accel_noise_stddev_m_s2": 0.017,
+  "gyro_noise_covariance_diagonal_rad2_s2": [
+    4e-08,
+    4e-08,
+    4e-08
+  ],
+  "accel_noise_covariance_diagonal_m2_s4": [
+    0.00028900000000000003,
+    0.00028900000000000003,
+    0.00028900000000000003
+  ],
+  "imu_noise_scope": "Independent zero-mean Gaussian per sample; no fitted bias, drift, clipping, timing jitter or vendor preprocessing. Merged interpolation introduces correlation.",
+  "initial_level_body_specific_force_in_imu_m_s2": [
+    0.0,
+    -9.81,
+    2.1782575743145572e-15
+  ],
+  "initial_level_body_gravity_in_imu_m_s2": [
+    -0.0,
+    9.81,
+    -2.1782575743145572e-15
+  ],
+  "pointlio_world_gravity_after_gravity_alignment_m_s2": [
+    0.0,
+    0.0,
+    -9.81
+  ],
+  "initialization": "Use measured stationary camera specific-force mean and gyro mean; do not subtract gravity in adapter; gravity_align=true rotates estimator world to Z-up. Do not use simulated quaternion as estimator orientation input.",
+  "camera_pose_to_body_equation": "T_map_body = T_map_imu * T_imu_body",
+  "truth_body_to_camera_equation": "T_world_imu = T_world_body * T_body_imu",
+  "lidar": {
+    "kind": "GPU instantaneous frame; not Unitree L1 scanning mechanics",
+    "rate_hz": 10,
+    "horizontal_samples": 600,
+    "vertical_samples": 30,
+    "range_m": [
+      0.8,
+      30.0
+    ],
+    "noise_stddev_m": 0.008,
+    "timestamp_offset_ns": 0,
+    "relative_point_time_sec": 0.0,
+    "point_time_explanation": "All rendered points share header time. Do not invent rolling-scan times or apply real-bag epoch offsets."
+  },
+  "bodybox_filter": {
+    "frame": "base_link",
+    "x_open_m": [
+      -0.42,
+      0.42
+    ],
+    "y_open_m": [
+      -0.24,
+      0.24
+    ],
+    "z_open_m": [
+      -0.5,
+      0.2
+    ],
+    "apply": "Compute p_body=R_BL*p_lidar+t_BL for the boolean mask only; publish surviving original native lidar coordinates. Do not mutate point coordinates and then reuse native imu_from_lidar."
+  },
+  "runtime_validation": {
+    "expanded_urdf_checked": false
+  },
+  "limits": [
+    "Physical quadruped simulation differs from the real camera hardware and L1 scan pattern.",
+    "No inference about competition or real-robot accuracy follows solely from a successful simulated navigation run.",
+    "Gazebo ground truth is evaluation-only and must never feed SLAM, planner pose, or command gating."
+  ]
+}

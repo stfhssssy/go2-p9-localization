@@ -8,7 +8,7 @@ import time
 
 from .sensor_core import (AdapterOptions, FIELD_SPECS, POINT_STEP, NS_PER_SEC,
                           IdentityFrameGraph, InvalidSensorData, RawImuInterpolator,
-                          check_live_age, clock_relation, prepare_cloud,
+                          check_live_age, clock_relation, prepare_cloud, prepare_imu,
                           stamp_nanoseconds, validate_merged_imu)
 
 
@@ -43,7 +43,8 @@ def main(args=None):
                 output_cloud_topic='/p9/points', output_imu_topic='/p9/imu',
                 gyro_topic='/camera/camera/gyro/sample', accel_topic='/camera/camera/accel/sample',
                 mode='live', imu_mode='merged_linear', cloud_frame='utlidar_lidar',
-                imu_frame='camera_imu_optical_frame', clock_offset_sec=0.0,
+                imu_frame='camera_imu_optical_frame', clock_offset_sec=0.0, common_clock_offset_sec=0.0,
+                accel_offset=[0.0, 0.0, 0.0], gyro_bias=[0.0, 0.0, 0.0],
                 point_time_field='time', point_time_scale=1.0, min_range=0.2, max_range=30.0,
                 max_scan_duration_sec=0.2, raw_gyro_frame='camera_gyro_optical_frame',
                 raw_accel_frame='camera_accel_optical_frame', max_accel_gap_sec=0.03,
@@ -57,8 +58,8 @@ def main(args=None):
             c = self.cfg
             if c['mode'] not in ('live', 'replay'):
                 raise ValueError('mode must be live or replay')
-            if c['imu_mode'] not in ('merged_linear', 'raw_linear'):
-                raise ValueError('imu_mode must be merged_linear or raw_linear')
+            if c['imu_mode'] not in ('merged_linear', 'raw_linear', 'native'):
+                raise ValueError('imu_mode must be merged_linear, raw_linear or native')
             for name in ('max_message_age_sec', 'future_tolerance_sec',
                          'clock_tolerance_sec', 'input_timeout_sec'):
                 if not math.isfinite(c[name]) or c[name] <= 0:
@@ -67,7 +68,7 @@ def main(args=None):
                 if not isinstance(c[name], int) or isinstance(c[name], bool) or c[name] < 2:
                     raise ValueError(name + ' must be an integer >= 2')
             topics = [c['input_cloud_topic']]
-            topics += ([c['input_imu_topic']] if c['imu_mode'] == 'merged_linear'
+            topics += ([c['input_imu_topic']] if c['imu_mode'] != 'raw_linear'
                        else [c['gyro_topic'], c['accel_topic']])
             outputs = [c['output_cloud_topic'], c['output_imu_topic'], '/p9/input_diagnostics']
             if any(not topic for topic in topics+outputs) or len(set(topics+outputs)) != len(topics+outputs):
@@ -84,6 +85,7 @@ def main(args=None):
             self.counts = Counter()
             self.first_stamp, self.last_stamp, self.received_steady = {}, {}, {}
             self.last_cloud_raw = self.last_imu = self.cloud_end_ns = None
+            self.last_imu_raw = None
             self.last_error = None
             self.started_steady = time.monotonic()
             self.graph = IdentityFrameGraph()
@@ -104,7 +106,7 @@ def main(args=None):
             self.imu_pub = self.create_publisher(Imu, c['output_imu_topic'], qos(c['imu_queue_size'], True))
             self.diag_pub = self.create_publisher(DiagnosticArray, '/p9/input_diagnostics', qos(10, True))
             self.create_subscription(PointCloud2, c['input_cloud_topic'], self.cloud, qos(c['cloud_queue_size']))
-            if c['imu_mode'] == 'merged_linear':
+            if c['imu_mode'] != 'raw_linear':
                 self.create_subscription(Imu, c['input_imu_topic'], self.merged, qos(c['imu_queue_size']))
             else:
                 self.create_subscription(TFMessage, '/tf_static', self.static_tf, qos(100, True, True))
@@ -113,7 +115,8 @@ def main(args=None):
             self.create_timer(1.0, self.report, clock=Clock(clock_type=ClockType.STEADY_TIME))
             self.get_logger().info(
                 f"P9 {c['mode']}/{c['imu_mode']}: cloud offset {self.options.cloud_offset_ns} ns; "
-                'native coordinates, IMU times and gyro preserved. No inferred time offset, TF, or motion output.')
+                f"IMU offset {self.options.imu_offset_ns} ns; explicit accel offset {c['accel_offset']}, gyro bias {c['gyro_bias']}. "
+                'No inferred time offset, TF, or motion output.')
             if c['imu_mode'] == 'merged_linear':
                 self.get_logger().warning('merged_linear requires RealSense unite_imu_method=2 (or an explicitly prepared linear IMU source); this node cannot infer driver interpolation from Imu messages.')
             self.report()
@@ -167,20 +170,19 @@ def main(args=None):
             self.counts['clouds_time_sorted'] += int(result.sorted_by_time)
 
         def publish_imu(self, msg):
-            stamp = validate_merged_imu(msg, self.last_imu, self.cfg['imu_frame'])
+            msg, input_stamp, stamp = prepare_imu(msg, self.last_imu_raw, self.options)
             # A raw gyro can spend time awaiting its right acceleration sample.
             # Recheck freshness at publication, not only at original receipt.
             self.age_check(stamp)
             self.imu_pub.publish(msg)
             self.last_imu = stamp
+            self.last_imu_raw = input_stamp
             self.accepted('imu', stamp)
             self.counts['imu_published'] += 1
 
         def merged(self, msg):
             self.received('merged_imu')
             try:
-                stamp = validate_merged_imu(msg, self.last_imu, self.cfg['imu_frame'])
-                self.age_check(stamp)
                 self.publish_imu(msg)
             except (InvalidSensorData, ValueError, TypeError, OverflowError) as error:
                 self.rejected('merged_imu', error)
@@ -188,7 +190,7 @@ def main(args=None):
         def raw(self, kind, msg):
             self.received(kind)
             try:
-                self.age_check(stamp_nanoseconds(msg.header.stamp))
+                self.age_check(stamp_nanoseconds(msg.header.stamp) + self.options.imu_offset_ns)
                 values = (self.merger.push_gyro if kind == 'gyro' else self.merger.push_accel)(msg, time.monotonic())
                 self.accepted(kind, stamp_nanoseconds(msg.header.stamp))
             except (InvalidSensorData, ValueError, TypeError, OverflowError) as error:
@@ -220,7 +222,7 @@ def main(args=None):
             now = time.monotonic()
             self.merger.expire(now)
             level, reasons = DiagnosticStatus.OK, []
-            required = ['cloud', 'merged_imu'] if self.cfg['imu_mode'] == 'merged_linear' else ['cloud', 'gyro', 'accel']
+            required = ['cloud', 'merged_imu'] if self.cfg['imu_mode'] != 'raw_linear' else ['cloud', 'gyro', 'accel']
             missing = [k for k in required if k not in self.received_steady]
             stale = [k for k in required if now-self.received_steady.get(k, self.started_steady) > self.cfg['input_timeout_sec']]
             if missing:
@@ -256,13 +258,15 @@ def main(args=None):
                 input_receipt_age_sec={k: now-v for k, v in self.received_steady.items()},
                 pending_gyro=len(self.merger.gyros), buffered_accel=len(self.merger.accels),
                 max_accel_bracket_sec=self.merger.max_used_bracket_ns/NS_PER_SEC,
-                cloud_header_offset_ns=self.options.cloud_offset_ns, imu_header_offset_ns=0,
+                cloud_header_offset_ns=self.options.cloud_offset_ns, imu_header_offset_ns=self.options.imu_offset_ns,
                 native_coordinates_preserved=True, per_point_time_unit='seconds',
+                acceleration_offset_native=self.cfg['accel_offset'], gyro_bias_native=self.cfg['gyro_bias'],
+                correction_uncertainty_modelled=False,
                 required_pointlio_timestamp_unit=0, tf_published=False, motion_published=False,
                 raw_covariance_policy='preceding/exact measured accel covariance; interpolation correlation not estimated',
                 merged_driver_linear_interpolation_verified_by_adapter=False,
                 configured_frames=dict(cloud=self.cfg['cloud_frame'], imu=self.cfg['imu_frame']),
-                time_policy='explicit cloud epoch shift only; no physical delay or drift calibration')
+                time_policy='explicit common epoch shift plus cloud-only shift; no inferred delay or drift')
             status = DiagnosticStatus(level=level, name='p9/input', hardware_id='go2_lidar_camera_imu',
                 message='; '.join(reasons) if reasons else 'valid sensor input contracts; not a localization accuracy verdict',
                 values=[KeyValue(key=k, value=json.dumps(v, allow_nan=False, ensure_ascii=False)) for k, v in details.items()])

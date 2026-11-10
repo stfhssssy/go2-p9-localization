@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>go2_p9_navigation</name><version>0.1.0</version>
+  <description>P9 plus terrain/FAR/local planning, isolated command output</description>
+  <maintainer email="stfhssssy@users.noreply.github.com">stfhssssy</maintainer>
+  <license>GPL-2.0-only</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend><exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend><exec_depend>launch_ros</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend><exec_depend>nav_msgs</exec_depend><exec_depend>sensor_msgs</exec_depend><exec_depend>std_msgs</exec_depend><exec_depend>std_srvs</exec_depend><exec_depend>tf2_ros</exec_depend>
+  <exec_depend>python3-yaml</exec_depend><exec_depend>go2_p9</exec_depend><exec_depend>rviz2</exec_depend>
+  <exec_depend>terrain_analysis</exec_depend><exec_depend>terrain_analysis_ext</exec_depend><exec_depend>local_planner</exec_depend><exec_depend>far_planner</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>
