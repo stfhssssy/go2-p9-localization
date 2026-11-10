@@ -44,7 +44,7 @@
     "config/p9.rviz": "1558731625a49e40b38f7499f7935fd21a16564eccb80395d62bc6c863314447",
     "config/p9nav-live.yaml": "663b31f4cd230e06b842e2d83ab5f4d00211420a70e91a28e7ac7736c35c2984",
     "config/p9nav-replay.yaml": "0d40c350b6f42825346d635b7bcc8c635b340fba8f5f30be45751340adb91b58",
-    "config/p9nav-sim.yaml": "3725427ad71954e4b2966310509b913067c308f6f579c53778d8722bcb735897",
+    "config/p9nav-sim.yaml": "a14228b50a46303a0e6c9b8d1233291f43642f4f1e56b17fda93607f200988fd",
     "config/pointlio-sim.yaml": "02eb38cdba3f7859ad878b87a812e48e549fbc073f35d7fcbbd3294aeb55a658",
     "config/replay-qos.yaml": "888b886c4b7795c5e00fc1cd032c9d6d807584d54eca0605059671d83d89268e",
     "config/replay.example.yaml": "562db3d34a5477c147254e1dceb331fee88e661d214bfabbed7a87a72d5ff34b",
@@ -60,7 +60,7 @@
     "simulation/README.txt": "c4009656fcf3d3c1d45fb8299c6b944d122df1e7b376fe5f6d2d52c9f47aed60",
     "simulation/inside.sh": "62753801894db6c451059b3b90059f2c11404eff530cccff6af769412c51dd62",
     "simulation/p9_sensor_adapter.py": "78f819c0cc616c370a4b3cc0862cf9448136c9d2e0e49d588a45c7276b5cc5e2",
-    "simulation/prepare_runtime.py": "0993a88bfec0bec900804df63710e80a6c89ea059e1a7bfd5edd2e5da8b686b6",
+    "simulation/prepare_runtime.py": "a987e5ceb71f7d4a3dd5aa1e16b533ffa758b3088de51d9a4531c34a63d13263",
     "simulation/run_simulation.py": "b7c7a32fabc46b1685c1d6835d88c52c0e191f562c6f73f19578ebe45b703658",
     "simulation/sensor_model/README.txt": "1bcfbed4314cccb92c09b0510168f732e5d82c8f188e0bf0827b56a647be7321",
     "simulation/sensor_model/bridges.launch.py": "0b4d2e8bb3d6a6d9f406addda827e0d6c7857cce487b10fdf7c243ca0a05b62b",
@@ -70,7 +70,7 @@
     "simulation/simulation.launch.py": "f33763e916ac7d13309cb3602f2bba3dab8e803046df3319375fec273ba6666b",
     "simulation/simulator.launch.py": "ba147e087a2ce8c942214b21ec7fbd0020816be87320a968c5b17cd51a465661",
     "simulation/source-provenance.json": "aa6d07051dcbd4a27244fba6d042f04f35898c73d281fe19d27c3e680e6af765",
-    "simulation/test_contracts.py": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+    "simulation/test_contracts.py": "a8ed53e72b41b601716798ac4a272021931fc69591d6a6562f955f0f93095a5a",
     "simulation/test_overlay_environment.py": "516075621742fcd73e9c46bdba0c287be7a5003c0ee42de76a7b2ac28f33245a",
     "simulation/validate_navigation.py": "1b40cb65e59069daf7057a43327319cdf71c4b84e7c4fac3397194d00c92459b",
     "simulation/xwd_to_png.py": "f1efde03a8a4338132e3a1c6a7cba5a1c9d0221cc552f583628f2954d9e12636",
@@ -115,20 +115,20 @@
     "src/far_planner/src/utility.cpp": "8d31cd3a0b413a474b817c0b07f244826b2f494bcde3428069249939585ce135",
     "src/far_planner/test/terrain_kdtree_regression.cpp": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8",
     "src/go2_p9/go2_p9/__init__.py": "1516c9a620f67f60a76b5c3f435a6ddcfcb1d5d53245dbdba600579176c123b7",
-    "src/go2_p9/go2_p9/adapter_node.py": "141e41142ef1904e3cd36f50c28f05508551c1faaf9ccda4396170a898a99145",
-    "src/go2_p9/go2_p9/cli.py": "b95da3503c682fb74a24b27074a57ad9d5242819c92125d10e4e03a752ffe810",
-    "src/go2_p9/go2_p9/cloud_codec.py": "5a6cb00e1e55d82f79176b69fc354603ef898b3a9b7ab1a1143de9c538ff26ee",
-    "src/go2_p9/go2_p9/configuration.py": "afdc604b509b380455a48a65b50f4fa9fdabe335fdf53f9346bfb8029c0f1322",
+    "src/go2_p9/go2_p9/adapter_node.py": "862fcf1083160598269eb25ea719037304786662f2fd1c255a15fc09ad7e09ee",
+    "src/go2_p9/go2_p9/cli.py": "8bd77b0518f48a8d40cc187e6b18b7208c311ec5fe2799158ee2fd40910079dc",
+    "src/go2_p9/go2_p9/cloud_codec.py": "9624308e757e350202aa2ec02423556a47f65d34b08dac704c8fb7bc170e4bc0",
+    "src/go2_p9/go2_p9/configuration.py": "d33561d5b0203d0c730060f3d110b1ee17887cba4a110de9fa40c6855ad0f252",
     "src/go2_p9/go2_p9/diagnose.py": "9fbc01dbd123ede932eb392f4a91f31ebfa1f80c04405e63e54f167a49abecd4",
     "src/go2_p9/go2_p9/mapping_core.py": "0284c7f1b2b3db7ca023e3cf5adcf5d3f340b70201b9e3a594baa092f5ac711e",
     "src/go2_p9/go2_p9/mapping_node.py": "9641818ea552e3389d5840c11fa8502d0e84bb8aa8638220c3618718131534ae",
-    "src/go2_p9/go2_p9/sensor_core.py": "f3d7af65765502ab3f160a54601c57146d95165b88c3dd7b4c03d9be5ef151e8",
+    "src/go2_p9/go2_p9/sensor_core.py": "24416f71709f3ed20a7d5dc9fbded2782607d526e5d0441190d0cc03bb673aaa",
     "src/go2_p9/launch/go2_p9.launch.py": "e8ba133a33795267dbc547f13ecdb5afc984cfb4bd9929cc8d5ed8db53f61816",
     "src/go2_p9/package.xml": "de5e078373dfbee4deaa394efa0714835b469dc94d89bb9a3155368a81f5bff6",
     "src/go2_p9/resource/go2_p9": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "src/go2_p9/setup.cfg": "b0172dfa42bb9ec955cb40ebc7d064debaf0b07c56195444b1b8083260e956e4",
     "src/go2_p9/setup.py": "af1adf40a139bfe63b818512e6c3ed82f0a82b6d2db813820a1816b2489ad77b",
-    "src/go2_p9_navigation/config/navigation.rviz": "0d9a13d1429b8c2c1cee39b21f1ad6f78cad47df0dc8dbe16574ab2307cbd146",
+    "src/go2_p9_navigation/config/navigation.rviz": "10858804d6460f0a31ffd2de9d2115a87f65b29473b03a3f7224faf75521c1b2",
     "src/go2_p9_navigation/config/navigation.yaml": "fbf5a47158626f00f4271768325368a37db834faf6e4f2528309e9aba600aa4e",
     "src/go2_p9_navigation/config/planner-defaults.yaml": "1b34d1cd5ed9a524cc52126459130b1c812efd21217b022bdb6fefe9d40686f9",
     "src/go2_p9_navigation/go2_p9_navigation/__init__.py": "3a9a46424a1b8b7c8f2c7c48bd4c9f11866bbfa0259c1eb284b6ce107480a482",
@@ -290,7 +290,7 @@
     },
     "config/p9nav-sim.yaml": {
       "common_fix_sha256": null,
-      "release_sha256": "3725427ad71954e4b2966310509b913067c308f6f579c53778d8722bcb735897",
+      "release_sha256": "a14228b50a46303a0e6c9b8d1233291f43642f4f1e56b17fda93607f200988fd",
       "reason": "Explicit navigation, replay/live/simulation, B1 compensation, and visualization configuration"
     },
     "config/pointlio-sim.yaml": {
@@ -330,7 +330,7 @@
     },
     "simulation/prepare_runtime.py": {
       "common_fix_sha256": null,
-      "release_sha256": "0993a88bfec0bec900804df63710e80a6c89ea059e1a7bfd5edd2e5da8b686b6",
+      "release_sha256": "a987e5ceb71f7d4a3dd5aa1e16b533ffa758b3088de51d9a4531c34a63d13263",
       "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
     },
     "simulation/run_simulation.py": {
@@ -380,7 +380,7 @@
     },
     "simulation/test_contracts.py": {
       "common_fix_sha256": null,
-      "release_sha256": "8f4659e60f95df2021b5c6d3225a7735730955dbb5bf475a33e19fa2134c5fb1",
+      "release_sha256": "a8ed53e72b41b601716798ac4a272021931fc69591d6a6562f955f0f93095a5a",
       "reason": "Explicit Gazebo sensor model, sensor bridge and adapter, independent of real-robot calibration"
     },
     "simulation/test_overlay_environment.py": {
@@ -598,14 +598,29 @@
       "release_sha256": "d5e4260988d6b40dc92c736a4ce409b2824450eac9d0c443d4e55b67e8da94c8",
       "reason": "Vendored planning package; exact upstream and local differences are recorded in packages"
     },
+    "src/go2_p9/go2_p9/adapter_node.py": {
+      "common_fix_sha256": "141e41142ef1904e3cd36f50c28f05508551c1faaf9ccda4396170a898a99145",
+      "release_sha256": "862fcf1083160598269eb25ea719037304786662f2fd1c255a15fc09ad7e09ee",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
     "src/go2_p9/go2_p9/cli.py": {
       "common_fix_sha256": "f980e7cd8dce976be0b8cb9f3e8ce473a0f51efa3acdbc297beafe049d07d7ed",
-      "release_sha256": "b95da3503c682fb74a24b27074a57ad9d5242819c92125d10e4e03a752ffe810",
+      "release_sha256": "8bd77b0518f48a8d40cc187e6b18b7208c311ec5fe2799158ee2fd40910079dc",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
+    "src/go2_p9/go2_p9/cloud_codec.py": {
+      "common_fix_sha256": "5a6cb00e1e55d82f79176b69fc354603ef898b3a9b7ab1a1143de9c538ff26ee",
+      "release_sha256": "9624308e757e350202aa2ec02423556a47f65d34b08dac704c8fb7bc170e4bc0",
       "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
     },
     "src/go2_p9/go2_p9/configuration.py": {
       "common_fix_sha256": "5359eeae7599918fb29348dd11192c0d0a635b7e5692e3bf80bfbf70c6973e1a",
-      "release_sha256": "afdc604b509b380455a48a65b50f4fa9fdabe335fdf53f9346bfb8029c0f1322",
+      "release_sha256": "d33561d5b0203d0c730060f3d110b1ee17887cba4a110de9fa40c6855ad0f252",
+      "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
+    },
+    "src/go2_p9/go2_p9/sensor_core.py": {
+      "common_fix_sha256": "f3d7af65765502ab3f160a54601c57146d95165b88c3dd7b4c03d9be5ef151e8",
+      "release_sha256": "24416f71709f3ed20a7d5dc9fbded2782607d526e5d0441190d0cc03bb673aaa",
       "reason": "P9 navigation/simulation integration and effective profile support; preserve original profile semantics"
     },
     "src/go2_p9/launch/go2_p9.launch.py": {
@@ -615,7 +630,7 @@
     },
     "src/go2_p9_navigation/config/navigation.rviz": {
       "common_fix_sha256": null,
-      "release_sha256": "0d9a13d1429b8c2c1cee39b21f1ad6f78cad47df0dc8dbe16574ab2307cbd146",
+      "release_sha256": "10858804d6460f0a31ffd2de9d2115a87f65b29473b03a3f7224faf75521c1b2",
       "reason": "Navigation integration, body-frame bridge, isolated planner commands, and optional explicit simulation command output"
     },
     "src/go2_p9_navigation/config/navigation.yaml": {

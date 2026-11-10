@@ -24,11 +24,14 @@ def verify_profile(profile, model):
     if profile.get('profile_mode') != 'sim':
         raise ValueError('Only the explicit sim profile is allowed')
     sensor = profile['sensor']
+    if sensor.get('instantaneous_cloud') is not True:
+        raise ValueError('GPU simulator requires explicit instantaneous_cloud: true')
     required = {'input_cloud_topic': '/camera_linear/points',
                 'input_imu_topic': '/camera_linear/imu', 'imu_mode': 'merged_linear',
                 'imu_frame': model['imu_frame'], 'cloud_frame': model['lidar_frame'],
                 'clock_offset_sec': 0.0, 'common_clock_offset_sec': 0.0,
-                'point_time_field': 'time', 'point_time_scale': 1.0}
+                'point_time_field': 'time', 'point_time_scale': 1.0,
+                'instantaneous_cloud': True}
     for key, expected in required.items():
         if sensor.get(key) != expected:
             raise ValueError(f'Sim sensor {key} must equal {expected!r}')

@@ -13,7 +13,7 @@ SENSOR_NODE_PARAMETERS = frozenset({
     'input_cloud_topic', 'input_imu_topic', 'output_cloud_topic', 'output_imu_topic',
     'gyro_topic', 'accel_topic', 'mode', 'imu_mode', 'cloud_frame', 'imu_frame',
     'clock_offset_sec', 'common_clock_offset_sec', 'accel_offset', 'gyro_bias', 'point_time_field', 'point_time_scale', 'min_range', 'max_range',
-    'max_scan_duration_sec', 'raw_gyro_frame', 'raw_accel_frame', 'max_accel_gap_sec',
+    'max_scan_duration_sec', 'instantaneous_cloud', 'raw_gyro_frame', 'raw_accel_frame', 'max_accel_gap_sec',
     'raw_queue_size', 'raw_buffer_sec', 'raw_pending_timeout_sec', 'cloud_queue_size',
     'imu_queue_size', 'max_message_age_sec', 'future_tolerance_sec',
     'clock_tolerance_sec', 'input_timeout_sec', 'diagnostic_output_path',
@@ -95,6 +95,10 @@ def load(path, mode):
     if c.get('status') not in ('measured', 'experimental', 'synthetic'):
         raise ValueError('Set calibration.status to measured, experimental or synthetic, accurately')
     sensor = _section(config, 'sensor', SENSOR_NODE_PARAMETERS, SENSOR_ENTRYPOINT_PARAMETERS)
+    if type(sensor.get('instantaneous_cloud', False)) is not bool:
+        raise ValueError('sensor.instantaneous_cloud must be a YAML boolean')
+    if sensor.get('instantaneous_cloud', False) and mode != 'sim':
+        raise ValueError('sensor.instantaneous_cloud is allowed only in sim mode')
     for key in ('accel_offset', 'gyro_bias'):
         if key in sensor:
             value = sensor[key]
@@ -112,10 +116,10 @@ def load(path, mode):
             raise ValueError(key + ' must be finite numeric seconds within ROS Time range')
         if key in sensor:
             sensor[key] = float(clock_offset)
-    # The adapter's replay policy means "no wall-clock epoch age check".
-    # In sim, /clock comes from Gazebo; the launch must not create a bag player.
+    # Both replay and sim skip wall-clock epoch age checks. Keep sim explicit:
+    # only sim may accept instantaneous GPU snapshots; replay remains strict.
     use_sim_time = mode in ('replay', 'sim')
-    sensor.update(mode='live' if mode == 'live' else 'replay', use_sim_time=use_sim_time)
+    sensor.update(mode=mode, use_sim_time=use_sim_time)
     mapping = _section(config, 'mapping', MAPPING_NODE_PARAMETERS, MAPPING_ENTRYPOINT_PARAMETERS)
     if mapping.get('input_reliability', 'best_effort') not in ('best_effort', 'reliable'):
         raise ValueError('mapping.input_reliability must be best_effort or reliable')

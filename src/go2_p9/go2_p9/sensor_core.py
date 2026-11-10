@@ -34,6 +34,8 @@ class AdapterOptions:
     min_range: float = 0.2
     max_range: float = 30.0
     max_scan_duration_sec: float = 0.2
+    mode: str = 'live'
+    instantaneous_cloud: bool = False  # only explicit sim mode; every point must have time=0
 
     def __post_init__(self):
         if not self.cloud_frame or not self.imu_frame:
@@ -56,7 +58,8 @@ class AdapterOptions:
             raise ValueError('require finite 0 <= min_range < max_range')
         CloudOptions(time_field=self.point_time_field,
                      point_time_scale=self.point_time_scale,
-                     max_scan_duration_sec=self.max_scan_duration_sec)
+                     max_scan_duration_sec=self.max_scan_duration_sec,
+                     mode=self.mode, instantaneous_cloud=self.instantaneous_cloud)
 
     @property
     def cloud_offset_ns(self):
@@ -101,7 +104,8 @@ def prepare_cloud(msg, previous_stamp_ns=None, options=None):
         raise InvalidSensorData('shifted cloud header is outside ROS Time range')
     normalized = normalize_cloud_numpy(msg, CloudOptions(
         time_field=options.point_time_field, point_time_scale=options.point_time_scale,
-        max_scan_duration_sec=options.max_scan_duration_sec))
+        max_scan_duration_sec=options.max_scan_duration_sec,
+        mode=options.mode, instantaneous_cloud=options.instantaneous_cloud))
     points = normalized.points
     ranges = np.hypot.reduce(points[:, :3], axis=1)
     # NumPy's reduction can differ by a few ulps from math.hypot. Preserve the

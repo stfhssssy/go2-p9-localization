@@ -46,7 +46,7 @@ def main(args=None):
                 imu_frame='camera_imu_optical_frame', clock_offset_sec=0.0, common_clock_offset_sec=0.0,
                 accel_offset=[0.0, 0.0, 0.0], gyro_bias=[0.0, 0.0, 0.0],
                 point_time_field='time', point_time_scale=1.0, min_range=0.2, max_range=30.0,
-                max_scan_duration_sec=0.2, raw_gyro_frame='camera_gyro_optical_frame',
+                max_scan_duration_sec=0.2, instantaneous_cloud=False, raw_gyro_frame='camera_gyro_optical_frame',
                 raw_accel_frame='camera_accel_optical_frame', max_accel_gap_sec=0.03,
                 raw_queue_size=4000, raw_buffer_sec=2.0, raw_pending_timeout_sec=2.0,
                 cloud_queue_size=100, imu_queue_size=4000, max_message_age_sec=1.0,
@@ -56,8 +56,8 @@ def main(args=None):
                 self.declare_parameter(name, value)
             self.cfg = {key: self.get_parameter(key).value for key in defaults}
             c = self.cfg
-            if c['mode'] not in ('live', 'replay'):
-                raise ValueError('mode must be live or replay')
+            if c['mode'] not in ('live', 'replay', 'sim'):
+                raise ValueError('mode must be live, replay or sim')
             if c['imu_mode'] not in ('merged_linear', 'raw_linear', 'native'):
                 raise ValueError('imu_mode must be merged_linear, raw_linear or native')
             for name in ('max_message_age_sec', 'future_tolerance_sec',
@@ -260,6 +260,7 @@ def main(args=None):
                 max_accel_bracket_sec=self.merger.max_used_bracket_ns/NS_PER_SEC,
                 cloud_header_offset_ns=self.options.cloud_offset_ns, imu_header_offset_ns=self.options.imu_offset_ns,
                 native_coordinates_preserved=True, per_point_time_unit='seconds',
+                instantaneous_cloud=self.cfg['instantaneous_cloud'],
                 acceleration_offset_native=self.cfg['accel_offset'], gyro_bias_native=self.cfg['gyro_bias'],
                 correction_uncertainty_modelled=False,
                 required_pointlio_timestamp_unit=0, tf_published=False, motion_published=False,

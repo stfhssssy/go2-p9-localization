@@ -51,11 +51,29 @@ class ConfigurationContract(unittest.TestCase):
         for mode, expected in (("live", False), ("replay", True), ("sim", True), ("live", False)):
             with self.subTest(mode=mode):
                 raw, sensor, mapping, engine = self.read_config(self.example, mode)
-                self.assertEqual(sensor["mode"], "replay" if mode == "sim" else mode)
+                self.assertEqual(sensor["mode"], mode)
                 self.assertIs(sensor["use_sim_time"], expected)
                 self.assertIs(mapping["use_sim_time"], expected)
                 self.assertIs(engine["use_sim_time"], expected)
                 self.assertNotIn("use_sim_time", raw["sensor"])
+
+    def test_instantaneous_cloud_is_explicit_boolean_sim_only(self):
+        config = copy.deepcopy(self.example)
+        config['sensor']['instantaneous_cloud'] = True
+        _, sensor, _, _ = self.read_config(config, 'sim')
+        self.assertIs(sensor['instantaneous_cloud'], True)
+        self.assertEqual(sensor['mode'], 'sim')
+        for mode in ('live', 'replay'):
+            with self.subTest(mode=mode), self.assertRaisesRegex(ValueError, 'only in sim'):
+                self.read_config(config, mode)
+        for invalid in ('true', 1, None):
+            config['sensor']['instantaneous_cloud'] = invalid
+            with self.subTest(invalid=invalid), self.assertRaisesRegex(ValueError, 'YAML boolean'):
+                self.read_config(config, 'sim')
+        config['sensor']['instantaneous_cloud'] = False
+        for mode in ('live', 'replay', 'sim'):
+            _, sensor, _, _ = self.read_config(config, mode)
+            self.assertIs(sensor['instantaneous_cloud'], False)
 
     def test_non_rigid_or_nonfinite_calibration_is_rejected(self):
         variants = [

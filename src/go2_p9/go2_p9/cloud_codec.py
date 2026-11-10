@@ -31,8 +31,18 @@ class CloudOptions:
     point_time_scale: float = 1.0
     point_time_is_absolute: bool = False
     max_scan_duration_sec: float = 0.2
+    mode: str = 'live'
+    instantaneous_cloud: bool = False
 
     def __post_init__(self):
+        if self.mode not in ('live', 'replay', 'sim'):
+            raise ValueError('cloud mode must be live, replay or sim')
+        if type(self.instantaneous_cloud) is not bool:
+            raise ValueError('instantaneous_cloud must be a boolean')
+        if self.instantaneous_cloud and self.mode != 'sim':
+            raise ValueError('instantaneous_cloud is allowed only in sim mode')
+        if self.instantaneous_cloud and self.point_time_is_absolute:
+            raise ValueError('instantaneous_cloud requires explicit zero relative point times')
         if not self.time_field or self.time_field in ('x', 'y', 'z', 'intensity', 'ring'):
             raise ValueError('time_field must be a distinct, nonempty field name')
         if not math.isfinite(self.point_time_scale) or self.point_time_scale <= 0.0:
@@ -132,6 +142,8 @@ def normalize_cloud(msg, options=CloudOptions()):
                 raise InvalidSensorData(
                     f'point offset {point_time:.6g}s exceeds max_scan_duration_sec; '
                     'check time field, units and header reference')
+            if options.instantaneous_cloud and values[options.time_field] != 0.0:
+                raise InvalidSensorData('instantaneous simulator cloud requires every relative point time to be zero')
             first_time = min(first_time, point_time)
             last_time = max(last_time, point_time)
             xyz = tuple(float(values[name]) for name in ('x', 'y', 'z'))
@@ -149,7 +161,7 @@ def normalize_cloud(msg, options=CloudOptions()):
             points.append((*xyz, intensity, int(ring), point_time))
     if not points:
         raise InvalidSensorData('point cloud has no finite coordinates')
-    if width * height > 1 and last_time <= first_time:
+    if not options.instantaneous_cloud and width * height > 1 and last_time <= first_time:
         raise InvalidSensorData(
             'all point timestamps are identical; a scan needs actual acquisition times')
     if not ordered:
@@ -217,6 +229,8 @@ def normalize_cloud_numpy(msg, options=CloudOptions()):
         raise InvalidSensorData(
             f'point offset {invalid_time:.6g}s exceeds max_scan_duration_sec; '
             'check time field, units and header reference')
+    if options.instantaneous_cloud and np.any(values[options.time_field] != 0.0):
+        raise InvalidSensorData('instantaneous simulator cloud requires every relative point time to be zero')
     xyz = np.column_stack([values[name] for name in ('x', 'y', 'z')])
     valid = np.all(np.isfinite(xyz) & (np.abs(xyz) <= FLOAT32_MAX), axis=1)
     dropped_coordinates = int(np.count_nonzero(~valid))
@@ -229,7 +243,7 @@ def normalize_cloud_numpy(msg, options=CloudOptions()):
         raise InvalidSensorData('intensity cannot be represented as finite float32')
     if np.any(~np.isfinite(ring) | (ring != np.trunc(ring)) | (ring < 0) | (ring > 65535)):
         raise InvalidSensorData('ring must be an integer in [0, 65535]')
-    if width * height > 1 and np.max(times) <= np.min(times):
+    if not options.instantaneous_cloud and width * height > 1 and np.max(times) <= np.min(times):
         raise InvalidSensorData(
             'all point timestamps are identical; a scan needs actual acquisition times')
     points = np.column_stack((xyz[valid], intensity, ring, times[valid]))

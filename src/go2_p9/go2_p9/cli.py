@@ -54,7 +54,7 @@ def main():
         os.execvp('ros2', ['ros2', 'service', 'call', '/p9/save', 'std_srvs/srv/Trigger', '{}'])
     config_path = Path(a.config).expanduser().resolve()
     try:
-        config, _, _, engine = load(config_path, a.command)
+        config, sensor, _, engine = load(config_path, a.command)
         if a.command == 'replay' and (not math.isfinite(a.rate) or a.rate <= 0 or not Path(a.bag).exists()):
             raise ValueError('Replay needs an existing bag and a finite positive rate')
     except (ValueError, OSError, TypeError, KeyError) as error:
@@ -73,6 +73,7 @@ def main():
     engine_path = estimator_config_path(config_path, config)
     record.update(estimator_config_path=str(engine_path),
                   estimator_config_sha256=hashlib.sha256(engine_path.read_bytes()).hexdigest(),
+                  effective_sensor_parameters=sensor,
                   effective_pointlio_parameters=engine)
     delta = experimental_delta()
     if delta is not None:

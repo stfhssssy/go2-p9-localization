@@ -47,6 +47,13 @@ class ContractTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             verify_profile(p, self.model)
 
+    def test_gpu_model_requires_instantaneous_profile(self):
+        for value in (None, False, 1, 'true'):
+            p = copy.deepcopy(self.profile)
+            p['sensor']['instantaneous_cloud'] = value
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                verify_profile(p, self.model)
+
     def test_no_accel_extrapolation(self):
         f = scope['interpolate_acceleration']
         self.assertIsNone(f([10, 20], [[1, 2, 3], [3, 4, 5]], 9))

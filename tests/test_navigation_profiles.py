@@ -155,7 +155,8 @@ class NavigationProfiles(unittest.TestCase):
         self.assertEqual(sensor['cloud_frame'], 'lidar_l1_link')
         self.assertEqual(sensor['point_time_field'], 'time')
         self.assertEqual(sensor['imu_mode'], 'merged_linear')
-        self.assertEqual(sensor['mode'], 'replay')
+        self.assertEqual(sensor['mode'], 'sim')
+        self.assertIs(sensor['instantaneous_cloud'], True)
         self.assertTrue(sensor['use_sim_time'])
         self.assertTrue(mapping['use_sim_time'])
         self.assertTrue(engine['use_sim_time'])
@@ -239,6 +240,8 @@ class NavigationProfiles(unittest.TestCase):
         self.assertFalse(any(arg.startswith('bag:=') or arg.startswith('rate:=') for arg in command))
         record = json.loads((output/'effective-config.json').read_text())
         self.assertEqual(record['mode'], 'sim')
+        self.assertIs(record['effective_sensor_parameters']['instantaneous_cloud'], True)
+        self.assertEqual(record['effective_sensor_parameters']['mode'], 'sim')
         self.assertIsNone(record['bag'])
         self.assertIsNone(record['rate'])
         self.assertTrue(record['effective_pointlio_parameters']['use_sim_time'])
@@ -255,6 +258,9 @@ class NavigationProfiles(unittest.TestCase):
         nodes = [a for a in actions if a.kind == 'Node']
         self.assertEqual(len(nodes), 4)
         self.assertTrue(all(n.kwargs['parameters'][0]['use_sim_time'] for n in nodes))
+        adapter = next(node for node in nodes if node.kwargs.get('executable') == 'p9_adapter')
+        self.assertEqual(adapter.kwargs['parameters'][0]['mode'], 'sim')
+        self.assertIs(adapter.kwargs['parameters'][0]['instantaneous_cloud'], True)
 
     def test_replay_player_and_live_wall_clock_remain_separate(self):
         module = launch_module_without_ros()

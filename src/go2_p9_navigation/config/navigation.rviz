@@ -49,6 +49,22 @@ Visualization Manager:
         Depth: 1
       Color: 255; 0; 255
       Line Width: 0.04
+    - Class: rviz_default_plugins/Marker
+      Name: FAR global route
+      Enabled: true
+      Topic:
+        Value: /viz_path_topic
+        Reliability Policy: Reliable
+        Durability Policy: Volatile
+        Depth: 5
+    - Class: rviz_default_plugins/MarkerArray
+      Name: FAR goals and nodes
+      Enabled: true
+      Topic:
+        Value: /viz_node_topic
+        Reliability Policy: Reliable
+        Durability Policy: Volatile
+        Depth: 5
     - Class: rviz_default_plugins/Odometry
       Name: Body pose
       Enabled: true
@@ -70,4 +86,4 @@ Visualization Manager:
       Pitch: 1.3
       Yaw: 0
       Focal Point: {X: 0, Y: 0, Z: 0}
-Window Geometry: {Width: 1400, Height: 950}
+Window Geometry: {Width: 1400, Height: 870}

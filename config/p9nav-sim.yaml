@@ -34,6 +34,7 @@ sensor:
   clock_offset_sec: 0.0
   point_time_field: time
   point_time_scale: 1.0
+  instantaneous_cloud: true  # Explicit sim-only GPU snapshot: every relative point time must be zero.
   common_clock_offset_sec: 0.0
   accel_offset:
   - 0.0

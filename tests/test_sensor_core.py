@@ -88,6 +88,53 @@ class SensorCoreTests(unittest.TestCase):
         vector_bytes = b''.join(POINT.pack(*p[:4], int(p[4]), p[5]) for p in vector.points)
         self.assertEqual(vector_bytes, scalar_bytes)
 
+    def test_instantaneous_snapshot_requires_explicit_sim_mode(self):
+        msg = cloud([(1., 2., 3., 4., 1, 0.), (2., 3., 4., 5., 2, 0.)])
+        for decoder in (normalize_cloud, normalize_cloud_numpy):
+            for mode in ('live', 'replay', 'sim'):
+                with self.subTest(decoder=decoder.__name__, mode=mode), self.assertRaises(InvalidSensorData):
+                    decoder(msg, CloudOptions(mode=mode))
+        for options_class in (CloudOptions, AdapterOptions):
+            for mode in ('live', 'replay'):
+                with self.subTest(options=options_class.__name__, mode=mode), self.assertRaisesRegex(ValueError, 'only in sim'):
+                    options_class(mode=mode, instantaneous_cloud=True)
+            for value in ('true', 1, None):
+                with self.subTest(options=options_class.__name__, value=value), self.assertRaises(ValueError):
+                    options_class(mode='sim', instantaneous_cloud=value)
+
+    def test_instantaneous_snapshot_scalar_numpy_canonical_bytes_preserve_time(self):
+        for endian in ('<', '>'):
+            msg = cloud([(1., 2., 3., 4., 1, 0.), (2., 3., 4., 5., 2, 0.)], endian=endian)
+            before = copy.deepcopy(msg)
+            self.assert_codec_matches_oracle(msg, CloudOptions(mode='sim', instantaneous_cloud=True))
+            result = prepare_cloud(msg, options=AdapterOptions(mode='sim', instantaneous_cloud=True))
+            self.assertEqual(result.input_stamp_ns, EPOCH)
+            self.assertEqual(result.output_stamp_ns, EPOCH)
+            self.assertEqual(result.first_point_time_sec, 0.)
+            self.assertEqual(result.last_point_time_sec, 0.)
+            self.assertEqual(result.data, POINT.pack(1., 2., 3., 4., 1, 0.)+POINT.pack(2., 3., 4., 5., 2, 0.))
+            self.assertEqual(msg, before)
+
+    def test_instantaneous_snapshot_rejects_nonzero_nan_and_missing_times(self):
+        options = CloudOptions(mode='sim', instantaneous_cloud=True)
+        cases = []
+        for times in ((.01, .01), (0., .01), (0., float('nan')), (0., float('inf')), (0., -.01)):
+            # A discarded coordinate must not hide bad timing.
+            cases.append(cloud([(1., 2., 3., 4., 1, times[0]), (float('nan'), 3., 4., 5., 2, times[1])]))
+        missing = cloud()
+        missing.fields = [field for field in missing.fields if field.name != 'time']
+        cases.append(missing)
+        for decoder in (normalize_cloud, normalize_cloud_numpy):
+            for msg in cases:
+                with self.subTest(decoder=decoder.__name__), self.assertRaises(InvalidSensorData):
+                    decoder(msg, options)
+            # Nonzero values must not become valid zeros through float underflow.
+            tiny = cloud([(1., 2., 3., 4., 1, 1e-300), (2., 3., 4., 5., 2, 1e-300)])
+            with self.assertRaises(InvalidSensorData):
+                decoder(tiny, CloudOptions(mode='sim', instantaneous_cloud=True, point_time_scale=1e-300))
+        with self.assertRaises(ValueError):
+            CloudOptions(mode='sim', instantaneous_cloud=True, point_time_is_absolute=True)
+
     def test_numpy_oracle_multicolumn_padded_endian_stable_optional(self):
         rows = [(2., -0., 3., 100., 2, .03), (1., 1., 1., 50., 1, .01),
                 (4., 4., 4., 80., 3, .01), (float('nan'), 2., 3., float('nan'), 5, .02),
