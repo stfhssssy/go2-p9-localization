@@ -1,0 +1,16 @@
+{
+  "upstream_repository": "https://github.com/caochao39/tare_planner.git",
+  "upstream_branch": "humble-jazzy",
+  "upstream_commit": "b6760adb4280b379567c76f4e684ce628e28ef71",
+  "patch_sha256": "5510c3bede38690948eeaccca185e9f3b6051735555708de509669fc0b407b7b",
+  "modified_source_files": [
+    "src/tare_planner/include/planning_env/planning_env.h",
+    "src/tare_planner/include/sensor_coverage_planner/sensor_coverage_planner_ground.h",
+    "src/tare_planner/include/tare_visualizer/tare_visualizer.h",
+    "src/tare_planner/rviz/tare_planner_ground.rviz",
+    "src/tare_planner/src/navigation_boundary_publisher/navigationBoundary.cpp",
+    "src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp"
+  ],
+  "runtime_compilation": "not performed by this subagent; main task will build in Jazzy container",
+  "planning_algorithm": "unchanged; only frame labels, start hold, input QoS, and read-only diagnostics"
+}

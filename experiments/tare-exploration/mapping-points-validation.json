@@ -1,0 +1,29 @@
+{
+  "source": "/opt/p9_ws/src/go2_p9/go2_p9/mapping_core.py",
+  "source_sha256": "0284c7f1b2b3db7ca023e3cf5adcf5d3f340b70201b9e3a594baa092f5ac711e",
+  "patch_sha256": "66c1dcb52dc7d5adfd9473026e38f49bbee98834589d17c70b98e8ac74f53565",
+  "tests": 6,
+  "benchmark": {
+    "voxels": 200000,
+    "repeats": 3,
+    "byte_identical": true,
+    "elapsed_sec": {
+      "original": [
+        0.24087726115249097,
+        0.24519397388212383,
+        0.24201546399854124
+      ],
+      "batched": [
+        0.06114143691956997,
+        0.0539378619287163,
+        0.05329220602288842
+      ]
+    },
+    "median_sec": {
+      "original": 0.24201546399854124,
+      "batched": 0.0539378619287163
+    },
+    "median_speedup": 4.4869309858515765,
+    "scope": "Map centroid export only; not ROS or end-to-end throughput"
+  }
+}

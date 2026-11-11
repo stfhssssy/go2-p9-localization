@@ -1,0 +1,17 @@
+--- a/src/go2_p9/go2_p9/mapping_core.py
++++ b/src/go2_p9/go2_p9/mapping_core.py
+@@ -282,7 +282,13 @@
+         return clean
+ 
+     def points(self):
+-        return np.asarray([total/n for total, n in self.cells.values()], dtype=np.float32).reshape(-1, 4)
++        # Batch the same float64 weighted-centroid calculation. Avoid one NumPy
++        # division allocation per voxel on the ROS input-processing thread.
++        # Counts are converted to float64, as in the previous float64 division.
++        rows = np.fromiter(self.cells.values(),
++                           dtype=[('sum', np.float64, (4,)), ('count', np.float64)],
++                           count=len(self.cells))
++        return np.asarray(rows['sum']/rows['count'][:, None], dtype=np.float32).reshape(-1, 4)
+ 
+     def report(self):
+         return dict(counts=dict(self.counts), voxels=len(self.cells), max_voxels=self.max_voxels,

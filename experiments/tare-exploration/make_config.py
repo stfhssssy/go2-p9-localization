@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import yaml
+p=yaml.safe_load(Path('/tare_ws/src/tare_planner/config/indoor.yaml').read_text())['tare_planner_node']['ros__parameters']
+p.update({
+ 'sub_state_estimation_topic_':'/state_estimation',
+ 'sub_start_exploration_topic_':'/start_exploration',
+ 'sub_coverage_boundary_topic_':'/p9/exploration/coverage_boundary',
+ 'sub_viewpoint_boundary_topic_':'/p9/exploration/navigation_boundary',
+ 'pub_waypoint_topic_':'/p9/exploration/tare_waypoint',
+ 'pub_exploration_finish_topic_':'/p9/exploration/finished',
+ 'pub_runtime_topic_':'/p9/exploration/tare_runtime',
+ 'kAutoStart':False,'kRushHome':True,'kRushHomeDist':3.0,'kExtendWayPoint':False,
+ 'kLookAheadDistance':1.5,'kAtHomeDistThreshold':0.4,
+ 'kUseCoverageBoundaryOnFrontier':True,'kUseCoverageBoundaryOnObjectSurface':True,
+ 'kSurfaceCloudDwzLeafSize':0.2,'kCollisionCloudDwzLeafSize':0.1,
+ 'kKeyposeCloudDwzFilterLeafSize':0.1,'kKeyposeCloudStackNum':3,
+ 'kPointCloudRowNum':15,'kPointCloudColNum':15,'kPointCloudLevelNum':5,
+ 'kPointCloudCellSize':3.0,'kPointCloudCellHeight':1.0,
+ 'kGridWorldXNum':31,'kGridWorldYNum':31,'kGridWorldZNum':5,
+ 'kGridWorldCellHeight':2.0,'kGridWorldNearbyGridNum':5,
+ 'viewpoint_manager/number_x':30,'viewpoint_manager/number_y':30,
+ 'viewpoint_manager/resolution_x':0.4,'viewpoint_manager/resolution_y':0.4,
+ 'kViewPointCollisionMargin':0.35,'kViewPointCollisionMarginZPlus':0.45,
+ 'kViewPointCollisionMarginZMinus':0.2,'kViewPointHeightFromTerrain':0.32,
+ 'kViewPointHeightFromTerrainChangeThreshold':0.4,
+ 'kSensorRange':5.0,'kNeighborRange':1.5,'kTerrainCollisionThreshold':0.18,
+ 'kFrontierClusterTolerance':0.5,'kFrontierClusterMinSize':8,
+ 'kCoverageDilationRadius':0.3,'kCoverageOcclusionThr':0.2,
+ 'rolling_occupancy_grid/resolution_x':0.2,'rolling_occupancy_grid/resolution_y':0.2,
+ 'rolling_occupancy_grid/resolution_z':0.2,
+ 'kMinAddPointNumSmall':15,'kMinAddPointNumBig':25,'kMinAddFrontierPointNum':5,
+ 'keypose_graph/kAddNodeMinDist':0.4,'keypose_graph/kAddEdgeCollisionCheckResolution':0.2,
+ 'keypose_graph/kAddEdgeCollisionCheckRadius':0.25,
+ 'use_sim_time':True,
+})
+Path('/output/integration/tare-small-scene.yaml').write_text(yaml.safe_dump({'tare_planner_node':{'ros__parameters':p}},sort_keys=False))
+sim=yaml.safe_load(Path('/opt/p9/config/p9nav-sim.yaml').read_text())
+sim['mapping'].update(map_publish_period_sec=5.0,path_publish_period_sec=1.0)
+sim['estimator']['config']='/opt/p9/config/pointlio-sim.yaml'
+Path('/output/integration/p9-exploration-sim.yaml').write_text(yaml.safe_dump(sim,sort_keys=False))

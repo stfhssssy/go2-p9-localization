@@ -1,0 +1,13 @@
+{
+  "tare_build_exit": "0",
+  "tare_binary_sha256": "36193846e5123bbfeb399e9a60a31b71ee81113d9637fa5c3ab4d52ab6d3c23b",
+  "tare_binary_size": 4771984,
+  "build_log_sha256": "f543569fb00e00310f758fbcb35a64186d42347ecb505e8521bdc98bb31c597c",
+  "execution": "compiled ROS 2 Jazzy overlay on existing navigation image; new Docker recipe not built",
+  "upstream_commit": "b6760adb4280b379567c76f4e684ce628e28ef71",
+  "base_image": {
+    "name": "go2-p9-nav:amd64-20261110",
+    "id": "sha256:9b6b7e97cba73195dc797322f28716bdb1bfc7bf53857e1144a118d786021375",
+    "architecture": "amd64"
+  }
+}

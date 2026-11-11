@@ -1,0 +1,136 @@
+{
+  "world_sha256": "9e05675643b341399bcc1bf820574e6b0fbb98755f43e26eb5c9f56fb89a34b1",
+  "objects": [
+    {
+      "name": "floor",
+      "center": [
+        0,
+        0,
+        -0.1
+      ],
+      "size": [
+        40,
+        40,
+        0.2
+      ]
+    },
+    {
+      "name": "north",
+      "center": [
+        0,
+        6.5,
+        1.1
+      ],
+      "size": [
+        13.2,
+        0.2,
+        2.2
+      ]
+    },
+    {
+      "name": "south",
+      "center": [
+        0,
+        -6.5,
+        1.1
+      ],
+      "size": [
+        13.2,
+        0.2,
+        2.2
+      ]
+    },
+    {
+      "name": "east",
+      "center": [
+        6.5,
+        0,
+        1.1
+      ],
+      "size": [
+        0.2,
+        13.2,
+        2.2
+      ]
+    },
+    {
+      "name": "west",
+      "center": [
+        -6.5,
+        0,
+        1.1
+      ],
+      "size": [
+        0.2,
+        13.2,
+        2.2
+      ]
+    },
+    {
+      "name": "east_occluding_partition",
+      "center": [
+        2,
+        -2.25,
+        1.0
+      ],
+      "size": [
+        0.2,
+        8.5,
+        2.0
+      ]
+    },
+    {
+      "name": "southwest_partition",
+      "center": [
+        -3.75,
+        -2,
+        1.0
+      ],
+      "size": [
+        5.5,
+        0.2,
+        2.0
+      ]
+    },
+    {
+      "name": "northwest_box",
+      "center": [
+        -3.5,
+        3,
+        0.6
+      ],
+      "size": [
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    {
+      "name": "east_box",
+      "center": [
+        4.5,
+        -3.5,
+        0.6
+      ],
+      "size": [
+        1.0,
+        1.0,
+        1.2
+      ]
+    }
+  ],
+  "spawn": [
+    0,
+    0,
+    0.375,
+    0
+  ],
+  "task_boundary_in_initial_body_xy": [
+    -6.0,
+    6.0,
+    -6.0,
+    6.0
+  ],
+  "planner_access": "Outer task boundary only. Obstacle geometry is simulator/evaluation data, not a planner input.",
+  "ground_truth_role": "evaluation only"
+}

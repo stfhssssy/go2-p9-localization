@@ -1,0 +1,54 @@
+P9 TARE integration — 2026-11-11
+
+Upstream: https://github.com/caochao39/tare_planner.git
+Branch: humble-jazzy
+Commit: b6760adb4280b379567c76f4e684ce628e28ef71
+The original Git commit and upstream algorithm are retained. See P9_INTEGRATION.patch and .json.
+
+Coordinate contract:
+P9 already supplies all world-space scan XYZ values, terrain clouds, boundary polygons,
+and odometry positions in camera_init. TARE uses these coordinates directly and does
+not apply any additional transform. All former hardcoded map output labels and RViz
+Fixed Frame now say camera_init, including PlanningEnv visualizations and the optional
+navigation boundary publisher. This is an interface convention, not a correction for
+misaligned input coordinates. Supplying values from another world frame violates it.
+
+Startup:
+SendInitialWaypoint publishes the current robot_position_ as a hold instead of a
+12 m forward target. The existing initialized_ transition and scan-driven planning
+are unchanged. The caller must still wait for valid sensor/odometry data before
+starting. kAutoStart=false and a true start_exploration message are recommended.
+A false start_exploration message is not a stop command in upstream TARE.
+
+QoS:
+Only odometry, registered scan, terrain map, and extended terrain map subscriptions
+use SensorDataQoS (BEST_EFFORT / depth 5), compatible with both best-effort and reliable
+publishers. Start, boundary, joystick and reset subscriptions remain reliable.
+
+Read-only telemetry:
+/p9/exploration/tare_diagnostics — std_msgs/msg/String, reliable depth 5.
+Emitted once after each actual successful planning iteration (candidate count > 0),
+after the upstream path publications. It reports simulation-time seconds sim_stamp,
+candidate_viewpoints, uncovered_surface_points, uncovered_frontier_points,
+exploration_finished, returned_home, stopped, robot_to_home_distance.
+These are native planner states, not ground-truth coverage or independent arrival
+certification. returned_home is exploration_finished && at_home_; stopped is upstream
+stopped_, whose value remains true after first returning home. It does not certify zero
+actuator velocity. robot_to_home_distance is the current 3D estimated distance. Counts
+are those passed to this iteration's local planner; after exploration finishes upstream
+can skip coverage counting, so zeros then do not prove the whole physical world covered.
+No diagnostic is produced for skipped/no-candidate cycles; observers must track age.
+No state variables or finish decisions are modified by diagnostics.
+
+Actual dynamic path topics (root namespace):
+/local_path — nav_msgs/Path, published by local_tsp_path_publisher_ every valid cycle.
+/global_path — nav_msgs/Path, trimmed global path published every valid cycle.
+/global_path_full — nav_msgs/Path, full global path published every valid cycle.
+/bspline_path_cloud — PointCloud2 representation of the concatenated exploration path.
+/exploration_path publisher exists, but its publish call is commented out upstream.
+/tare_visualizer/local_path publisher exists, but there is no active publication call.
+Do not use those last two topics as evidence of dynamic planning.
+
+This patch does not change TSP selection, frontier scoring, coverage, completion,
+return-home logic, lookahead tuning or local control. It does not enable FAR and TARE
+simultaneously. Simulation scale and obstacle margins must be set by launch configuration.

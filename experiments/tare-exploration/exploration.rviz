@@ -1,0 +1,103 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Tool Properties
+    Name: Tool Properties
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Fixed Frame: camera_init
+    Background Color: 25; 28; 31
+    Frame Rate: 20
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid (1 metre)
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 40
+    - Class: rviz_default_plugins/PointCloud2
+      Name: P9 accumulated map (green)
+      Enabled: true
+      Topic:
+        Value: /p9/map
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Size (Pixels): 1
+      Style: Points
+      Color Transformer: FlatColor
+      Color: 50; 200; 130
+      Position Transformer: XYZ
+    - Class: rviz_default_plugins/Path
+      Name: Estimated trajectory (orange)
+      Enabled: true
+      Topic:
+        Value: /p9/path
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Color: 255; 170; 0
+      Line Style: Billboards
+      Line Width: 0.035
+    - Class: rviz_default_plugins/Path
+      Name: TARE local exploration path (purple)
+      Enabled: true
+      Topic:
+        Value: /p9/exploration/tare_path
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Color: 220; 80; 255
+      Line Style: Billboards
+      Line Width: 0.065
+    - Class: rviz_default_plugins/Path
+      Name: TARE global route (cyan)
+      Enabled: true
+      Topic:
+        Value: /p9/exploration/global_path
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Color: 0; 225; 255
+      Line Style: Billboards
+      Line Width: 0.05
+    - Class: rviz_default_plugins/Path
+      Name: Local collision avoidance path (blue)
+      Enabled: true
+      Topic:
+        Value: /path
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Color: 70; 130; 255
+      Line Style: Billboards
+      Line Width: 0.04
+    - Class: rviz_default_plugins/Marker
+      Name: Exploration boundary (yellow)
+      Enabled: true
+      Topic:
+        Value: /p9/exploration/boundary_marker
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 5
+    - Class: rviz_default_plugins/Odometry
+      Name: Estimated body pose
+      Enabled: true
+      Topic:
+        Value: /state_estimation
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+      Keep: 1
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Target Frame: camera_init
+      Scale: 45
+      X: 0
+      Y: 0
+      Angle: 0
+Window Geometry: {Width: 1440, Height: 870, X: 0, Y: 0}

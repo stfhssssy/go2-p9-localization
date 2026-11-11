@@ -1,0 +1,3 @@
+# Unified-diff blank context lines contain one mandatory prefix space.
+# Keep patch bytes unchanged so their recorded provenance hashes remain valid.
+*.patch -whitespace

@@ -1,0 +1,742 @@
+{
+  "runs": [
+    {
+      "run": "run02",
+      "wall_duration_sec": 349.45572762098163,
+      "starts": 2,
+      "final_state": "STOPPED",
+      "final_reason": "Localization, terrain or clock unavailable; explicit restart required",
+      "first_stop_reason": "Localization, terrain or clock unavailable; explicit restart required",
+      "tare_flags": {
+        "tare_finished_seen": false,
+        "tare_returned_home_seen": false,
+        "tare_stopped_seen": false,
+        "guard_finished_seen": false,
+        "guard_returned_home_seen": false
+      },
+      "last_tare_diagnostics": {
+        "sim_stamp": 409.536,
+        "candidate_viewpoints": 393,
+        "uncovered_surface_points": 1,
+        "uncovered_frontier_points": 22,
+        "exploration_finished": false,
+        "returned_home": false,
+        "stopped": false,
+        "robot_to_home_distance": 5.584827385388863
+      },
+      "gt_raw_path_length_m": 21.430609053640577,
+      "gt_at_start": {
+        "wall_sec": 55.04043800290674,
+        "offset_sec": -0.0664151799865067,
+        "xyz": [
+          0.19327735195716267,
+          -0.0050260418719259925,
+          0.2394065924705011
+        ]
+      },
+      "gt_at_return": null,
+      "gt_at_end": {
+        "wall_sec": 349.4068592689,
+        "offset_sec": -0.048868352081626654,
+        "xyz": [
+          -5.007657918065757,
+          2.032535439226436,
+          0.23955234211201293
+        ]
+      },
+      "gt_xy_start_to_return_m": null,
+      "gt_xy_start_to_end_m": 5.585819946276833,
+      "estimated_home_observation": {
+        "distance_m": 5.584042207945968,
+        "stable": true,
+        "samples": 19,
+        "span_sec": 2.0,
+        "speed_p95_m_s": 0.005886644033449284
+      },
+      "global_fallback_status_samples": 0,
+      "input_pause_count": 0,
+      "input_resume_count": 0,
+      "commands": {
+        "samples": 6989,
+        "nonzero_samples": 1523,
+        "invalid_samples": 0,
+        "max_abs_linear_m_s": 0.25,
+        "max_abs_yaw_rate_rad_s": 0.48869219422340393,
+        "last_command": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "last_message_wall_age_sec": 0.0139819101896137,
+        "consecutive_observed_zero_tail_wall_sec": 92.85318714100868,
+        "recent_zero_commands_for_at_least_2_sec": true
+      },
+      "observed_cloud_growth": {
+        "metric": "union of observed world-frame lidar voxels; NOT ground-truth coverage",
+        "voxel_size_m": 0.2,
+        "initial_baseline_scan_time_sec": 30.0,
+        "baseline_complete": true,
+        "baseline_observed_voxels": 2319,
+        "observed_voxels": 7506,
+        "added_voxels_after_baseline": 5187,
+        "valid_cloud_count": 3081,
+        "finite_points_seen": 10933103,
+        "first_scan_stamp": 65.599999999,
+        "last_scan_stamp": 409.6,
+        "scan_stamp_regressions": 0,
+        "last_valid_cloud_wall_age_sec": 0.01499809417873621,
+        "last_valid_cloud_header_age_sim_sec": 0.06699999999995043
+      },
+      "max_odom_age_sim_sec": 2.155000000000001,
+      "recording": {
+        "source": "actual X display via Pillow XCB",
+        "display": ":94",
+        "resolution": [
+          1440,
+          900
+        ],
+        "fps": 10,
+        "frames": 3091,
+        "video_seconds": 309.1,
+        "wall_seconds": 309.01445861300454,
+        "duplicates_for_delayed_capture": 0,
+        "maximum_capture_lateness_seconds": 0.001710421871393919,
+        "maximum_capture_duration_seconds": 0.015150458086282015,
+        "playback_speed": 1,
+        "audio": false,
+        "stop_reason": "stop_file",
+        "stop_file": "/output/run02/stop-recording",
+        "stop_file_exists": true,
+        "received_signal": null,
+        "output": "raw RGB24 stdout",
+        "encoder_exit_code": null,
+        "error": null
+      }
+    },
+    {
+      "run": "run03",
+      "wall_duration_sec": 531.8528412231244,
+      "starts": 1,
+      "final_state": "STOPPED",
+      "final_reason": "Invalid, stale or out-of-bound body odometry",
+      "first_stop_reason": "Invalid, stale or out-of-bound body odometry",
+      "tare_flags": {
+        "tare_finished_seen": false,
+        "tare_returned_home_seen": false,
+        "tare_stopped_seen": false,
+        "guard_finished_seen": false,
+        "guard_returned_home_seen": false
+      },
+      "last_tare_diagnostics": {
+        "sim_stamp": 575.535,
+        "candidate_viewpoints": 2,
+        "uncovered_surface_points": 0,
+        "uncovered_frontier_points": 0,
+        "exploration_finished": false,
+        "returned_home": false,
+        "stopped": false,
+        "robot_to_home_distance": 4.569107269123073
+      },
+      "gt_raw_path_length_m": 51.85679788088193,
+      "gt_at_start": {
+        "wall_sec": 55.830718285171315,
+        "offset_sec": 0.09552104817703366,
+        "xyz": [
+          0.19460778405802553,
+          0.0009381648290427167,
+          0.23952060855946652
+        ]
+      },
+      "gt_at_return": null,
+      "gt_at_end": {
+        "wall_sec": 531.8097764861304,
+        "offset_sec": -0.04306473699398339,
+        "xyz": [
+          3.924147372719061,
+          -2.625097332024121,
+          0.23966982006689425
+        ]
+      },
+      "gt_xy_start_to_return_m": null,
+      "gt_xy_start_to_end_m": 4.561307704389473,
+      "estimated_home_observation": {
+        "distance_m": 4.565824728309366,
+        "stable": false,
+        "samples": 10,
+        "span_sec": 1.8,
+        "speed_p95_m_s": 0.005976119819555234
+      },
+      "global_fallback_status_samples": 0,
+      "input_pause_count": 3,
+      "input_resume_count": 3,
+      "commands": {
+        "samples": 10637,
+        "nonzero_samples": 3519,
+        "invalid_samples": 0,
+        "max_abs_linear_m_s": 0.25,
+        "max_abs_yaw_rate_rad_s": 0.48869219422340393,
+        "last_command": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "last_message_wall_age_sec": 0.007869553985074162,
+        "consecutive_observed_zero_tail_wall_sec": 230.45014275494032,
+        "recent_zero_commands_for_at_least_2_sec": true
+      },
+      "observed_cloud_growth": {
+        "metric": "union of observed world-frame lidar voxels; NOT ground-truth coverage",
+        "voxel_size_m": 0.2,
+        "initial_baseline_scan_time_sec": 30.0,
+        "baseline_complete": true,
+        "baseline_observed_voxels": 2182,
+        "observed_voxels": 10292,
+        "added_voxels_after_baseline": 8110,
+        "valid_cloud_count": 4548,
+        "finite_points_seen": 17172970,
+        "first_scan_stamp": 53.5,
+        "last_scan_stamp": 562.799999999,
+        "scan_stamp_regressions": 0,
+        "last_valid_cloud_wall_age_sec": 0.24824123014695942,
+        "last_valid_cloud_header_age_sim_sec": 13.241000001000089
+      },
+      "max_odom_age_sim_sec": 14.14900000099999,
+      "recording": {
+        "source": "actual X display via Pillow XCB",
+        "display": ":94",
+        "resolution": [
+          1440,
+          900
+        ],
+        "fps": 10,
+        "frames": 4980,
+        "video_seconds": 498.0,
+        "wall_seconds": 497.9077191669494,
+        "duplicates_for_delayed_capture": 0,
+        "maximum_capture_lateness_seconds": 0.001839325064793229,
+        "maximum_capture_duration_seconds": 0.011428932892158628,
+        "playback_speed": 1,
+        "audio": false,
+        "stop_reason": "stop_file",
+        "stop_file": "/output/run03/stop-recording",
+        "stop_file_exists": true,
+        "received_signal": null,
+        "output": "raw RGB24 stdout",
+        "encoder_exit_code": null,
+        "error": null
+      },
+      "latency_probe_15s": {
+        "/p9/points": {
+          "n": 136,
+          "first_age": 0.02199999999999136,
+          "last_age": 0.021000000000015007,
+          "max_age": 0.04099999999999682
+        },
+        "/pointlio/odom": {
+          "n": 136,
+          "first_age": 0.045000000000015916,
+          "last_age": 0.036000000000001364,
+          "max_age": 0.05700000000001637
+        },
+        "/pointlio/registered_scan": {
+          "n": 136,
+          "first_age": 0.04800000000000182,
+          "last_age": 0.03699999999997772,
+          "max_age": 0.057999999999992724
+        },
+        "/state_estimation": {
+          "n": 95,
+          "first_age": 0.06399999999996453,
+          "last_age": 4.005000000999985,
+          "max_age": 4.088999999999999
+        },
+        "/registered_scan": {
+          "n": 95,
+          "first_age": 0.06499999999999773,
+          "last_age": 4.005000000999985,
+          "max_age": 4.089999999999975
+        },
+        "/terrain_map": {
+          "n": 95,
+          "first_age": 0.06799999999998363,
+          "last_age": 4.007000000999994,
+          "max_age": 4.095000000000027
+        }
+      }
+    },
+    {
+      "run": "run04",
+      "wall_duration_sec": 638.0263371651527,
+      "starts": 1,
+      "final_state": "STOPPED",
+      "final_reason": "Explicit stop; subsequent planner output cannot re-arm",
+      "first_stop_reason": "Explicit stop; subsequent planner output cannot re-arm",
+      "tare_flags": {
+        "tare_finished_seen": false,
+        "tare_returned_home_seen": false,
+        "tare_stopped_seen": false,
+        "guard_finished_seen": false,
+        "guard_returned_home_seen": false
+      },
+      "last_tare_diagnostics": {
+        "sim_stamp": 675.016,
+        "candidate_viewpoints": 295,
+        "uncovered_surface_points": 0,
+        "uncovered_frontier_points": 11,
+        "exploration_finished": false,
+        "returned_home": false,
+        "stopped": false,
+        "robot_to_home_distance": 3.927824665968726
+      },
+      "gt_raw_path_length_m": 61.44717731516781,
+      "gt_at_start": {
+        "wall_sec": 55.79306205105968,
+        "offset_sec": -0.0029490049928426743,
+        "xyz": [
+          0.19629901886558043,
+          0.001772361786453548,
+          0.23932696132892003
+        ]
+      },
+      "gt_at_return": null,
+      "gt_at_end": {
+        "wall_sec": 637.999221784994,
+        "offset_sec": -0.027115380158647895,
+        "xyz": [
+          4.01519223567709,
+          0.9316082705813462,
+          0.23959864807563314
+        ]
+      },
+      "gt_xy_start_to_return_m": null,
+      "gt_xy_start_to_end_m": 3.93046310486352,
+      "estimated_home_observation": {
+        "distance_m": 3.927600939948094,
+        "stable": true,
+        "samples": 21,
+        "span_sec": 2.0,
+        "speed_p95_m_s": 0.006849563379010496
+      },
+      "global_fallback_status_samples": 0,
+      "input_pause_count": 7,
+      "input_resume_count": 7,
+      "commands": {
+        "samples": 12761,
+        "nonzero_samples": 4409,
+        "invalid_samples": 0,
+        "max_abs_linear_m_s": 0.25,
+        "max_abs_yaw_rate_rad_s": 0.48869219422340393,
+        "last_command": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "last_message_wall_age_sec": 0.02222577203065157,
+        "consecutive_observed_zero_tail_wall_sec": 316.3004994939547,
+        "recent_zero_commands_for_at_least_2_sec": true
+      },
+      "observed_cloud_growth": {
+        "metric": "union of observed world-frame lidar voxels; NOT ground-truth coverage",
+        "voxel_size_m": 0.2,
+        "initial_baseline_scan_time_sec": 30.0,
+        "baseline_complete": true,
+        "baseline_observed_voxels": 2186,
+        "observed_voxels": 11101,
+        "added_voxels_after_baseline": 8915,
+        "valid_cloud_count": 5579,
+        "finite_points_seen": 21129238,
+        "first_scan_stamp": 52.1,
+        "last_scan_stamp": 675.2,
+        "scan_stamp_regressions": 0,
+        "last_valid_cloud_wall_age_sec": 0.09359639114700258,
+        "last_valid_cloud_header_age_sim_sec": 0.14799999999991087
+      },
+      "max_odom_age_sim_sec": 1.3560000010000124,
+      "recording": {
+        "source": "actual X display via Pillow XCB",
+        "display": ":94",
+        "resolution": [
+          1440,
+          900
+        ],
+        "fps": 10,
+        "frames": 6001,
+        "video_seconds": 600.1,
+        "wall_seconds": 600.0114431851543,
+        "duplicates_for_delayed_capture": 0,
+        "maximum_capture_lateness_seconds": 0.0015345800202339888,
+        "maximum_capture_duration_seconds": 0.010781472781673074,
+        "playback_speed": 1,
+        "audio": false,
+        "stop_reason": "max_seconds",
+        "stop_file": "/output/run04/stop-recording",
+        "stop_file_exists": false,
+        "received_signal": null,
+        "output": "raw RGB24 stdout",
+        "encoder_exit_code": null,
+        "error": null
+      },
+      "latency_probe_15s": {
+        "/p9/points": {
+          "n": 127,
+          "first_age": 0.01999999999998181,
+          "last_age": 0.019000000000005457,
+          "max_age": 0.03400000000004866
+        },
+        "/pointlio/odom": {
+          "n": 127,
+          "first_age": 0.03499999999996817,
+          "last_age": 0.033999999999991815,
+          "max_age": 0.05000000000001137
+        },
+        "/pointlio/registered_scan": {
+          "n": 127,
+          "first_age": 0.036000000000001364,
+          "last_age": 0.03499999999996817,
+          "max_age": 0.05000000000001137
+        },
+        "/state_estimation": {
+          "n": 126,
+          "first_age": 0.05299999999999727,
+          "last_age": 0.05500000000000682,
+          "max_age": 0.22800000099999806
+        },
+        "/registered_scan": {
+          "n": 126,
+          "first_age": 0.053999999999973625,
+          "last_age": 0.055999999999983174,
+          "max_age": 0.22900000100003126
+        },
+        "/terrain_map": {
+          "n": 126,
+          "first_age": 0.05699999999995953,
+          "last_age": 0.05900000000002592,
+          "max_age": 0.23599999999999
+        }
+      }
+    },
+    {
+      "run": "run05",
+      "wall_duration_sec": 566.9887401300948,
+      "starts": 1,
+      "final_state": "STOPPED",
+      "final_reason": "TARE path/lookahead unavailable; explicit restart required",
+      "first_stop_reason": "TARE path/lookahead unavailable; explicit restart required",
+      "tare_flags": {
+        "tare_finished_seen": true,
+        "tare_returned_home_seen": false,
+        "tare_stopped_seen": false,
+        "guard_finished_seen": true,
+        "guard_returned_home_seen": false
+      },
+      "last_tare_diagnostics": {
+        "sim_stamp": 589.719,
+        "candidate_viewpoints": 432,
+        "uncovered_surface_points": 0,
+        "uncovered_frontier_points": 0,
+        "exploration_finished": true,
+        "returned_home": false,
+        "stopped": false,
+        "robot_to_home_distance": 2.8635643194767324
+      },
+      "gt_raw_path_length_m": 67.27100327510335,
+      "gt_at_start": {
+        "wall_sec": 63.03266409295611,
+        "offset_sec": -0.0933160011190921,
+        "xyz": [
+          0.16741239305407263,
+          -0.006626044770381219,
+          0.23939975925105902
+        ]
+      },
+      "gt_at_return": null,
+      "gt_at_end": {
+        "wall_sec": 566.9502071030438,
+        "offset_sec": -0.03853302705101669,
+        "xyz": [
+          2.0310642239809997,
+          2.2861950437259906,
+          0.23931913830297769
+        ]
+      },
+      "gt_xy_start_to_return_m": null,
+      "gt_xy_start_to_end_m": 2.9546957018906324,
+      "estimated_home_observation": {
+        "distance_m": 2.861616900179515,
+        "stable": false,
+        "samples": 17,
+        "span_sec": 1.8000000010000001,
+        "speed_p95_m_s": 0.008565571092822027
+      },
+      "global_fallback_status_samples": 0,
+      "input_pause_count": 2,
+      "input_resume_count": 2,
+      "commands": {
+        "samples": 11339,
+        "nonzero_samples": 4783,
+        "invalid_samples": 0,
+        "max_abs_linear_m_s": 0.25,
+        "max_abs_yaw_rate_rad_s": 0.48869219422340393,
+        "last_command": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "last_message_wall_age_sec": 0.041717044077813625,
+        "consecutive_observed_zero_tail_wall_sec": 222.7500166608952,
+        "recent_zero_commands_for_at_least_2_sec": true
+      },
+      "observed_cloud_growth": {
+        "metric": "union of observed world-frame lidar voxels; NOT ground-truth coverage",
+        "voxel_size_m": 0.2,
+        "initial_baseline_scan_time_sec": 30.0,
+        "baseline_complete": true,
+        "baseline_observed_voxels": 2185,
+        "observed_voxels": 12007,
+        "added_voxels_after_baseline": 9822,
+        "valid_cloud_count": 4953,
+        "finite_points_seen": 18704682,
+        "first_scan_stamp": 35.2,
+        "last_scan_stamp": 590.399999999,
+        "scan_stamp_regressions": 0,
+        "last_valid_cloud_wall_age_sec": 0.057205452118068933,
+        "last_valid_cloud_header_age_sim_sec": 0.11900000100001762
+      },
+      "max_odom_age_sim_sec": 1.770000001000028,
+      "recording": {
+        "source": "actual X display via Pillow XCB",
+        "display": ":94",
+        "resolution": [
+          1440,
+          900
+        ],
+        "fps": 10,
+        "frames": 5207,
+        "video_seconds": 520.7,
+        "wall_seconds": 520.610738908872,
+        "duplicates_for_delayed_capture": 0,
+        "maximum_capture_lateness_seconds": 0.0020102360285818577,
+        "maximum_capture_duration_seconds": 0.0111793780233711,
+        "playback_speed": 1,
+        "audio": false,
+        "stop_reason": "stop_file",
+        "stop_file": "/output/run05/stop-recording",
+        "stop_file_exists": true,
+        "received_signal": null,
+        "output": "raw RGB24 stdout",
+        "encoder_exit_code": null,
+        "error": null
+      },
+      "latency_probe_15s": {
+        "/state_estimation": {
+          "n": 142,
+          "first_age": 0.060000000000002274,
+          "last_age": 0.0560000009999726,
+          "max_age": 0.2740000000000009
+        },
+        "/registered_scan": {
+          "n": 142,
+          "first_age": 0.06099999999997863,
+          "last_age": 0.057000001000005796,
+          "max_age": 0.27499999999997726
+        },
+        "/terrain_map": {
+          "n": 142,
+          "first_age": 0.07200000000000273,
+          "last_age": 0.0640000010000108,
+          "max_age": 0.27799999999996317
+        },
+        "/p9/points": {
+          "n": 142,
+          "first_age": 0.020999999999958163,
+          "last_age": 0.01999999999998181,
+          "max_age": 0.03699999999997772
+        },
+        "/pointlio/odom": {
+          "n": 141,
+          "first_age": 0.03799999999995407,
+          "last_age": 0.037000001000023985,
+          "max_age": 0.05400000100001989
+        },
+        "/pointlio/registered_scan": {
+          "n": 141,
+          "first_age": 0.03899999999998727,
+          "last_age": 0.03800000100000034,
+          "max_age": 0.055000000999996246
+        }
+      }
+    },
+    {
+      "run": "run06",
+      "wall_duration_sec": 646.755118379835,
+      "starts": 1,
+      "final_state": "STOPPED",
+      "final_reason": "Explicit stop; subsequent planner output cannot re-arm",
+      "first_stop_reason": "Explicit stop; subsequent planner output cannot re-arm",
+      "tare_flags": {
+        "tare_finished_seen": true,
+        "tare_returned_home_seen": false,
+        "tare_stopped_seen": false,
+        "guard_finished_seen": true,
+        "guard_returned_home_seen": false
+      },
+      "last_tare_diagnostics": {
+        "sim_stamp": 708.172,
+        "candidate_viewpoints": 1,
+        "uncovered_surface_points": 0,
+        "uncovered_frontier_points": 0,
+        "exploration_finished": true,
+        "returned_home": false,
+        "stopped": false,
+        "robot_to_home_distance": 2.298767845594587
+      },
+      "gt_raw_path_length_m": 121.49380672229863,
+      "gt_at_start": {
+        "wall_sec": 56.59112201188691,
+        "offset_sec": -0.02068768604658544,
+        "xyz": [
+          0.1780014599721231,
+          -0.0034430660715582006,
+          0.23920948188019162
+        ]
+      },
+      "gt_at_return": null,
+      "gt_at_end": {
+        "wall_sec": 646.6756330127828,
+        "offset_sec": -0.07948536705225706,
+        "xyz": [
+          2.4172418347562634,
+          -0.947161350046651,
+          0.24006303132649484
+        ]
+      },
+      "gt_xy_start_to_return_m": null,
+      "gt_xy_start_to_end_m": 2.429979764436797,
+      "estimated_home_observation": {
+        "distance_m": 2.297935605566935,
+        "stable": true,
+        "samples": 21,
+        "span_sec": 2.0,
+        "speed_p95_m_s": 0.004652468794473295
+      },
+      "global_fallback_status_samples": 209,
+      "input_pause_count": 12,
+      "input_resume_count": 12,
+      "commands": {
+        "samples": 12936,
+        "nonzero_samples": 9202,
+        "invalid_samples": 0,
+        "max_abs_linear_m_s": 0.2490002065896988,
+        "max_abs_yaw_rate_rad_s": 0.48869219422340393,
+        "last_command": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "last_message_wall_age_sec": 0.01534460298717022,
+        "consecutive_observed_zero_tail_wall_sec": 21.899541322840378,
+        "recent_zero_commands_for_at_least_2_sec": true
+      },
+      "observed_cloud_growth": {
+        "metric": "union of observed world-frame lidar voxels; NOT ground-truth coverage",
+        "voxel_size_m": 0.2,
+        "initial_baseline_scan_time_sec": 30.0,
+        "baseline_complete": true,
+        "baseline_observed_voxels": 2413,
+        "observed_voxels": 31565,
+        "added_voxels_after_baseline": 29152,
+        "valid_cloud_count": 5718,
+        "finite_points_seen": 21725655,
+        "first_scan_stamp": 70.099999999,
+        "last_scan_stamp": 708.299999999,
+        "scan_stamp_regressions": 0,
+        "last_valid_cloud_wall_age_sec": 0.0964108428452164,
+        "last_valid_cloud_header_age_sim_sec": 0.16000000100007128
+      },
+      "max_odom_age_sim_sec": 2.1329999999999245,
+      "recording": {
+        "source": "actual X display via Pillow XCB",
+        "display": ":94",
+        "resolution": [
+          1440,
+          900
+        ],
+        "fps": 10,
+        "frames": 6001,
+        "video_seconds": 600.1,
+        "wall_seconds": 600.0109674490523,
+        "duplicates_for_delayed_capture": 0,
+        "maximum_capture_lateness_seconds": 0.0020294799469411373,
+        "maximum_capture_duration_seconds": 0.010585614014416933,
+        "playback_speed": 1,
+        "audio": false,
+        "stop_reason": "max_seconds",
+        "stop_file": "/output/run06/stop-recording",
+        "stop_file_exists": false,
+        "received_signal": null,
+        "output": "raw RGB24 stdout",
+        "encoder_exit_code": null,
+        "error": null
+      },
+      "latency_probe_15s": {
+        "/terrain_map": {
+          "n": 143,
+          "first_age": 0.06299999999998818,
+          "last_age": 0.05899999999996908,
+          "max_age": 0.26200000000000045
+        },
+        "/p9/points": {
+          "n": 142,
+          "first_age": 0.022000000000048203,
+          "last_age": 0.019000000000005457,
+          "max_age": 0.03899999999998727
+        },
+        "/pointlio/odom": {
+          "n": 142,
+          "first_age": 0.039000001000033535,
+          "last_age": 0.033999999999991815,
+          "max_age": 0.05499999999994998
+        },
+        "/pointlio/registered_scan": {
+          "n": 142,
+          "first_age": 0.04000000100000989,
+          "last_age": 0.03499999999996817,
+          "max_age": 0.05499999999994998
+        },
+        "/state_estimation": {
+          "n": 142,
+          "first_age": 0.05800000100003899,
+          "last_age": 0.05299999999999727,
+          "max_age": 0.25099999999997635
+        },
+        "/registered_scan": {
+          "n": 142,
+          "first_age": 0.059000001000015345,
+          "last_age": 0.05299999999999727,
+          "max_age": 0.25099999999997635
+        }
+      }
+    }
+  ],
+  "notes": [
+    "GT is evaluation-only, never a controller input.",
+    "GT raw path length includes high-rate simulator jitter and is not a localization accuracy metric.",
+    "Observed 0.2m voxel growth is not ground-truth coverage.",
+    "Runs are sequential integration/debugging trials, not repeated statistical benchmarks."
+  ]
+}
