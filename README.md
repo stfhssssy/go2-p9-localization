@@ -1,76 +1,211 @@
-# Go2 P9 localization and geometry mapping
+# Go2 P9: Localization, Mapping, and FAR Planning
 
-## 新的 B1 定位、建图与规划版本（2026-11-10）
+English | [中文说明](docs/README.zh-CN.md)
 
-本分支在保留原 P9 配置和 `p9` 入口的基础上，新增 `p9nav`：采用 C 组 R/t 与 B1 静态陀螺仪偏置，连接 **Point-LIO → 地图累积 → 地形分析 → FAR → 局部规划与路径跟随**。原 P9 发布仍在原 `main` 和旧镜像中。
+A ROS 2 Jazzy integration for **Go2 LiDAR + D435i IMU → Point-LIO localization → accumulated 3D mapping → FAR and local planning**. The navigation release adds calibrated parameter candidates and a separate `p9nav` entrypoint while retaining the original P9 configuration and `p9` entrypoint.
 
-新镜像：`go2-p9-nav:arm64-20261110`，构建文件 `Dockerfile.navigation`。三种独立配置为 `config/p9nav-replay.yaml`、`p9nav-live.yaml`、`p9nav-sim.yaml`。实时配置的时钟和机身变换需要现场复核，不能直接沿用历史 bag 的时间偏移。规划默认输出隔离的速度建议，只有仿真显式开关连接 `/cmd_vel`；镜像不向真狗发送动作。
+**Status: experimental.** The planner has driven a robot model in Gazebo through goals selected in RViz. The latest complete goal test did not pass arrival validation, and input freshness issues remain. **The released `live` mode produces isolated velocity suggestions; it does not command the physical Go2.** A real-robot motion bridge and hardware validation are still required.
 
-请从 [新方案完整说明](docs/navigation.md) 开始；下面保留原 P9 的使用说明。新版本验证结果、源码提交、镜像 ID 和下载校验以 HF `releases/p9-nav-20261110/` 的发行记录为准。
+## Versions
 
-独立 ROS 2 Jazzy / ARM64 发行包，基于 `go2-control:arm64-v4`，包含实际历史 P9 使用的 Point-LIO 源码快照、新的传感器接口、地图累积器和 RViz 配置。
+| Component | Version / location |
+|---|---|
+| Navigation branch | `p9-navigation-20261110` |
+| Runtime source used for the published images and RViz test | `0a53bff69c8bd3debbe4c2a915faefca0eb19b30` |
+| Published ARM64 image | `go2-p9-nav:arm64-20261110` |
+| Docker build file | [`Dockerfile.navigation`](Dockerfile.navigation) |
+| Original P9 | Preserved on `main`, with the original `go2-p9:arm64` image |
+| Image archive and release records | [Hugging Face release directory](https://huggingface.co/datasets/sssssssssssssssy/go2-p9-arm64/tree/main/releases/p9-nav-20261110) |
 
+The English README was updated on **2026-11-11**. This documentation update does not rebuild or replace the published images. Use the release directory's `release.json`, `validation.json`, and `SHA256SUMS` to identify and verify those artifacts. Access follows the repository's existing permissions.
+
+## Data flow
+
+```text
+Go2 LiDAR points + D435i gyroscope / accelerometer
+  -> sensor adapter: fields, per-point time, clock alignment,
+     linear IMU interpolation, and optional B1 gyro-bias correction
+  -> Point-LIO
+  -> registered world-frame scan + timestamp-matched IMU pose
+       |-> P9 map accumulator -> /p9/map, /p9/path, PCD, CSV
+       `-> body-pose bridge + terrain analysis
+            -> FAR route / waypoint planning
+            -> localPlanner + pathFollower
+            -> navigation guard -> /p9/navigation/cmd_vel
+                                      `-> simulation /cmd_vel
+                                          only when explicitly enabled
 ```
-Go2 /utlidar/cloud + D435i gyro/acceleration
-  -> P9 时间/字段/数据有效性接口 -> Point-LIO
-  -> camera_init 下的 registered scan + 同时刻 IMU 原点位姿
-  -> 5 cm 体素累积地图 /p9/map + /p9/path -> RViz / PCD / CSV
-```
 
-不使用 `robot_odom` 作为估计输入。相机图像不参与。已经变换到世界系的点云不再次乘里程计。默认不启动相机、规划器或机器人运动控制。
+- `/utlidar/robot_odom` is **not** an estimator input in this P9 pipeline. Camera images are not used for localization.
+- Registered scans are already expressed in the `camera_init` world frame. The map accumulator does not transform them by the current pose a second time; its default voxel size is 5 cm.
+- Point-LIO's native pose refers to the IMU origin. The configured `T_imu_base` supplies a `base_link` pose for planning. The planner's `vehicle` frame uses the same position and yaw-only orientation; it is not a static identity alias of `base_link`.
+- Geometric map accumulation, terrain analysis, and route planning are separate stages. The system follows externally supplied goals; autonomous exploration is not included in this entrypoint.
 
-## 两个入口
+## Requirements
 
-下载发行镜像后 `docker load -i go2-p9-arm64.tar`（若下载的是 `.tar.zst`，先 `zstd -d`），镜像名与 SHA256 以同版本 `release.json` / `SHA256SUMS` 为准。
+- ROS 2 Jazzy for a native build, or the supplied Linux/ARM64 Docker image for deployment. The navigation image builds on the retained P9 image, which is based on `go2-control:arm64-v4`.
+- An external working sensor driver. `p9nav live` does not start a second RealSense driver.
+- Correct sensor topics, frame transforms, per-point LiDAR timestamps, and a common time basis. `use_sim_time` and a bag player's `/clock` do not repair message header timestamps.
+- A persistent mounted output directory, empty or new for each run.
+- For the commands below, `sar-run` is the competition environment's existing container launcher; it is not installed by this repository. Replace `/path/...` with host paths that the launcher mounts into the container. GUI commands require the launcher's GUI support.
+
+## Load the navigation image
+
+Download `go2-p9-nav-arm64-20261110.tar.zst`, `release.json`, and `SHA256SUMS` from the same release directory. In the download directory:
 
 ```bash
-# 实机：已有主机相机驱动，且 unite_imu_method=2；domain 0，绑定 SAR_ROBOT_IFACE。
-# SAR_ROBOT_IFACE 由比赛环境提供，勿自行猜测网络接口。
-sar-run go2-p9:arm64 p9 diagnose
-sar-run --gui go2-p9:arm64 p9 live --config "$HOME/p9/robot.yaml" \
-  --output "$HOME/p9/runs/live-001" --rviz
-# 另一终端保存实机运行，保持同一 domain 0 / 机器人接口：
-sar-run go2-p9:arm64 p9 save
-
-# 回放：隔离到 domain 42 + loopback，避免与真机同名话题混流。
-# 历史 localization 已线性插值的派生包，使用该包专用配置。
-sar-run --gui go2-p9:arm64 env ROS_DOMAIN_ID=42 \
-  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
-  p9 replay --bag "$HOME/bags/localization-linear" \
-  --config /opt/p9/config/replay.example.yaml --rate 0.5 \
-  --output "$HOME/p9/runs/replay-001" --rviz
-# 另一终端保存该回放，必须使用同一 domain 42 / loopback：
-sar-run go2-p9:arm64 env ROS_DOMAIN_ID=42 \
-  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
-  p9 save
+# Check the downloaded files against that release's checksum list.
+sha256sum --ignore-missing -c SHA256SUMS
+zstd -dc go2-p9-nav-arm64-20261110.tar.zst | docker load
+docker image inspect go2-p9-nav:arm64-20261110 \
+  --format '{{.Os}}/{{.Architecture}} {{.Id}}'
 ```
 
-回放命令中的 `env` 只覆盖该容器进程的 DDS 设置，不改变实机相机驱动的 domain 0。不要在机器人 domain 0 上播放历史 bag；同一回放 domain 内只运行一个 P9 实例。
+The published deployment image is ARM64. Its build checks and a separate AMD64 simulation test are different forms of evidence; an x86 or QEMU run does not establish Jetson throughput.
 
-`config/live.example.yaml` 需要填写本机测量的 LiDAR→相机 IMU 旋转和平移。`config/live-p9-experimental.yaml` 提供旧 P9 的实验旋转和假设零平移，时间偏移为零；它**不是比赛真机完成标定的证明**。`replay.example.yaml` 中约 2167 秒偏移只属于那份公开 localization 派生包，不用于其他 bag 或实时数据。所有启动必须明确选择配置，默认入口仅做 10 秒只读诊断。
+## Choose the correct profile
 
-如果直接回放原始 bag，把 `sensor.imu_mode` 改成 `raw_linear`；默认订阅相机 `gyro/sample`、`accel/sample`，同时需要原始 `/tf_static`。接口仅在 TF 证实原始 IMU 轴相同时重用合并 IMU frame，并等待双侧加速度样本线性插值，不外推。已有派生 IMU 或 RealSense `unite_imu_method=2` 使用 `merged_linear`，消息原样验证转发。
+| Mode | Profile | Purpose | Motion output |
+|---|---|---|---|
+| `p9nav replay` | [`config/p9nav-replay.yaml`](config/p9nav-replay.yaml) | Prepared public `localization` bag; recorded sensor data and bag clock | Isolated suggestions; cannot alter the recorded motion |
+| `p9nav live` | [`config/p9nav-live.yaml`](config/p9nav-live.yaml) | Current Go2 and D435i streams; current-device clocks and transforms must be checked | Isolated suggestions; no physical robot control |
+| `p9nav sim` | [`config/p9nav-sim.yaml`](config/p9nav-sim.yaml) | An already running simulator with compatible sensors and `/clock` | Simulation `/cmd_vel` only with `--sim-command-output` |
 
-## 产物和检查
+All three modes require an explicit `--config`. The original `p9 replay/live` commands remain available for localization and mapping without the navigation stack.
 
-输出目录必须为空。有效配置、ROS 日志、`trajectory.csv`、`mapping_status.json`、`mapping_summary.json` 与 `PCD/map.pcd` 存入 `--output`。Ctrl-C 正常退出或 `p9 save` 保存地图；默认回放结束后保留 RViz，`--exit-on-finish` 可在 EOF 后退出。使用容器挂载的持久目录，不能只保存在临时容器可写层。
+### Replay
 
-地图与轨迹默认参考系是 `camera_init`，位姿参考点是相机 IMU `aft_mapped`；没有测量 IMU→机身外参时，不把它误称为 `base_link`。输出 `/p9/input_diagnostics` 和 `/p9/mapping_status` 分别用于排查输入与配对问题。映射容量或配对错误会明确停止接收并报 FAULT，不以静默丢弃隐藏数据缺失。
-
-历史录包回放、ARM64 镜像构建/测试、比赛真机效果是三个独立验收层次。无独立 GT，地图整齐不能证明绝对定位精度。`use_imu_as_input=false` 是此版 Point-LIO 的 IMU 测量更新模式，**并非关闭 IMU**。
-
-## 构建与验证
+Run historical data on a separate DDS domain and loopback interface. The example profile is specific to the prepared public `localization` bag, not an arbitrary rosbag:
 
 ```bash
-# 首先导入发布说明所列、SHA256 已核验的 go2-control:arm64-v4 基础镜像。
-docker build --platform linux/arm64 --build-arg BUILD_JOBS=2 -t go2-p9:arm64 .
-docker image inspect go2-p9:arm64 --format '{{.Os}}/{{.Architecture}}'
-# 在已安装 numpy/PyYAML 的源码环境执行纯合同测试：
-PYTHONPATH=src/go2_p9 python3 -m unittest discover -s tests -p 'test_*.py' -v
+sar-run --gui go2-p9-nav:arm64-20261110 env ROS_DOMAIN_ID=42 \
+  CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="lo"/></Interfaces></General></Domain></CycloneDDS>' \
+  p9nav replay --bag /path/prepared-localization-bag \
+  --config /opt/p9/config/p9nav-replay.yaml \
+  --output /path/new-navigation-replay --rate 0.25 --rviz
 ```
 
-x86 主机需 ARM64 QEMU/binfmt 或 ARM64 远端构建器；不得复用 x86 编译的历史二进制。运行入口不联网安装依赖。源码、配置和构建依赖均随镜像部署，不依赖作者或本地实验目录挂载。
+This profile applies a LiDAR header offset of **2167.645092767 seconds** for that particular prepared bag. Do not copy this offset to live data, `two-laps`, or another bag. For raw camera IMU topics, use a reviewed `raw_linear` profile with the required static TF instead of treating raw data as an already merged stream.
 
-原生 GitHub 路线使用 `scripts/build-native.sh` 构建、`scripts/p9` 启动；见 [原生安装](docs/native.md)。
+Replay can validate sensor adaptation, localization, mapping, and planning interfaces. It cannot validate closed-loop navigation: the bag continues along its recorded trajectory regardless of the selected goal.
 
-完整说明：[部署](docs/deployment.md) · [标定](docs/calibration.md) · [来源](docs/provenance.md) · [第三方许可](THIRD_PARTY_NOTICES.md)。保留上游完整源文件和许可证；本项目新代码 GPL-2.0-only。实际 Point-LIO 源码哈希见 `provenance/source-manifest.json`，镜像内编译产物哈希见 `/opt/p9/provenance/binary.sha256`。
+### Live localization, mapping, and planning preview
+
+Copy and review the live profile first. Confirm current topics, clocks, LiDAR-to-IMU extrinsics, and the IMU-to-body transform. Use the competition-provided `SAR_ROBOT_IFACE` and the assigned DDS configuration; the existing deployment uses domain 0.
+
+```bash
+sar-run go2-p9-nav:arm64-20261110 p9 diagnose
+sar-run --gui go2-p9-nav:arm64-20261110 p9nav live \
+  --config /path/p9nav-live-robot.yaml \
+  --output /path/new-navigation-live --rviz
+```
+
+The supplied live profile combines `/camera/camera/gyro/sample` and `/camera/camera/accel/sample` using bracketed linear interpolation and checks their internal static TF. It does not extrapolate missing accelerometer coverage. Its zero clock offset is a value to verify on the current boot, not proof that the clocks are synchronized.
+
+**This command does not make the Go2 walk, stand up, or rotate.** The direct Unitree SportClient/API sender was removed from the integrated path follower. `/p9/navigation/cmd_vel` is an isolated suggestion topic. Physical autonomous navigation still needs a separately implemented and validated motion bridge.
+
+### Simulation
+
+Start the simulator, sensor bridges, and the compatible sensor adapter first. The `sim` entrypoint neither installs Gazebo nor creates a world. Raw Gazebo point clouds must follow the declared virtual sensor timing contract; they must not bypass the real-sensor timestamp checks.
+
+In the simulator's isolated ROS environment:
+
+```bash
+p9nav sim --config /opt/p9/config/p9nav-sim.yaml \
+  --output /path/new-navigation-sim --rviz --sim-command-output
+```
+
+Without `--sim-command-output`, commands remain isolated. `live` and `replay` reject attempts to use this flag to enable actuation. The simulation profile uses virtual sensor transforms, zero gyro bias, and zero epoch offset instead of the physical robot's calibration constants. The [`simulation/`](simulation) directory contains the integration and validation tools used with the external simulator workspace.
+
+## Set goals and save results
+
+In the supplied RViz configuration, use **2D Goal Pose**. The tool publishes `/p9/navigation/goal_pose` in `camera_init`. Alternatively, run these commands in the same ROS environment, DDS domain, and network interface as the active instance:
+
+```bash
+p9nav goal 1.0 0.5 --frame camera_init
+p9nav stop
+p9 save
+```
+
+Goal coordinates are in metres in the current map frame. `p9nav goal` reports acceptance or rejection; acceptance does not mean arrival. `p9nav stop` stops this navigation interface, not an independent robot controller.
+
+When using an existing Docker container, `docker exec` does not automatically repeat its entrypoint's exported ROS/DDS setup. Run helper commands through `/usr/local/bin/p9-entrypoint` and preserve the active instance's domain and interface. A mismatched interface can make an observer or goal client see no messages.
+
+Outputs include effective configurations, ROS logs, `trajectory.csv`, `mapping_status.json`, `mapping_summary.json`, and `PCD/map.pcd` under the localization output directory. Navigation adds `effective-navigation.json` and `navigation-status.json`. Use `p9 save` to save the active map; normal shutdown also saves localization results. Keep output on a persistent mount. Only one P9 instance should use the fixed service/topic names in a given DDS domain.
+
+The native trajectory tracks the IMU origin unless explicitly converted; map points use `camera_init`. Use the configured body pose when evaluating the robot's goal distance; do not compare paths with different reference points as if they were identical.
+
+## Calibration in this version
+
+The navigation profiles use the C-group LiDAR-to-camera-IMU rotation and translation candidate plus the B1 static gyroscope-bias candidate:
+
+```text
+omega_corrected = omega_input - b_g
+b_g = [ 0.00028568964388210946,
+       -0.0018381138448739292,
+        0.0005906477368247819 ] rad/s
+```
+
+The adapter applies this correction once. The target bag is not refitted, and the same bias must not be subtracted again in a prepared bag or filter initializer. No new accelerometer scale or static-bias correction is applied by B1.
+
+The public bag and recent calibration were recorded on the same dog with unchanged sensor mounting, as confirmed by the operator. This makes the installation relationship relevant, but does not certify parameter accuracy or bias stability across temperature and power cycles. Full D435i six-position intrinsic calibration and EEPROM updates were not performed. The body transform still needs hardware verification. See [calibration details](docs/calibration.md) and [navigation parameter notes](docs/navigation.md) (Chinese).
+
+In this Point-LIO version, `use_imu_as_input=false` selects the IMU measurement-update formulation; it does **not** disable the IMU.
+
+## Validation status and known issues
+
+The **2026-11-10 RViz test** used the published runtime source at `0a53bff` in the separate AMD64 image `go2-p9-nav:amd64-20261110`, with actual RViz goal clicks and a Gazebo robot model. It was not a real Go2 run.
+
+| Observation | What it establishes |
+|---|---|
+| Outbound and return RViz demonstration, with motion and stop | The localization/map/planner/control chain can drive the simulated robot; this recording did not have complete passive telemetry for both legs |
+| Additional goal with complete passive telemetry: accepted goal, 663 nonzero `/cmd_vel` samples, approximately 5.62 m maximum GT displacement | Goal delivery, route following, and physical motion in the simulator were observed |
+| FAR's last waypoint was approximately 0.532 m from the original clicked goal; the final estimated body position was approximately 0.809 m from that original goal | The complete test **failed** the 0.5 m original-goal arrival criterion, even though FAR reported arrival near its adjusted waypoint and the robot stopped |
+| A later body-odometry age of approximately 1.192 s exceeded the 1 s freshness threshold | The guard cleared the goal; this occurred after motion had already stopped and is not established as the initial stopping cause |
+| A first run stopped receiving point clouds in the adapter while raw data was still available | An unresolved input/subscription stability issue; a successful restart does not prove a fix |
+
+The 0.809 m figure is **estimated body-to-goal distance**, not localization error against ground truth. The tests do not certify full-trajectory localization accuracy, collision-free operation, hardware throughput, or real-robot navigation. Earlier empty observer recordings were caused by test-tool setup errors, including a DDS interface mismatch; they are not treated as planner success or failure.
+
+Remaining work includes reconciling FAR's adjusted target with the local follower and guard arrival criteria, investigating input stalls and odometry delays, and validating real-device timing, body transforms, and the motion bridge. These findings are documented here; this README update does not claim to fix them. Map appearance alone is not ground truth.
+
+## Build from source
+
+After installing the ROS 2 Jazzy dependencies described in [native setup](docs/native.md):
+
+```bash
+git clone --branch p9-navigation-20261110 \
+  git@github.com:stfhssssy/go2-p9-localization.git
+cd go2-p9-localization
+BUILD_JOBS=2 ./scripts/build-navigation-native.sh
+./scripts/p9nav --help
+```
+
+Use `./scripts/p9nav` instead of `p9nav` for the native examples, and use checkout-relative configuration paths. The original `scripts/build-native.sh` and `scripts/p9` remain the localization-only route.
+
+To build the navigation container, first load the verified original `go2-p9:arm64` base image:
+
+```bash
+docker build --platform linux/arm64 -f Dockerfile.navigation \
+  --build-arg BUILD_JOBS=2 --build-arg PLANNER_BUILD_JOBS=2 \
+  --build-arg SOURCE_REVISION="$(git rev-parse HEAD)" \
+  -t go2-p9-nav:arm64-local .
+```
+
+An x86 host requires a configured ARM64 builder or QEMU/binfmt support. Do not reuse x86 binaries for ARM64. Runtime startup does not install dependencies from the network.
+
+For source verification in a Python environment with the test dependencies installed:
+
+```bash
+python3 scripts/freeze-navigation-provenance.py --check
+PYTHONPATH=src/go2_p9:src/go2_p9_navigation python3 -m pytest -q tests
+```
+
+The provenance check verifies recorded source/document bytes, not algorithm quality. The archived image and its release records remain tied to their original source commit; a documentation commit has its own updated document inventory.
+
+## Origins and license
+
+The integrated planning packages come from the existing server workspace, with ROS 2 Jazzy adaptations, based on [Zhang Ji's autonomy_stack_go2](https://github.com/jizhang-cmu/autonomy_stack_go2). That server snapshot had no Git metadata; it is not represented as a clean upstream checkout. The exact source snapshot, upstream comparison, local changes, and file hashes are recorded in [`provenance/planning-upstream.json`](provenance/planning-upstream.json).
+
+Original P9 provenance remains in [`provenance/source-manifest.json`](provenance/source-manifest.json); the common changes remain in [`provenance/experiment-delta.json`](provenance/experiment-delta.json). Existing upstream source and license notices are retained. New project code is GPL-2.0-only; see [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md).
+
+Further documentation (Chinese): [navigation](docs/navigation.md) · [deployment](docs/deployment.md) · [native setup](docs/native.md) · [calibration](docs/calibration.md) · [provenance](docs/provenance.md).
