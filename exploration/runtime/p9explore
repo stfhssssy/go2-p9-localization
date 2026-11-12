@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Explicit TARE overlay; existing p9/p9nav commands remain available.
+set -eo pipefail
+export P9_EXPLORATION_HOME="${P9_EXPLORATION_HOME:-/opt/p9-exploration}"
+if [[ ! -r /tare_ws/install/local_setup.bash ]]; then
+  echo 'TARE overlay missing: /tare_ws/install/local_setup.bash' >&2
+  exit 2
+fi
+if [[ ! -r /opt/p9_ws/install/setup.bash ]]; then
+  echo 'P9 navigation overlay missing: /opt/p9_ws/install/setup.bash' >&2
+  exit 2
+fi
+exec /usr/local/bin/p9-entrypoint bash -c '
+  set -eo pipefail
+  source /tare_ws/install/local_setup.bash
+  export LD_LIBRARY_PATH="/tare_ws/src/tare_planner/or-tools/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  exec python3 "$P9_EXPLORATION_HOME/cli_exploration.py" "$@"
+' p9explore "$@"

@@ -1,0 +1,269 @@
+diff --git a/src/tare_planner/include/planning_env/planning_env.h b/src/tare_planner/include/planning_env/planning_env.h
+index c34210b..78fa00c 100644
+--- a/src/tare_planner/include/planning_env/planning_env.h
++++ b/src/tare_planner/include/planning_env/planning_env.h
+@@ -81,7 +81,7 @@ struct planning_env_ns::PlanningEnvParameters
+ class planning_env_ns::PlanningEnv
+ {
+ public:
+-  PlanningEnv(rclcpp::Node::SharedPtr nh, std::string world_frame_id = "map");
++  PlanningEnv(rclcpp::Node::SharedPtr nh, std::string world_frame_id = "camera_init");
+   ~PlanningEnv() = default;
+   double GetPlannerCloudResolution()
+   {
+diff --git a/src/tare_planner/include/sensor_coverage_planner/sensor_coverage_planner_ground.h b/src/tare_planner/include/sensor_coverage_planner/sensor_coverage_planner_ground.h
+index 9a887fe..4d7f8ca 100644
+--- a/src/tare_planner/include/sensor_coverage_planner/sensor_coverage_planner_ground.h
++++ b/src/tare_planner/include/sensor_coverage_planner/sensor_coverage_planner_ground.h
+@@ -30,6 +30,7 @@
+ #include <std_msgs/msg/float32.hpp>
+ #include <std_msgs/msg/int32.hpp>
+ #include <std_msgs/msg/int32_multi_array.hpp>
++#include <std_msgs/msg/string.hpp>
+ #include <tf2/transform_datatypes.h>
+ // PCL
+ #include <pcl/PointIndices.h>
+@@ -59,7 +60,7 @@
+ #define curshome "\033[0;0H"
+ 
+ namespace sensor_coverage_planner_3d_ns {
+-const std::string kWorldFrameID = "map";
++const std::string kWorldFrameID = "camera_init";
+ typedef pcl::PointXYZRGBNormal PlannerCloudPointType;
+ typedef pcl::PointCloud<PlannerCloudPointType> PlannerCloudType;
+ typedef misc_utils_ns::Timer Timer;
+@@ -247,6 +248,8 @@ private:
+   rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr runtime_pub_;
+   rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr
+       momentum_activation_count_pub_;
++  // Read-only P9 experiment telemetry; never changes planner state.
++  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr p9_diagnostics_pub_;
+   // Debug
+   rclcpp::Publisher<geometry_msgs::msg::PointStamped>::SharedPtr
+       pointcloud_manager_neighbor_cells_origin_pub_;
+@@ -299,6 +302,8 @@ private:
+       const exploration_path_ns::ExplorationPath &local_path);
+ 
+   void PublishRuntime();
++  void PublishP9Diagnostics(int candidate_viewpoints, int uncovered_surface_points,
++                            int uncovered_frontier_points);
+   double GetRobotToHomeDistance();
+   void PublishExplorationState();
+   void PublishWaypoint();
+diff --git a/src/tare_planner/include/tare_visualizer/tare_visualizer.h b/src/tare_planner/include/tare_visualizer/tare_visualizer.h
+index 212d5b4..ce6019b 100644
+--- a/src/tare_planner/include/tare_visualizer/tare_visualizer.h
++++ b/src/tare_planner/include/tare_visualizer/tare_visualizer.h
+@@ -37,7 +37,7 @@ public:
+   void PublishMarkers();
+ 
+ private:
+-  const std::string kWorldFrameID = "map";
++  const std::string kWorldFrameID = "camera_init";
+   bool kExploringSubspaceMarkerColorGradientAlpha;
+   double kExploringSubspaceMarkerColorMaxAlpha;
+   std_msgs::msg::ColorRGBA kExploringSubspaceMarkerColor;
+diff --git a/src/tare_planner/rviz/tare_planner_ground.rviz b/src/tare_planner/rviz/tare_planner_ground.rviz
+index e50f9af..428ec91 100644
+--- a/src/tare_planner/rviz/tare_planner_ground.rviz
++++ b/src/tare_planner/rviz/tare_planner_ground.rviz
+@@ -536,7 +536,7 @@ Visualization Manager:
+   Enabled: true
+   Global Options:
+     Background Color: 0; 0; 0
+-    Fixed Frame: map
++    Fixed Frame: camera_init
+     Frame Rate: 15
+   Name: root
+   Tools:
+diff --git a/src/tare_planner/src/navigation_boundary_publisher/navigationBoundary.cpp b/src/tare_planner/src/navigation_boundary_publisher/navigationBoundary.cpp
+index bf3c7a7..a474b08 100644
+--- a/src/tare_planner/src/navigation_boundary_publisher/navigationBoundary.cpp
++++ b/src/tare_planner/src/navigation_boundary_publisher/navigationBoundary.cpp
+@@ -101,7 +101,7 @@ int main(int argc, char** argv)
+ 
+   auto pubBoundary = nh->create_publisher<geometry_msgs::msg::PolygonStamped>("/navigation_boundary", 5);
+   geometry_msgs::msg::PolygonStamped boundaryMsgs;
+-  boundaryMsgs.header.frame_id = "map";
++  boundaryMsgs.header.frame_id = "camera_init";
+ 
+   // read boundary from file
+   if (sendBoundary)
+diff --git a/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp b/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp
+index f3923fb..ceb0b55 100644
+--- a/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp
++++ b/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp
+@@ -12,6 +12,9 @@
+ #include "sensor_coverage_planner/sensor_coverage_planner_ground.h"
+ #include "graph/graph.h"
+ #include <memory>
++#include <iomanip>
++#include <locale>
++#include <sstream>
+ #include <tf2/LinearMath/Matrix3x3.h>
+ #include <tf2/LinearMath/Quaternion.h>
+ 
+@@ -394,20 +397,20 @@ bool SensorCoveragePlanner3D::initialize() {
+                 std::placeholders::_1));
+   registered_scan_sub_ =
+       this->create_subscription<sensor_msgs::msg::PointCloud2>(
+-          sub_registered_scan_topic_, 5,
++          sub_registered_scan_topic_, rclcpp::SensorDataQoS(),
+           std::bind(&SensorCoveragePlanner3D::RegisteredScanCallback, this,
+                     std::placeholders::_1));
+   terrain_map_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
+-      sub_terrain_map_topic_, 5,
++      sub_terrain_map_topic_, rclcpp::SensorDataQoS(),
+       std::bind(&SensorCoveragePlanner3D::TerrainMapCallback, this,
+                 std::placeholders::_1));
+   terrain_map_ext_sub_ =
+       this->create_subscription<sensor_msgs::msg::PointCloud2>(
+-          sub_terrain_map_ext_topic_, 5,
++          sub_terrain_map_ext_topic_, rclcpp::SensorDataQoS(),
+           std::bind(&SensorCoveragePlanner3D::TerrainMapExtCallback, this,
+                     std::placeholders::_1));
+   state_estimation_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+-      sub_state_estimation_topic_, 5,
++      sub_state_estimation_topic_, rclcpp::SensorDataQoS(),
+       std::bind(&SensorCoveragePlanner3D::StateEstimationCallback, this,
+                 std::placeholders::_1));
+   coverage_boundary_sub_ =
+@@ -458,6 +461,8 @@ bool SensorCoveragePlanner3D::initialize() {
+       this->create_publisher<std_msgs::msg::Float32>(pub_runtime_topic_, 2);
+   momentum_activation_count_pub_ = this->create_publisher<std_msgs::msg::Int32>(
+       pub_momentum_activation_count_topic_, 2);
++  p9_diagnostics_pub_ = this->create_publisher<std_msgs::msg::String>(
++      "/p9/exploration/tare_diagnostics", 5);
+   // Debug
+   pointcloud_manager_neighbor_cells_origin_pub_ =
+       this->create_publisher<geometry_msgs::msg::PointStamped>(
+@@ -644,7 +649,7 @@ void SensorCoveragePlanner3D::JoystickCallback(
+ 
+       // Set waypoint to the current robot position to stop the robot in place
+       geometry_msgs::msg::PointStamped waypoint;
+-      waypoint.header.frame_id = "map";
++      waypoint.header.frame_id = "camera_init";
+       waypoint.header.stamp = this->now();
+       waypoint.point.x = robot_position_.x;
+       waypoint.point.y = robot_position_.y;
+@@ -663,7 +668,7 @@ void SensorCoveragePlanner3D::ResetWaypointCallback(
+ 
+   // Set waypoint to the current robot position to stop the robot in place
+   geometry_msgs::msg::PointStamped waypoint;
+-  waypoint.header.frame_id = "map";
++  waypoint.header.frame_id = "camera_init";
+   waypoint.header.stamp = this->now();
+   waypoint.point.x = robot_position_.x;
+   waypoint.point.y = robot_position_.y;
+@@ -673,18 +678,12 @@ void SensorCoveragePlanner3D::ResetWaypointCallback(
+ }
+ 
+ void SensorCoveragePlanner3D::SendInitialWaypoint() {
+-  // send waypoint ahead
+-  double lx = 12.0;
+-  double ly = 0.0;
+-  double dx = cos(robot_yaw_) * lx - sin(robot_yaw_) * ly;
+-  double dy = sin(robot_yaw_) * lx + cos(robot_yaw_) * ly;
+-
++  // P9 integration starts in place. Exploration still initializes and waits for
++  // scan updates; only an actual planned waypoint may request movement.
+   geometry_msgs::msg::PointStamped waypoint;
+-  waypoint.header.frame_id = "map";
++  waypoint.header.frame_id = kWorldFrameID;
+   waypoint.header.stamp = this->now();
+-  waypoint.point.x = robot_position_.x + dx;
+-  waypoint.point.y = robot_position_.y + dy;
+-  waypoint.point.z = robot_position_.z;
++  waypoint.point = robot_position_;
+   waypoint_pub_->publish(waypoint);
+ }
+ 
+@@ -825,7 +824,7 @@ void SensorCoveragePlanner3D::UpdateGlobalRepresentation() {
+       planning_env_->GetPointCloudManagerNeighborCellsOrigin();
+   geometry_msgs::msg::PointStamped
+       pointcloud_manager_neighbor_cells_origin_point;
+-  pointcloud_manager_neighbor_cells_origin_point.header.frame_id = "map";
++  pointcloud_manager_neighbor_cells_origin_point.header.frame_id = "camera_init";
+   pointcloud_manager_neighbor_cells_origin_point.header.stamp = this->now();
+   pointcloud_manager_neighbor_cells_origin_point.point.x =
+       pointcloud_manager_neighbor_cells_origin.x();
+@@ -877,7 +876,7 @@ void SensorCoveragePlanner3D::PublishGlobalPlanningVisualization(
+     const exploration_path_ns::ExplorationPath &global_path,
+     const exploration_path_ns::ExplorationPath &local_path) {
+   nav_msgs::msg::Path global_path_full = global_path.GetPath();
+-  global_path_full.header.frame_id = "map";
++  global_path_full.header.frame_id = "camera_init";
+   global_path_full.header.stamp = this->now();
+   global_path_full_publisher_->publish(global_path_full);
+   // Get the part that connects with the local path
+@@ -929,7 +928,7 @@ void SensorCoveragePlanner3D::PublishGlobalPlanningVisualization(
+     last_pose.pose.position.z = local_path.nodes_.back().position_.z();
+     global_path_trim.poses.push_back(last_pose);
+   }
+-  global_path_trim.header.frame_id = "map";
++  global_path_trim.header.frame_id = "camera_init";
+   global_path_trim.header.stamp = this->now();
+   global_path_publisher_->publish(global_path_trim);
+ 
+@@ -938,7 +937,7 @@ void SensorCoveragePlanner3D::PublishGlobalPlanningVisualization(
+   grid_world_->GetMarker(grid_world_marker_->marker_);
+   grid_world_marker_->Publish();
+   nav_msgs::msg::Path full_path = exploration_path_.GetPath();
+-  full_path.header.frame_id = "map";
++  full_path.header.frame_id = "camera_init";
+   full_path.header.stamp = this->now();
+   // exploration_path_publisher_->publish(full_path);
+   exploration_path_.GetVisualizationCloud(exploration_path_cloud_->cloud_);
+@@ -966,7 +965,7 @@ void SensorCoveragePlanner3D::PublishLocalPlanningVisualization(
+   viewpoint_vis_cloud_->Publish();
+   lookahead_point_cloud_->Publish();
+   nav_msgs::msg::Path local_tsp_path = local_path.GetPath();
+-  local_tsp_path.header.frame_id = "map";
++  local_tsp_path.header.frame_id = "camera_init";
+   local_tsp_path.header.stamp = this->now();
+   local_tsp_path_publisher_->publish(local_tsp_path);
+   local_coverage_planner_->GetSelectedViewPointVisCloud(
+@@ -1371,6 +1370,34 @@ void SensorCoveragePlanner3D::PublishWaypoint() {
+                          kWorldFrameID);
+ }
+ 
++void SensorCoveragePlanner3D::PublishP9Diagnostics(
++    int candidate_viewpoints, int uncovered_surface_points,
++    int uncovered_frontier_points) {
++  // These are the planner's actual state and this iteration's coverage counts,
++  // not ground-truth coverage percentages or a motion completion certificate.
++  const double distance = GetRobotToHomeDistance();
++  std::ostringstream json;
++  json.imbue(std::locale::classic());
++  json << std::setprecision(17) << std::boolalpha
++       << "{\"sim_stamp\":" << this->now().seconds()
++       << ",\"candidate_viewpoints\":" << candidate_viewpoints
++       << ",\"uncovered_surface_points\":" << uncovered_surface_points
++       << ",\"uncovered_frontier_points\":" << uncovered_frontier_points
++       << ",\"exploration_finished\":" << exploration_finished_
++       << ",\"returned_home\":" << (exploration_finished_ && at_home_)
++       << ",\"stopped\":" << stopped_
++       << ",\"robot_to_home_distance\":";
++  if (std::isfinite(distance)) {
++    json << distance;
++  } else {
++    json << "null";
++  }
++  json << "}";
++  std_msgs::msg::String message;
++  message.data = json.str();
++  p9_diagnostics_pub_->publish(message);
++}
++
+ void SensorCoveragePlanner3D::PublishRuntime() {
+   local_viewpoint_sampling_runtime_ =
+       local_coverage_planner_->GetViewPointSamplingRuntime() / 1000;
+@@ -1564,6 +1591,8 @@ void SensorCoveragePlanner3D::execute() {
+     PublishLocalPlanningVisualization(local_path);
+     PublishGlobalPlanningVisualization(global_path, local_path);
+     PublishRuntime();
++    PublishP9Diagnostics(viewpoint_candidate_count, uncovered_point_num,
++                         uncovered_frontier_point_num);
+   }
+ }
+ } // namespace sensor_coverage_planner_3d_ns

@@ -1,0 +1,72 @@
+{
+  "inspection_date": "2026-11-12",
+  "hardware_accessed": false,
+  "hardware_tested": false,
+  "implementation": "New optional ROS 2 bridge; only high-level Move and StopMove",
+  "upstream_primary": "https://github.com/unitreerobotics/unitree_ros2/blob/master/example/src/src/common/ros2_sport_client.cpp",
+  "upstream_read_date": "2026-11-12",
+  "transport": {
+    "request": "/api/sport/request",
+    "request_type": "unitree_api/msg/Request",
+    "response": "/api/sport/response",
+    "response_type": "unitree_api/msg/Response",
+    "state": "/lf/sportmodestate",
+    "state_type": "unitree_go/msg/SportModeState"
+  },
+  "api": {
+    "Move": {
+      "id": 1008,
+      "parameters": [
+        "x",
+        "y",
+        "z"
+      ],
+      "noreply": true
+    },
+    "StopMove": {
+      "id": 1003,
+      "parameters": {},
+      "noreply": false
+    }
+  },
+  "evidence_sha256": {
+    "inspected-control-v4/sport_rpc.hpp": "5778967682d0dc679d25823a2eeedc1a012f706d235f1a1b6d9fe47b7963b059",
+    "inspected-control-v4/main.cpp": "c4e4a3a4f523e6b108271c50d4ec0c6aa960c748d9275ac50c94ad1e987bf6b7",
+    "inspected-control-v4/sport_rpc_test.cpp": "d945f5e5d5af5acb672157ede8a61ac97048a42b448b1c13c8529d7ca39e5d96",
+    "autonomy_stack_go2/unitree_api/Request.msg": "095718e795b7fb08210f32fad9b2ce519ca2b0a0976054e772bc89e48fbe14bc",
+    "autonomy_stack_go2/unitree_api/RequestHeader.msg": "0783c0fd13fa9cd588bc2cd2b7961c98f1312ab7c1e730d62eae43901c093ab3",
+    "autonomy_stack_go2/unitree_api/RequestIdentity.msg": "ae144634bbd4b142308d3801fe0fe1712b4fad442fe15cca3552fcce127be2fd",
+    "autonomy_stack_go2/unitree_api/RequestLease.msg": "b16d384a7334bf5f9d59a90800984ba0e5fdf0b5bed931f2ce11557d0f49f879",
+    "autonomy_stack_go2/unitree_api/RequestPolicy.msg": "b93c83f07a266ed0de9071be1242d7d7c5cd247a5ec494cfd16720d1a41161ee",
+    "autonomy_stack_go2/unitree_api/Response.msg": "deeb19c6fec4bf67790d33a9e4a391f717840e274f6882e968d7d65c57402a13",
+    "autonomy_stack_go2/unitree_api/ResponseHeader.msg": "808649ac643d66fa0620c11cec50d7d8f5cba576094cd50a941093b2f7ac673b",
+    "autonomy_stack_go2/unitree_api/ResponseStatus.msg": "1102bc217ff8add7007d6bd6ffb6d6f183ee1c9b029d20cd5b09cc7134a6ac41",
+    "autonomy_stack_go2/unitree_go/SportModeState.msg": "4034e8c6805e002c5ad2327912f52219c712853a51a518378acb1d22764d122c"
+  },
+  "differences_from_v4": [
+    "Separate ROS publisher instead of directly instantiating the Unitree C++ SDK.",
+    "No standing, crouching, mode switching, or low-level motor methods.",
+    "Explicit g arm requires acknowledged StopMove; h supplies attended terminal deadman.",
+    "Freshness checks require P9 live guard status in addition to robot telemetry."
+  ],
+  "test_status": {
+    "pure_policy": {
+      "passed": 30
+    },
+    "ROS_loopback_mock": "Script uses loopback lo/domain101, including SIGHUP and closed PTY while forwarding; execution recorded separately by release builder.",
+    "physical_robot": "not tested",
+    "terminal_cleanup": {
+      "passed": 4,
+      "scope": "Pure Python cleanup ordering and real PTY hangup; no ROS or hardware."
+    }
+  },
+  "schema_validation": {
+    "repository": "https://github.com/unitreerobotics/unitree_ros2",
+    "commit": "668d1ec5a05d1c38d3306bdca7d59f2ba3581a88",
+    "message_packages": "build/unitree_interfaces",
+    "required_schemas": "All 8 unitree_api .msg files plus SportModeState, TimeSpec and IMUState byte-identical to previously inspected autonomy_stack_go2 copy.",
+    "v4_comparison_scope": "Previously inspected v4 source and recorded data field/API semantics; no new v4 generated schema extraction."
+  },
+  "test_configuration_change": "DDS domain corrected from239 to101 because239 produced RTPS ports above65535; no control-policy change.",
+  "shutdown_fix": "StopMove is attempted before nonblocking terminal restore; nested finally releases ROS resources even when terminal restoration fails. Broken terminal output cannot interrupt stop retries."
+}

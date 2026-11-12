@@ -1,0 +1,10 @@
+# The parent P9 repository ignores build/ directories; retain these build recipes.
+!build/
+build/*.tar.gz
+build/*.part
+build/ortools-v*-release.json
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+
+**/mock-control-transcript.txt

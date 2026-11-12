@@ -1,0 +1,57 @@
+--- a/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp
++++ b/src/tare_planner/src/sensor_coverage_planner/sensor_coverage_planner_ground.cpp
+@@ -56,6 +56,8 @@
+                                        "momentum_activation_count");
+ 
+   // Bool
++  // Declare before either parameter reader: YAML overrides alone do not declare.
++  this->declare_parameter<bool>("kUseFrontier", true);
+   this->declare_parameter<bool>("kAutoStart", false);
+   this->declare_parameter<bool>("kRushHome", false);
+   this->declare_parameter<bool>("kUseTerrainHeight", true);
+--- a/src/tare_planner/src/viewpoint_manager/viewpoint_manager.cpp
++++ b/src/tare_planner/src/viewpoint_manager/viewpoint_manager.cpp
+@@ -9,12 +9,18 @@
+  *
+  */
+ #include "viewpoint_manager/viewpoint_manager.h"
++#include <stdexcept>
+ 
+ namespace viewpoint_manager_ns
+ {
+ bool ViewPointManagerParameter::ReadParameters(rclcpp::Node::SharedPtr nh)
+ {
+-  nh->get_parameter("kUseFrontier", kUseFrontier);
++  // An absent declaration must stop startup, never leave an indeterminate bool.
++  kUseFrontier = false;
++  if (!nh->get_parameter("kUseFrontier", kUseFrontier))
++  {
++    throw std::runtime_error("Required parameter kUseFrontier is not declared");
++  }
+   kNumber.x() = nh->get_parameter("viewpoint_manager/number_x").as_int();
+   kNumber.y() = nh->get_parameter("viewpoint_manager/number_y").as_int();
+   kNumber.z() = nh->get_parameter("viewpoint_manager/number_z").as_int();
+--- a/src/tare_planner/src/planning_env/planning_env.cpp
++++ b/src/tare_planner/src/planning_env/planning_env.cpp
+@@ -10,6 +10,7 @@
+  */
+ 
+ #include <planning_env/planning_env.h>
++#include <stdexcept>
+ #include <viewpoint_manager/viewpoint_manager.h>
+ 
+ namespace planning_env_ns
+@@ -29,7 +30,12 @@
+   nh->get_parameter("kPointCloudCellHeight", kPointCloudCellHeight);
+   nh->get_parameter("kPointCloudManagerNeighborCellNum", kPointCloudManagerNeighborCellNum);
+   nh->get_parameter("kCoverCloudZSqueezeRatio", kCoverCloudZSqueezeRatio);
+-  nh->get_parameter("kUseFrontier", kUseFrontier);
++  // An absent declaration must stop startup, never leave an indeterminate bool.
++  kUseFrontier = false;
++  if (!nh->get_parameter("kUseFrontier", kUseFrontier))
++  {
++    throw std::runtime_error("Required parameter kUseFrontier is not declared");
++  }
+   nh->get_parameter("kFrontierClusterTolerance", kFrontierClusterTolerance);
+   nh->get_parameter("kFrontierClusterMinSize", kFrontierClusterMinSize);
+   nh->get_parameter("kUseCoverageBoundaryOnFrontier", kUseCoverageBoundaryOnFrontier);

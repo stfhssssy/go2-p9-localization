@@ -1,0 +1,15 @@
+.git
+**/.git
+**/__pycache__
+**/*.pyc
+**/*.part
+**/.DS_Store
+build/ortools-v*-release.json
+validation/videos
+validation/*.mp4
+validation/*.bag
+validation/*.db3
+validation/*.mcap
+validation/*.pcd
+
+**/mock-control-transcript.txt

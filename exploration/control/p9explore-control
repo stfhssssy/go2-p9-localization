@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+p9_control_dir="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+exec python3 "$p9_control_dir/p9explore_control.py" "$@"

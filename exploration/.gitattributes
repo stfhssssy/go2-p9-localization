@@ -1,0 +1,4 @@
+# Preserve upstream patch context whitespace exactly.
+*.patch -whitespace
+# Official Unitree message and package sources are retained byte-for-byte.
+build/unitree_interfaces/** -whitespace

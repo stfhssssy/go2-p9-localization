@@ -1,0 +1,79 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_ros2",
+  "commit": "668d1ec5a05d1c38d3306bdca7d59f2ba3581a88",
+  "fetched_utc_date": "2026-11-12",
+  "license": "BSD-3-Clause",
+  "message_schemas_modified": false,
+  "full_sdk_included": false,
+  "hardware_contacted": false,
+  "source_paths": {
+    "unitree_api": "cyclonedds_ws/src/unitree/unitree_api",
+    "unitree_go": "cyclonedds_ws/src/unitree/unitree_go"
+  },
+  "build_metadata_changes": [
+    "Replace obsolete custom Connext DDS generator helper with standard ROS 2 rosidl_default_generators; preserve message schemas and package identity.",
+    "Export rosidl_default_runtime using ament_export_dependencies."
+  ],
+  "schema_comparison": {
+    "reference_repository": "https://github.com/jizhang-cmu/autonomy_stack_go2",
+    "reference_commit": "43d5f54b389b251713f0097893c30fa76c870d54",
+    "unitree_api": "All 8 .msg files byte-identical.",
+    "required_unitree_go": "SportModeState.msg, TimeSpec.msg, and IMUState.msg byte-identical.",
+    "control_v4": "Required Request and Response fields, SportModeState stamp/body_height/velocity/yaw_speed match previously inspected v4 source and decoded v4 data. Full v4 generated bindings not re-extracted in this packaging step."
+  },
+  "build_dependencies": [
+    "ament_cmake",
+    "rosidl_default_generators",
+    "geometry_msgs"
+  ],
+  "runtime_dependencies": [
+    "rosidl_default_runtime",
+    "geometry_msgs"
+  ],
+  "bindings_expected": [
+    "C",
+    "C++",
+    "Python (unitree_api.msg and unitree_go.msg)"
+  ],
+  "file_sha256": {
+    "unitree_api/CMakeLists.txt": "60a639712e56bb7a9e7fc4dae6605606eab9cf0e3466b7ebe5058f36587ea01c",
+    "unitree_api/LICENSE": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25",
+    "unitree_api/msg/Request.msg": "095718e795b7fb08210f32fad9b2ce519ca2b0a0976054e772bc89e48fbe14bc",
+    "unitree_api/msg/RequestHeader.msg": "0783c0fd13fa9cd588bc2cd2b7961c98f1312ab7c1e730d62eae43901c093ab3",
+    "unitree_api/msg/RequestIdentity.msg": "ae144634bbd4b142308d3801fe0fe1712b4fad442fe15cca3552fcce127be2fd",
+    "unitree_api/msg/RequestLease.msg": "b16d384a7334bf5f9d59a90800984ba0e5fdf0b5bed931f2ce11557d0f49f879",
+    "unitree_api/msg/RequestPolicy.msg": "b93c83f07a266ed0de9071be1242d7d7c5cd247a5ec494cfd16720d1a41161ee",
+    "unitree_api/msg/Response.msg": "deeb19c6fec4bf67790d33a9e4a391f717840e274f6882e968d7d65c57402a13",
+    "unitree_api/msg/ResponseHeader.msg": "808649ac643d66fa0620c11cec50d7d8f5cba576094cd50a941093b2f7ac673b",
+    "unitree_api/msg/ResponseStatus.msg": "1102bc217ff8add7007d6bd6ffb6d6f183ee1c9b029d20cd5b09cc7134a6ac41",
+    "unitree_api/package.xml": "2acf54b778c17736c36c325fe4fc76e396083b0c9e19a14426fe15b6f435a8bf",
+    "unitree_go/CMakeLists.txt": "a32286bb3c8ceecfce4c5710006c32f1dde593fc88884eb6be50c4b22dc20625",
+    "unitree_go/LICENSE": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25",
+    "unitree_go/msg/AudioData.msg": "c875fbedf1b48aa990cbdf061cf2fe406a91152966e155df488d0eb6bbcba9f9",
+    "unitree_go/msg/BmsCmd.msg": "59861adb50b81c76bd1c792e6db604a0cf67e46f781a957bbe422d40e3e60415",
+    "unitree_go/msg/BmsState.msg": "0f7ad8e09f8fd02999da9aa222ab0ecb848d9f70136af78a5ec7a10631959828",
+    "unitree_go/msg/Error.msg": "dcb46b69ed65270bb96c729ad94743b9557d166c048efc5c273eed9cedfa7139",
+    "unitree_go/msg/Go2FrontVideoData.msg": "86078978dd1f90357a6ff41e16f28eb16ccedb15a7302b17d5f5738128fddddf",
+    "unitree_go/msg/HeightMap.msg": "e7b732d004e8a482a19ca231ea85095aa3902584a7dc0a849d1cc6fd210ebfdd",
+    "unitree_go/msg/IMUState.msg": "95b5b2aa84fbbea748a560f18cc3950a6091c5822aa1dba326aa183327cb8198",
+    "unitree_go/msg/InterfaceConfig.msg": "03004edb03d062c83309cf233d2135570538b15c1bf837cbf4f1d515766f3695",
+    "unitree_go/msg/LidarState.msg": "cb3dac931714cabba31604f73d1c69eeaf5ae3d1a2d06bac71d68c54d2d6d5e3",
+    "unitree_go/msg/LowCmd.msg": "5254dae41aaee1c32d879affa5b5393e35303f405e68d65e39fd9606497659ee",
+    "unitree_go/msg/LowState.msg": "927537585595e44ab6753741c78410f43c0fe190f3f2f47825fdb57793ed19e5",
+    "unitree_go/msg/MotorCmd.msg": "067edd164076ca83f13b251a152ac4fe15cdec501a08f845a1ca4f0829dd90b1",
+    "unitree_go/msg/MotorCmds.msg": "85679ea65fae74079c6e094674f600f9f33dabeb4410be51730cc2ee6e6e42cb",
+    "unitree_go/msg/MotorState.msg": "e4c7440b1f096b723e48c626c21ef6b77d828d19af0ce5bd90e28a80590014a0",
+    "unitree_go/msg/MotorStates.msg": "aeb5cf4202e80f24b67bdc7480f745f9bcb3cf17b639bc97b43193827cb8b22f",
+    "unitree_go/msg/PathPoint.msg": "f669eeecb1e279267cef687e2b9485a520e7c7a841a8e1f337611304606e457c",
+    "unitree_go/msg/Req.msg": "b356c1bb1e19aa07f6d7fcf38d5e5ea1888f64ecd9f5f28566e71d4aa97e01f9",
+    "unitree_go/msg/Res.msg": "07d84bf89cc9680b066a21f4d0c40833a94b8401cb8ff6df783cd445c88edeef",
+    "unitree_go/msg/SportModeCmd.msg": "21dc358a1d4cf1f4660c9327c2feb9a85ba67139099b1c506d6a4566dc83b2d0",
+    "unitree_go/msg/SportModeState.msg": "4034e8c6805e002c5ad2327912f52219c712853a51a518378acb1d22764d122c",
+    "unitree_go/msg/TimeSpec.msg": "1bab331c842af6a6847f471cf2aad56ad38139c901b9df436470e7b42f86369f",
+    "unitree_go/msg/UwbState.msg": "8813add9680f3c448c4e35d62a49058709f992024867529754d3cd774fd9686b",
+    "unitree_go/msg/UwbSwitch.msg": "4aa32edaaa274891d5997de5355e000a0dcdd51d7c0702f7b25bbde0b7492dc4",
+    "unitree_go/msg/WirelessController.msg": "ce175fee57fa89c6edfd0d57e8395e5b75788b62ad6d19a393dc68e0f2fddd6d",
+    "unitree_go/package.xml": "6a23b69425841653e4f4ed1231a1305c4c6f40c15d83225260ff82aba6df62f5",
+    "LICENSE": "a5d73fc4aca9074e3e6fe0b1a0ba763cf9514b2249b7390ed20fe8d53630bf25"
+  }
+}

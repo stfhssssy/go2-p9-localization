@@ -1,0 +1,28 @@
+{
+  "tare_repository": "https://github.com/caochao39/tare_planner",
+  "tare_commit": "b6760adb4280b379567c76f4e684ce628e28ef71",
+  "ortools_version": "9.8.3296",
+  "official_release_page": "https://github.com/google/or-tools/releases/tag/v9.8",
+  "integration_patch_sha256": "5510c3bede38690948eeaccca185e9f3b6051735555708de509669fc0b407b7b",
+  "artifacts": [
+    {
+      "filename": "tare-b6760adb4280b379567c76f4e684ce628e28ef71.tar.gz",
+      "url": "https://codeload.github.com/caochao39/tare_planner/tar.gz/b6760adb4280b379567c76f4e684ce628e28ef71",
+      "sha256": "bd843cf77ff317ae8246974f3a6c40b2213d54cc516f62af08c5f041c0826e18",
+      "license": "Upstream package.xml declares BSD; pinned repository has no standalone LICENSE file; source notices retained"
+    },
+    {
+      "filename": "or-tools_arm64_debian-11_cpp_v9.8.3296.tar.gz",
+      "url": "https://github.com/google/or-tools/releases/download/v9.8/or-tools_arm64_debian-11_cpp_v9.8.3296.tar.gz",
+      "sha256": "77a88d01eb612ffac0f6e030e30e58a3d171fe75d93a527ec55a06f9070332ab",
+      "license": "Apache-2.0 (share/doc/ortools/LICENSE); complete official SDK retained; third-party dependencies have their own terms"
+    },
+    {
+      "filename": "or-tools_amd64_ubuntu-22.04_cpp_v9.8.3296.tar.gz",
+      "url": "https://github.com/google/or-tools/releases/download/v9.8/or-tools_amd64_ubuntu-22.04_cpp_v9.8.3296.tar.gz",
+      "sha256": "2a332e95897ac6fc2cfd0122bcbc07cfd286d0f579111529cc99ac3076f5421a",
+      "license": "Apache-2.0 (share/doc/ortools/LICENSE); complete official SDK retained; third-party dependencies have their own terms"
+    }
+  ],
+  "checksum_note": "SHA-256 computed from exact official HTTPS release downloads. The older v9.8 GitHub API asset metadata does not publish a digest."
+}

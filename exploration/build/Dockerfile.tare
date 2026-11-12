@@ -1,0 +1,71 @@
+# Build context: release root containing build/ and (for the release stage) runtime/.
+# Compile native target instructions (ARM64 may execute under QEMU on an AMD64 host).
+ARG BASE_IMAGE=go2-p9-nav:arm64-20261110
+FROM ${BASE_IMAGE} AS tare-build
+ARG BASE_IMAGE_ID=unrecorded
+ARG BUILD_JOBS=2
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+RUN set -eo pipefail; \
+    test -f /opt/p9/config/p9nav-live.yaml; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      ca-certificates build-essential cmake git patch binutils file \
+      python3-colcon-common-extensions python3-numpy python3-scipy python3-yaml \
+      libeigen3-dev libpcl-dev libgoogle-glog-dev \
+      ros-jazzy-pcl-ros ros-jazzy-pcl-conversions \
+      ros-jazzy-tf2-geometry-msgs ros-jazzy-visualization-msgs ros-jazzy-rviz2; \
+    rm -rf /var/lib/apt/lists/*
+COPY build/tare-b6760adb4280b379567c76f4e684ce628e28ef71.tar.gz \
+     build/or-tools_arm64_debian-11_cpp_v9.8.3296.tar.gz \
+     build/or-tools_amd64_ubuntu-22.04_cpp_v9.8.3296.tar.gz \
+     build/P9_TARE.patch build/SHA256SUMS /opt/p9-tare-build-inputs/
+COPY build/tare_tsp_smoke.cpp build/prepare_tare.sh build/compile_tare.sh /opt/p9-tare-build/
+RUN bash /opt/p9-tare-build/prepare_tare.sh && \
+    printf '%s\n' "$BASE_IMAGE_ID" > /opt/p9-tare-provenance/base-image-id.txt
+RUN BUILD_JOBS="$BUILD_JOBS" bash /opt/p9-tare-build/compile_tare.sh
+# Retain source, exact archives and build metadata for audit/rebuilding. The base already
+# includes Point-LIO, mapping, FAR and RViz. No Gazebo dependency is added by this recipe.
+LABEL org.opencontainers.image.title="P9 calibrated navigation with TARE exploration" \
+      org.opencontainers.image.source="https://github.com/stfhssssy/go2-p9-localization" \
+      p9.tare.commit="b6760adb4280b379567c76f4e684ce628e28ef71" \
+      p9.ortools.version="9.8.3296" \
+      p9.base_image_id="${BASE_IMAGE_ID}"
+
+FROM tare-build AS control-interfaces
+COPY build/unitree_interfaces/ /opt/p9_control_ws/src/
+RUN set -eo pipefail; source /opt/ros/jazzy/setup.bash; \
+    cd /opt/p9_control_ws; \
+    MAKEFLAGS=-j2 CMAKE_BUILD_PARALLEL_LEVEL=2 colcon build --executor sequential \
+      --packages-select unitree_api unitree_go --cmake-args -DBUILD_TESTING=OFF; \
+    source install/local_setup.bash; \
+    python3 -c 'from unitree_api.msg import Request,Response; from unitree_go.msg import SportModeState; Request(); Response(); SportModeState()'
+
+FROM control-interfaces AS frontier-fix
+ARG FRONTIER_BUILD_JOBS=4
+COPY build/TARE_FRONTIER_PARAMETER.patch build/apply_frontier_fix.sh /opt/p9-tare-frontier-fix/
+RUN FRONTIER_BUILD_JOBS="$FRONTIER_BUILD_JOBS" bash /opt/p9-tare-frontier-fix/apply_frontier_fix.sh
+
+FROM frontier-fix AS release
+COPY runtime/ /opt/p9-exploration/
+COPY control/ /opt/p9-exploration/control/
+COPY validation/ /opt/p9-exploration/validation/
+COPY README.md /opt/p9-exploration/README.md
+COPY build/control-entrypoint.sh /usr/local/bin/p9explore-control
+COPY build/exploration-entrypoint.sh /usr/local/bin/p9explore-entrypoint
+RUN set -eo pipefail; chmod 755 /usr/local/bin/p9explore-control /usr/local/bin/p9explore-entrypoint /opt/p9-exploration/p9explore && \
+    ln -s /opt/p9-exploration/p9explore /usr/local/bin/p9explore && \
+    python3 /opt/p9-exploration/test_mapping_points.py \
+      --source /opt/p9_ws/src/go2_p9/go2_p9/mapping_core.py \
+      > /opt/p9-tare-provenance/mapping-equivalence.json && \
+    python3 /opt/p9-exploration/apply_mapping_patch.py \
+      --provenance /opt/p9-tare-provenance/mapping && \
+    bash /opt/p9-exploration/validation/image_smoke.sh 2>&1 \
+      | tee /opt/p9-tare-provenance/integration-smoke.log
+ARG SOURCE_REVISION=unreleased
+ENV P9_EXPLORATION_REVISION=${SOURCE_REVISION}
+LABEL org.opencontainers.image.revision="${SOURCE_REVISION}" \
+      org.opencontainers.image.title="P9 calibrated localization, mapping, TARE exploration and attended control"
+WORKDIR /output
+ENTRYPOINT ["/usr/local/bin/p9explore-entrypoint"]
+CMD ["p9explore", "--help"]
